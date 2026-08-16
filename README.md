@@ -23,8 +23,8 @@
 
 ### � 部署（对齐现有 `.github/workflows/deploy.yml`，阿里云 ECS）
 1. 推送 `main` 分支，GitHub Actions 自动 SSH 到服务器执行：`git pull` → `npm install` → `pm2 start npm -- run start`
-2. 服务器通过 `npm start` 起 Node 静态服务，根目录入口就是 `index.html`，访问 `https://你的域名/` 直接进入游戏
-3. 游戏与指南均为单文件自包含（内联 CSS/JS），无需额外构建
+2. 服务器通过 `npm start` 启动 `server.js`（Node 静态服务器，**监听 80 端口**），根目录入口就是 `index.html`，访问 `https://你的域名/` 直接进入游戏
+3. 本地验证：`npm start` 后打开 `http://localhost:80/`（Windows/Mac 可用 `PORT=8080 npm start` 避开权限）
 
 > 若改为部署到 GitHub Pages：把 `index.html` 推到仓库根目录，开启 **Settings → Pages**（main / root），访问 `https://<用户名>.github.io/<仓库名>/` 即可。
 
