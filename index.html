@@ -260,9 +260,10 @@
   .celebrate button { margin-top:20px; padding:14px 40px; border:none; border-radius:40px; font-size:16px;
     font-weight:800; color:#fff; background:linear-gradient(135deg,#ffd76a,#ffb35c); cursor:pointer; }
 
-  @media (max-width:420px){
-    nav button { font-size:11px; padding:6px 6px; }
-    .logo { font-size:15px; }
+  @media (max-width:480px){
+    nav button { font-size:11px; padding:6px 5px; }
+    .logo { font-size:14px; }
+    .logo small { display:none; }
     h2 { font-size:18px; }
   }
 </style>
@@ -278,6 +279,7 @@
       <button data-nav="map" class="on">🗺️ 冒险</button>
       <button data-nav="collection">📚 作品</button>
       <button data-nav="growth">🌱 成长</button>
+      <button data-nav="education">🧭 教育</button>
       <button data-nav="settings">⚙️ 设置</button>
     </nav>
   </header>
@@ -975,7 +977,9 @@ function sendChat(){
 function bindEvents(){
   $('#mainNav').addEventListener('click', function(e){
     var b=e.target.closest('button'); if(!b) return;
-    showScreen(b.getAttribute('data-nav'));
+    var nav=b.getAttribute('data-nav');
+    if(nav==='education'){ location.href='guide.html'; return; }
+    showScreen(nav);
   });
   $('#btnStart').addEventListener('click', function(){
     var name=$('#playerName').value.trim()||'小作家';
