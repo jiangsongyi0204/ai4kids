@@ -2,7 +2,7 @@
   "name": "ai4kids",
   "version": "1.0.0",
   "private": true,
-  "description": "AI+教育小游戏：写作星球 · 墨墨的灵感宇宙（Node.js 静态服务器，监听 80 端口）",
+  "description": "AI+教育小游戏：职业宇宙 · 101个职业启蒙（Node.js 静态服务器，监听 80 端口）",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

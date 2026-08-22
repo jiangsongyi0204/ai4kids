@@ -2,1099 +2,347 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>写作星球 · 墨墨的灵感宇宙</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>101个职业启蒙 · 职业宇宙</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html,body { height:100%; }
   body {
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
-    background:linear-gradient(160deg,#141a3d 0%,#1e2a5e 40%,#3a1e5c 100%);
-    color:#2b2f4a;
-    min-height:100%;
-    overflow-x:hidden;
+    background:linear-gradient(165deg,#1b2a6b 0%,#3b2a7a 45%,#7a2a6b 100%);
+    color:#2b2f4a; min-height:100%; overflow-x:hidden;
   }
-  /* 星星背景 */
-  .stars,.stars2 { position:fixed; inset:0; pointer-events:none; z-index:0; }
-  .stars { background-image:
-      radial-gradient(1px 1px at 20% 30%, #fff, transparent),
+  /* 星星与星球背景 */
+  .bg { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .stars { position:absolute; inset:0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20% 30%, #fff, transparent),
       radial-gradient(1px 1px at 70% 15%, #fff, transparent),
-      radial-gradient(1.5px 1.5px at 40% 70%, #ffe9a8, transparent),
+      radial-gradient(2px 2px at 40% 70%, #ffe9a8, transparent),
       radial-gradient(1px 1px at 85% 55%, #fff, transparent),
-      radial-gradient(1.5px 1.5px at 10% 80%, #c9e4ff, transparent),
+      radial-gradient(2px 2px at 10% 80%, #c9e4ff, transparent),
       radial-gradient(1px 1px at 55% 40%, #fff, transparent),
       radial-gradient(1px 1px at 30% 12%, #fff, transparent),
-      radial-gradient(1.5px 1.5px at 92% 82%, #ffd7f0, transparent);
+      radial-gradient(2px 2px at 92% 82%, #ffd7f0, transparent);
     animation:twinkle 4s ease-in-out infinite alternate; }
-  .stars2 { background-image:
-      radial-gradient(1px 1px at 50% 55%, #fff, transparent),
-      radial-gradient(1px 1px at 15% 45%, #fff, transparent),
-      radial-gradient(1.5px 1.5px at 65% 85%, #fff, transparent);
-    animation:twinkle 6s ease-in-out infinite alternate-reverse; }
   @keyframes twinkle { from{opacity:.35} to{opacity:1} }
+  .planet { position:absolute; border-radius:50%; opacity:.5; }
+  .planet.p1 { width:140px; height:140px; top:-40px; right:-40px;
+    background:radial-gradient(circle at 30% 30%, #ff9ad5, #b44a8f); }
+  .planet.p2 { width:90px; height:90px; bottom:8%; left:-30px;
+    background:radial-gradient(circle at 30% 30%, #9ad5ff, #4a7ab4); }
+  .ring { position:absolute; width:220px; height:60px; top:16%; left:-90px;
+    border:3px solid rgba(255,255,255,.18); border-radius:50%; transform:rotate(-18deg); }
 
-  #app { position:relative; z-index:1; max-width:760px; margin:0 auto; padding:12px 14px 90px; }
+  #app { position:relative; z-index:1; max-width:900px; margin:0 auto; padding:14px 14px 90px; }
 
   /* 顶栏 */
   .topbar { display:flex; align-items:center; justify-content:space-between; gap:8px;
-    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14);
-    backdrop-filter:blur(8px); border-radius:22px; padding:10px 14px; margin-bottom:14px; }
-  .logo { color:#fff; font-weight:800; font-size:17px; letter-spacing:.5px; white-space:nowrap; }
-  .logo small { font-size:11px; color:#cdd8ff; font-weight:500; margin-left:4px; }
-  nav { display:flex; gap:4px; }
-  nav button { background:transparent; border:none; color:#c6d0f5; font-size:12px; font-weight:600;
-    padding:7px 8px; border-radius:14px; cursor:pointer; transition:.15s; }
-  nav button.on { background:rgba(255,255,255,.16); color:#fff; }
-  nav button:active { transform:scale(.94); }
+    background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.16);
+    backdrop-filter:blur(8px); border-radius:22px; padding:10px 14px; margin-bottom:16px; }
+  .logo { color:#fff; font-weight:800; font-size:17px; letter-spacing:.5px; }
+  .logo small { font-size:11px; color:#ffd76a; font-weight:700; margin-left:6px;
+    background:rgba(255,215,106,.18); padding:2px 8px; border-radius:20px; }
+  .topbar .right { font-size:12px; color:#e6ebff; font-weight:600; }
 
-  .screen { display:none; }
-  .screen.on { display:block; animation:pop .3s ease; }
-  @keyframes pop { from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none} }
+  /* Hero */
+  .hero { text-align:center; padding:20px 12px 6px; }
+  .hero .astro { font-size:74px; display:inline-block; animation:float 3.2s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0) rotate(-3deg)} 50%{transform:translateY(-10px) rotate(3deg)} }
+  .hero h1 { color:#fff; font-size:30px; margin:10px 0 8px; letter-spacing:1px; }
+  .hero h1 em { font-style:normal; color:#ffd76a; }
+  .hero p { color:#cdd8ff; font-size:14px; line-height:1.7; max-width:600px; margin:0 auto; }
+  .hero p b { color:#fff; }
 
-  .card { background:#fff; border-radius:24px; padding:18px; box-shadow:0 14px 34px rgba(0,0,0,.25);
-    margin-bottom:14px; }
-  h2 { font-size:20px; color:#1c2150; margin-bottom:4px; }
-  .sub { font-size:13px; color:#7a83a8; margin-bottom:12px; }
+  /* 进度卡 */
+  .progress-card { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.16);
+    backdrop-filter:blur(8px); border-radius:22px; padding:14px 16px; margin:18px 0 6px;
+    display:flex; align-items:center; gap:14px; }
+  .progress-card .p-label { color:#fff; font-size:13px; font-weight:700; white-space:nowrap; }
+  .progress-card .p-bar { flex:1; height:12px; background:rgba(255,255,255,.2); border-radius:20px; overflow:hidden; }
+  .progress-card .p-bar i { display:block; height:100%; width:0.99%;
+    background:linear-gradient(90deg,#ffd76a,#ff9ad5); border-radius:20px;
+    transition:width .6s; }
+  .progress-card .p-num { color:#ffd76a; font-size:15px; font-weight:800; white-space:nowrap; }
 
-  /* 首页 */
-  .home-hero { text-align:center; padding:26px 12px 14px; }
-  .planet-big { font-size:64px; animation:float 3.2s ease-in-out infinite; display:inline-block; }
-  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-  .home-hero h1 { color:#fff; font-size:26px; margin:6px 0 4px; }
-  .home-hero p { color:#cdd8ff; font-size:14px; }
-  .name-box { margin:18px auto 6px; max-width:340px; }
-  .name-box input { width:100%; padding:14px 18px; border-radius:18px; border:2px solid #e3e8ff;
-    font-size:16px; text-align:center; outline:none; background:#fff; }
-  .name-box input:focus { border-color:#7c8bff; }
-  .start-btn { display:block; margin:16px auto 0; padding:16px 44px; font-size:18px; font-weight:800;
-    color:#fff; background:linear-gradient(135deg,#7c8bff,#5a6bff); border:none; border-radius:40px;
-    box-shadow:0 10px 24px rgba(90,107,255,.45); cursor:pointer; transition:.15s; }
-  .start-btn:active { transform:scale(.96); }
-  .home-tip { color:#9aa6d8; font-size:12px; text-align:center; margin-top:14px; }
+  /* 分类筛选 */
+  .cats { display:flex; gap:8px; overflow-x:auto; padding:14px 2px 4px; scrollbar-width:none; }
+  .cats::-webkit-scrollbar { display:none; }
+  .cats button { flex-shrink:0; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.14);
+    color:#e6ebff; font-size:13px; font-weight:700; padding:8px 14px; border-radius:30px; cursor:pointer;
+    transition:.15s; }
+  .cats button.on { background:#fff; color:#4a3a8a; border-color:#fff; }
+  .cats button:active { transform:scale(.95); }
 
-  /* 墨墨形象 */
-  .momo-char { width:86px; height:86px; border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #8a6cff, #5a3fd0);
-    position:relative; box-shadow:0 10px 22px rgba(90,63,208,.45); margin:0 auto 8px; }
-  .momo-char .eye { position:absolute; width:12px; height:16px; background:#fff; border-radius:50%;
-    top:34px; }
-  .momo-char .eye.l { left:22px; } .momo-char .eye.r { right:22px; }
-  .momo-char .pupil { position:absolute; width:6px; height:8px; background:#2b1b6e; border-radius:50%;
-    top:4px; left:3px; animation:blink 4.5s infinite; }
-  .momo-char .cheek { position:absolute; width:12px; height:8px; background:#ffb6d0; border-radius:50%;
-    top:52px; opacity:.85; }
-  .momo-char .cheek.l { left:12px; } .momo-char .cheek.r { right:12px; }
-  .momo-char .smile { position:absolute; width:26px; height:12px; border-bottom:3px solid #fff;
-    border-radius:0 0 26px 26px; left:30px; top:54px; }
-  .momo-char .hat { position:absolute; width:52px; height:20px; background:#ffd76a; border-radius:10px;
-    top:-8px; left:17px; transform:rotate(-6deg); }
-  @keyframes blink { 0%,92%,100%{transform:scaleY(1)} 95%{transform:scaleY(.1)} }
+  /* 职业卡片网格 */
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(118px,1fr)); gap:12px; margin-top:14px; }
+  .job { position:relative; background:#fff; border-radius:20px; padding:16px 8px 12px; text-align:center;
+    cursor:pointer; transition:.18s; border:3px solid transparent; user-select:none; }
+  .job:active { transform:scale(.95); }
+  .job .ic { font-size:38px; line-height:1; display:block; }
+  .job .nm { font-size:13px; font-weight:800; color:#3a3f6e; margin-top:8px; display:block; }
+  .job .cat-tag { font-size:10px; color:#a5abc9; font-weight:600; margin-top:3px; display:block; }
 
-  /* 地图 / 星域卡 */
-  .domain-card { border-radius:24px; padding:16px 18px; color:#fff; cursor:pointer; margin-bottom:14px;
-    transition:.15s; border:2px solid transparent; }
-  .domain-card:active { transform:scale(.98); }
-  .domain-card.done { border-color:#ffd76a; }
-  .domain-head { display:flex; align-items:center; gap:12px; }
-  .domain-head .ic { font-size:34px; }
-  .domain-head .dt { flex:1; }
-  .domain-head .dt b { font-size:18px; display:block; }
-  .domain-head .dt span { font-size:12px; opacity:.92; }
-  .domain-progress { margin-top:10px; }
-  .pbar { height:8px; background:rgba(255,255,255,.28); border-radius:20px; overflow:hidden; }
-  .pbar i { display:block; height:100%; background:#ffd76a; border-radius:20px; transition:width .4s; }
-  .plabel { font-size:11px; opacity:.9; margin-top:5px; }
-  .badge-mark { font-size:16px; }
+  /* 已点亮 */
+  .job.lit { border-color:#ffd76a; box-shadow:0 10px 26px rgba(255,215,106,.35);
+    background:linear-gradient(180deg,#fffdf5,#fff7e0); animation:glow 2.4s ease-in-out infinite; }
+  @keyframes glow { 0%,100%{box-shadow:0 10px 26px rgba(255,215,106,.35)} 50%{box-shadow:0 10px 34px rgba(255,215,106,.65)} }
+  .job.lit .badge { position:absolute; top:-11px; left:50%; transform:translateX(-50%);
+    background:linear-gradient(135deg,#ffd76a,#ff9a3d); color:#7a3a00; font-size:11px; font-weight:800;
+    padding:3px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 4px 10px rgba(255,154,61,.4); }
+  .job.lit .ic { animation:bounce 2s ease-in-out infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
 
-  /* 关卡列表 */
-  .level-item { display:flex; align-items:center; gap:12px; background:#fafbff; border:1px solid #e6eaff;
-    border-radius:18px; padding:12px 14px; margin-top:10px; cursor:pointer; transition:.15s; }
-  .level-item:active { transform:scale(.98); background:#f0f3ff; }
-  .level-item .lic { font-size:26px; }
-  .level-item .lt { flex:1; }
-  .level-item .lt b { display:block; font-size:15px; color:#232858; }
-  .level-item .lt span { font-size:12px; color:#8a93b8; }
-  .level-item .lstate { font-size:18px; }
+  /* 未点亮（灰色锁定） */
+  .job.lock { background:#e9ebf2; border-color:#dfe2ec; filter:grayscale(1); opacity:.82; cursor:not-allowed; }
+  .job.lock .ic { opacity:.55; }
+  .job.lock .nm { color:#9aa0b8; }
+  .job.lock .lock-ic { position:absolute; top:10px; right:10px; font-size:13px; opacity:.8; }
+  .job.lock .cat-tag { color:#c2c7da; }
 
-  /* 写作覆盖层 */
-  #writingOverlay, #chatOverlay { position:fixed; inset:0; z-index:20; background:#f4f6ff;
-    display:none; flex-direction:column; overflow-y:auto; }
-  #writingOverlay.on, #chatOverlay.on { display:flex; animation:slideup .25s ease; }
-  @keyframes slideup { from{transform:translateY(40px); opacity:.5} to{transform:none; opacity:1} }
-  .w-top { position:sticky; top:0; background:rgba(244,246,255,.95); backdrop-filter:blur(6px);
-    z-index:3; padding:12px 14px 10px; display:flex; align-items:center; gap:10px;
-    border-bottom:1px solid #e4e8ff; }
-  .w-top .back { background:#fff; border:1px solid #dfe4ff; border-radius:14px; padding:8px 12px;
-    font-size:14px; color:#3d4372; cursor:pointer; font-weight:600; }
-  .w-top .wt { flex:1; }
-  .w-top .wt b { display:block; font-size:16px; color:#1c2150; }
-  .w-top .wt span { font-size:11px; color:#8a93b8; }
-  .w-body { padding:14px 14px 40px; max-width:760px; width:100%; margin:0 auto; }
+  /* 提示 Toast */
+  #toast { position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(20px);
+    background:rgba(30,26,66,.95); color:#fff; padding:12px 20px; border-radius:30px; font-size:13px;
+    font-weight:600; z-index:99; opacity:0; pointer-events:none; transition:.3s; max-width:86vw; text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,.3); }
+  #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
-  .task-card { background:linear-gradient(135deg,#fff,#f6f8ff); border:1.5px solid #dfe4ff;
-    border-radius:20px; padding:14px 16px; margin-bottom:12px; }
-  .task-card .tt { font-size:13px; font-weight:700; color:#5a6bff; margin-bottom:6px; }
-  .task-card .td { font-size:14px; color:#3d4372; line-height:1.75; }
-
-  .write-box { position:relative; }
-  textarea#draft { width:100%; min-height:220px; border:2px solid #dfe4ff; border-radius:20px;
-    padding:16px; font-size:16px; line-height:1.9; resize:vertical; outline:none; background:#fff;
-    color:#2b2f4a; }
-  textarea#draft:focus { border-color:#7c8bff; }
-  .write-count { text-align:right; font-size:12px; color:#9aa3c4; margin:6px 6px 0 0; }
-
-  .toolbar { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0; }
-  .toolbar button { flex:1; min-width:110px; padding:12px 8px; border:none; border-radius:16px;
-    font-size:13px; font-weight:700; cursor:pointer; color:#fff; transition:.15s; }
-  .toolbar button:active { transform:scale(.96); }
-  .tb-idea { background:linear-gradient(135deg,#ffb35c,#ff8f3d); }
-  .tb-submit { background:linear-gradient(135deg,#7c8bff,#5a6bff); }
-  .tb-chat { background:linear-gradient(135deg,#8a6cff,#5a3fd0); }
-  .tb-req { background:linear-gradient(135deg,#34c98e,#1f9d6f); }
-
-  .rev-track { display:flex; align-items:center; gap:8px; font-size:13px; color:#3d4372;
-    background:#fff; border:1px solid #dfe4ff; border-radius:14px; padding:8px 12px; margin-bottom:10px; }
-  .rev-track .dots { display:flex; gap:5px; }
-  .rev-track .dot { width:14px; height:14px; border-radius:50%; background:#e3e8ff; }
-  .rev-track .dot.on { background:#ffd76a; box-shadow:0 0 8px #ffd76a; }
-
-  /* 墨墨回复卡 */
-  .momo-card { background:#fff; border:2px solid #d8ccff; border-radius:22px; padding:16px;
-    margin-top:14px; display:none; animation:pop .3s ease; }
-  .momo-card.on { display:block; }
-  .momo-card .head { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
-  .momo-mini { width:40px; height:40px; border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #8a6cff, #5a3fd0); position:relative; flex-shrink:0; }
-  .momo-mini .eye { position:absolute; width:6px; height:9px; background:#fff; border-radius:50%; top:14px; }
-  .momo-mini .eye.l { left:10px; } .momo-mini .eye.r { right:10px; }
-  .momo-mini .pupil { position:absolute; width:3px; height:4px; background:#2b1b6e; border-radius:50%; top:2px; left:1px; }
-  .momo-card .head b { color:#4a2f9e; font-size:15px; }
-  .momo-card .head span { font-size:11px; color:#9aa3c4; }
-  .momo-text { font-size:14px; line-height:1.85; color:#3d4372; white-space:pre-wrap; }
-  .momo-text .glow { display:block; background:#f4f1ff; border-radius:14px; padding:10px 12px;
-    margin:6px 0; }
-  .finish-btn { display:block; width:100%; margin-top:14px; padding:14px; border:none; border-radius:18px;
-    font-size:16px; font-weight:800; color:#fff; cursor:pointer;
-    background:linear-gradient(135deg,#ffd76a,#ffb35c); box-shadow:0 8px 18px rgba(255,179,92,.4); }
-  .finish-btn:active { transform:scale(.97); }
-  .again-btn { display:block; width:100%; margin-top:8px; padding:11px; border:1.5px solid #dfe4ff;
-    border-radius:18px; font-size:13px; font-weight:600; color:#5a6bff; background:#fff; cursor:pointer; }
-  .again-btn:active { transform:scale(.97); }
-  .loading-dots span { animation:blinkdot 1.2s infinite; }
-  .loading-dots span:nth-child(2){ animation-delay:.2s } .loading-dots span:nth-child(3){ animation-delay:.4s }
-  @keyframes blinkdot { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
-
-  /* 聊天 */
-  .chat-body { flex:1; padding:14px; overflow-y:auto; max-width:760px; width:100%; margin:0 auto; }
-  .msg { display:flex; gap:8px; margin-bottom:12px; }
-  .msg.mine { justify-content:flex-end; }
-  .msg .bubble { max-width:78%; padding:10px 14px; border-radius:18px; font-size:14px; line-height:1.7; }
-  .msg.momo .bubble { background:#fff; border:1.5px solid #d8ccff; color:#3d4372; }
-  .msg.mine .bubble { background:linear-gradient(135deg,#7c8bff,#5a6bff); color:#fff; }
-  .msg .mini { width:34px; height:34px; border-radius:50%; flex-shrink:0;
-    background:radial-gradient(circle at 35% 30%, #8a6cff, #5a3fd0); }
-  .chat-input { position:sticky; bottom:0; background:#f4f6ff; padding:10px 12px 14px;
-    display:flex; gap:8px; border-top:1px solid #e4e8ff; max-width:760px; margin:0 auto; width:100%; }
-  .chat-input input { flex:1; border:2px solid #dfe4ff; border-radius:18px; padding:12px 14px;
-    font-size:15px; outline:none; background:#fff; }
-  .chat-input input:focus { border-color:#7c8bff; }
-  .chat-input button { border:none; background:linear-gradient(135deg,#8a6cff,#5a3fd0); color:#fff;
-    border-radius:18px; padding:0 20px; font-size:15px; font-weight:700; cursor:pointer; }
-
-  /* 作品集 */
-  .work-item { background:#fafbff; border:1px solid #e6eaff; border-radius:18px; padding:12px 14px;
-    margin-top:10px; cursor:pointer; }
-  .work-item:active { transform:scale(.99); background:#f0f3ff; }
-  .work-item b { color:#232858; font-size:14px; }
-  .work-item .p { font-size:13px; color:#6b7498; white-space:nowrap; overflow:hidden;
-    text-overflow:ellipsis; margin-top:4px; }
-  .work-item .meta { font-size:11px; color:#9aa3c4; margin-top:4px; }
-
-  /* 成长 */
-  .stat-row { display:flex; gap:10px; }
-  .stat { flex:1; background:#fafbff; border:1px solid #e6eaff; border-radius:18px; padding:12px;
-    text-align:center; }
-  .stat .v { font-size:22px; font-weight:800; color:#1c2150; }
-  .stat .k { font-size:11px; color:#8a93b8; margin-top:2px; }
-  .badge-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
-  .badge { flex:1; min-width:120px; background:#fafbff; border:1.5px dashed #d5dbf5; border-radius:18px;
-    padding:12px; text-align:center; }
-  .badge.got { border-style:solid; border-color:#ffd76a; background:#fff9ea; }
-  .badge .bi { font-size:30px; }
-  .badge .bn { font-size:12px; font-weight:700; color:#3d4372; margin-top:4px; }
-  .badge .bs { font-size:10px; color:#8a93b8; }
-
-  /* 设置 */
-  .set-row { margin-top:10px; }
-  .set-row label { font-size:13px; font-weight:700; color:#3d4372; display:block; margin-bottom:6px; }
-  .set-row input { width:100%; padding:11px 14px; border:2px solid #dfe4ff; border-radius:14px;
-    font-size:14px; outline:none; }
-  .set-row input:focus { border-color:#7c8bff; }
-  .switch-row { display:flex; align-items:center; justify-content:space-between; padding:12px 0;
-    border-bottom:1px solid #eef0fb; }
-  .switch-row .sx b { font-size:14px; color:#232858; display:block; }
-  .switch-row .sx span { font-size:12px; color:#8a93b8; }
-  .switch { width:50px; height:28px; border-radius:30px; background:#d5dbf5; position:relative;
-    cursor:pointer; transition:.2s; }
-  .switch.on { background:#5a6bff; }
-  .switch::after { content:''; position:absolute; width:22px; height:22px; border-radius:50%;
-    background:#fff; top:3px; left:3px; transition:.2s; }
-  .switch.on::after { left:25px; }
-  .note { font-size:12px; color:#8a93b8; background:#f4f6ff; border-radius:14px; padding:12px;
-    line-height:1.8; margin-top:12px; }
-  .note b { color:#5a6bff; }
-
-  .toast { position:fixed; left:50%; bottom:60px; transform:translateX(-50%) translateY(20px);
-    background:rgba(28,33,80,.92); color:#fff; padding:12px 22px; border-radius:40px; font-size:14px;
-    z-index:99; opacity:0; pointer-events:none; transition:.25s; max-width:82%; text-align:center; }
-  .toast.on { opacity:1; transform:translateX(-50%) translateY(0); }
-
-  /* 庆祝 */
-  .celebrate { position:fixed; inset:0; z-index:40; background:rgba(20,26,61,.96); display:none;
-    align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:24px; }
-  .celebrate.on { display:flex; animation:fadein .3s; }
-  @keyframes fadein { from{opacity:0} to{opacity:1} }
-  .celebrate .big { font-size:72px; animation:float 2.6s ease-in-out infinite; }
-  .celebrate h3 { color:#fff; font-size:24px; margin:12px 0 6px; }
-  .celebrate p { color:#cdd8ff; font-size:14px; line-height:1.8; }
-  .celebrate button { margin-top:20px; padding:14px 40px; border:none; border-radius:40px; font-size:16px;
-    font-weight:800; color:#fff; background:linear-gradient(135deg,#ffd76a,#ffb35c); cursor:pointer; }
-
-  @media (max-width:480px){
-    nav button { font-size:11px; padding:6px 5px; }
-    .logo { font-size:14px; }
-    .logo small { display:none; }
-    h2 { font-size:18px; }
-  }
+  .foot { text-align:center; color:#9aa6d8; font-size:12px; margin-top:26px; line-height:1.8; }
 </style>
 </head>
 <body>
-<div class="stars"></div>
-<div class="stars2"></div>
+<div class="bg">
+  <div class="stars"></div>
+  <div class="planet p1"></div>
+  <div class="planet p2"></div>
+  <div class="ring"></div>
+</div>
 
 <div id="app">
   <header class="topbar">
-    <div class="logo">🪐 写作星球<small>墨墨的灵感宇宙</small></div>
-    <nav id="mainNav">
-      <button data-nav="map" class="on">🗺️ 冒险</button>
-      <button data-nav="collection">📚 作品</button>
-      <button data-nav="growth">🌱 成长</button>
-      <button data-nav="education">🧭 教育</button>
-      <button data-nav="settings">⚙️ 设置</button>
-    </nav>
+    <div class="logo">🧭 职业宇宙 <small>101 个职业启蒙</small></div>
+    <div class="right" id="today"></div>
   </header>
 
-  <!-- 首页 -->
-  <section id="home" class="screen on">
-    <div class="home-hero">
-      <div class="planet-big">🪐</div>
-      <h1>写作星球</h1>
-      <p>和 AI 搭档「墨墨」一起，踏上成为<span style="color:#ffd76a">四种人</span>的写作冒险吧！</p>
-      <div class="name-box">
-        <input id="playerName" maxlength="8" placeholder="✨ 输入你的名字（小作家）">
-      </div>
-      <button class="start-btn" id="btnStart">🚀 出发！</button>
-      <div class="home-tip">🌿 自然的人 · 🤝 社会的人 · 🧘 精神的人 · ⚙️ 职业的人</div>
-    </div>
+  <section class="hero">
+    <span class="astro">🚀</span>
+    <h1>点亮你的<em>第一个职业</em>！</h1>
+    <p>宇宙里有 <b>101 个闪闪发光的职业星球</b>。每点亮一颗，就能钻进它的时间隧道，从它「出生」的那天开始，一步一步学懂这个职业！今天，先点亮第一颗 —— <b>Web 开发</b>。</p>
   </section>
 
-  <!-- 冒险地图 -->
-  <section id="map" class="screen">
-    <div class="card">
-      <h2>🗺️ 冒险地图</h2>
-      <div class="sub">完成每个星域的关卡，就能点亮一种「人」的徽章</div>
-      <div id="domainList"></div>
-    </div>
-  </section>
+  <div class="progress-card">
+    <span class="p-label">已点亮</span>
+    <div class="p-bar"><i id="pbar"></i></div>
+    <span class="p-num" id="pnum">1 / 101</span>
+  </div>
 
-  <!-- 作品集 -->
-  <section id="collection" class="screen">
-    <div class="card">
-      <h2>📚 我的作品集</h2>
-      <div class="sub">你写下的每一篇，都是宇宙里最闪亮的星</div>
-      <div id="workList"></div>
-    </div>
-  </section>
+  <nav class="cats" id="cats"></nav>
 
-  <!-- 成长 -->
-  <section id="growth" class="screen">
-    <div class="card">
-      <h2>🌱 我的成长</h2>
-      <div class="sub">四种人 · 缺一不可，像桌子的四条腿</div>
-      <div class="stat-row">
-        <div class="stat"><div class="v" id="stCoins">0</div><div class="k">⭐ 灵感星币</div></div>
-        <div class="stat"><div class="v" id="stWords">0</div><div class="k">✍️ 累计字数</div></div>
-        <div class="stat"><div class="v" id="stStreak">0</div><div class="k">🔥 连续写作(天)</div></div>
-      </div>
-      <div class="badge-row" id="badgeRow"></div>
-    </div>
-  </section>
+  <main class="grid" id="grid"></main>
 
-  <!-- 设置 -->
-  <section id="settings" class="screen">
-    <div class="card">
-      <h2>⚙️ 设置</h2>
-      <div class="switch-row">
-        <div class="sx"><b>🤖 墨墨智能模式</b><span>离线 AI 引擎默认开启，无需任何配置</span></div>
-        <div class="switch" id="swOffline"></div>
-      </div>
-      <div class="sub" style="margin-top:10px">家长可选：接入真实大模型，让墨墨「活」起来（需 DeepSeek 等 OpenAI 兼容 API Key）</div>
-      <div class="set-row">
-        <label>API 地址</label>
-        <input id="apiBase" placeholder="https://api.deepseek.com/v1">
-      </div>
-      <div class="set-row">
-        <label>模型名</label>
-        <input id="apiModel" placeholder="deepseek-chat">
-      </div>
-      <div class="set-row">
-        <label>API Key（仅保存在本机浏览器，不上传）</label>
-        <input id="apiKey" type="password" placeholder="sk-...">
-      </div>
-      <button class="finish-btn" id="btnSaveApi" style="margin-top:14px">保存设置</button>
-      <div class="note">
-        <b>📱 如何在微信里玩？</b><br>
-        1. 把这个文件上传到 GitHub 仓库，开启 <b>GitHub Pages</b>；<br>
-        2. 把生成的网址发给自己的微信，点开即可全屏玩耍；<br>
-        3. 孩子的作品只保存在本机浏览器（localStorage），不会上传。<br><br>
-        <b>🔌 关于真·大模型</b><br>
-        微信内置浏览器调用外部 API 可能受跨域限制，若联网失败会自动退回离线引擎，游戏始终可用。建议用支持 CORS 的网关（如 Cloudflare Worker）代理。
-      </div>
-    </div>
-  </section>
+  <div class="foot">💡 每完成一个职业的时间轴课程，就可以「点亮」下一颗职业星球哦！<br>数据只保存在本机浏览器，不会上传。</div>
 </div>
 
-<!-- 写作覆盖层 -->
-<div id="writingOverlay">
-  <div class="w-top">
-    <button class="back" id="wBack">← 返回</button>
-    <div class="wt"><b id="wTitle"></b><span id="wLevel"></span></div>
-  </div>
-  <div class="w-body">
-    <div class="task-card">
-      <div class="tt">🎯 本关任务</div>
-      <div class="td" id="wTask"></div>
-    </div>
-    <div class="rev-track" id="revTrack" style="display:none">
-      <span>✏️ 主编修改进度：</span><span class="dots" id="revDots"></span>
-    </div>
-    <div class="write-box">
-      <textarea id="draft" placeholder="在这里开始写吧……墨墨会认真读你写的每一个字 ✍️"></textarea>
-      <div class="write-count" id="wCount"></div>
-    </div>
-    <div class="toolbar">
-      <button class="tb-idea" id="btnIdea">✨ 灵感火花</button>
-      <button class="tb-submit" id="btnSubmit">🧠 写完交给墨墨</button>
-      <button class="tb-req" id="btnReq" style="display:none">👑 给AI下需求</button>
-      <button class="tb-chat" id="btnChat">💬 和墨墨聊聊</button>
-    </div>
-    <div class="momo-card" id="momoCard">
-      <div class="head"><div class="momo-mini"><span class="eye l"><span class="pupil"></span></span><span class="eye r"><span class="pupil"></span></span></div>
-        <div><b>墨墨</b><br><span>灵感小精灵 · 你的写作搭档</span></div></div>
-      <div class="momo-text" id="momoText"></div>
-      <button class="finish-btn" id="btnFinish" style="display:none">🎉 完成本关</button>
-      <button class="again-btn" id="btnAgain" style="display:none">✏️ 还想再改改</button>
-    </div>
-  </div>
-</div>
-
-<!-- 聊天覆盖层 -->
-<div id="chatOverlay">
-  <div class="w-top">
-    <button class="back" id="cBack">← 返回</button>
-    <div class="wt"><b>💬 和墨墨聊聊</b><span>它不会替你把文章写完，但会陪你聊灵感</span></div>
-  </div>
-  <div class="chat-body" id="chatBody"></div>
-  <div class="chat-input">
-    <input id="chatInput" placeholder="想和墨墨说什么？" maxlength="120">
-    <button id="btnSend">发送</button>
-  </div>
-</div>
-
-<!-- 庆祝 -->
-<div class="celebrate" id="celebrate">
-  <div class="big" id="celIcon">🌟</div>
-  <h3 id="celTitle"></h3>
-  <p id="celText"></p>
-  <button id="celBtn">继续冒险！</button>
-</div>
-
-<div class="toast" id="toast"></div>
+<div id="toast"></div>
 
 <script>
-/* =====================================================
-   写作星球 · 墨墨的灵感宇宙
-   核心设计（对应 guide 的"四种人"）：
-   - 自然的人 / 社会的人 / 精神的人 / 职业的人
-   - AI 属性：文本分析反馈、苏格拉底式提问、灵感生成、
-     提需求训练、可选真·大模型接入
-   ===================================================== */
-
-/* ---------- 工具 ---------- */
-function $(s){ return document.querySelector(s); }
-function $all(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); }
-function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
-function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
-function todayStr(){ var d=new Date(); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
-function showToast(t){ var el=$('#toast'); el.textContent=t; el.classList.add('on');
-  clearTimeout(el._t); el._t=setTimeout(function(){ el.classList.remove('on'); },2200); }
-
-/* ---------- 状态 ---------- */
-var KEY='writingPlanet_v1';
-var S=null;
-function defaultState(){ return {
-  name:'', badges:{nature:false,social:false,dream:false,career:false},
-  done:{}, revs:{}, works:[], coins:0, totalWords:0, streak:0, lastDate:'', chat:[],
-  api:{base:'https://api.deepseek.com/v1', model:'deepseek-chat', key:'', enabled:false},
-  offline:true
-}; }
-function load(){ try{ S=JSON.parse(localStorage.getItem(KEY)); }catch(e){}
-  if(!S || typeof S!=='object'){ S=defaultState(); }
-  else {
-    var d=defaultState();
-    for(var k in d){ if(S[k]===undefined) S[k]=d[k]; }
-    if(!S.api) S.api=d.api;
-    if(!S.badges) S.badges=d.badges;
-    if(!S.done) S.done=d.done;
-    if(!S.revs) S.revs=d.revs;
-    if(!S.works) S.works=d.works;
-    if(!S.chat) S.chat=d.chat;
-  }
-}
-function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
-
-/* ---------- 关卡数据（4 星域 · 12 关） ---------- */
-var DOMAINS=[
- { id:'nature', name:'自然星域', tag:'🌿 自然的人', icon:'🌿', grad:'linear-gradient(135deg,#2fbf8a,#1f8f68)',
-   desc:'保持好奇心：先动手观察，再探索原理', facts:'🌿',
-   levels:[
-    { id:'n1', icon:'👀', title:'观察日记',
-      task:'选一样你身边的大自然：窗外的一棵树、一片云、一只小虫或阳台上的植物。先安安静静看 5 分钟，再写下你真正看到的——颜色、形状、它在动还是没动。写完再让墨墨讲原理哦！',
-      fact:'🌳 树的原理：树的年轮一圈代表一岁，干旱的年份圈会特别窄；树叶是它的小工厂，用阳光把空气和水变成营养（光合作用）。☁️ 云是飘在空中的小水滴，十万滴才凑成一片云。🐛 毛毛虫变成蝴蝶，靠的是身体里悄悄进行的"完全变态"。' },
-    { id:'n2', icon:'🍳', title:'厨房小实验',
-      task:'你还记得哪一次在厨房里看到过神奇的变化吗？比如奶油打发、糖融化、鸡蛋变色、水烧开冒泡……先写出你的猜想："为什么会这样？"再写你亲眼看到的变化过程。写完让墨墨揭晓科学秘密！',
-      fact:'🥚 蛋清打发会膨胀，是因为搅拌把空气包了进去，像吹出无数个小气球。🧊 糖放进热水会"消失"（溶解），其实它还在水里，只是小到看不见。🔥 水烧开冒泡泡，是水变成水蒸气想跑出来。"翻车"才是最好的实验！' },
-    { id:'n3', icon:'💌', title:'给大自然的悄悄话',
-      task:'选一样大自然里的小生命（月亮、蚂蚁、风、一朵花、一只鸟……），给它写一封信。可以问它问题，可以谢谢它，也可以告诉它只有你们俩知道的小秘密。',
-      fact:'🌙 月亮正慢慢远离地球，每年远大约 3.8 厘米。🐜 蚂蚁能搬动比自己重 50 倍的东西，它们靠气味互相聊天。🍃 每一片叶子的纹路都像指纹一样，世界上没有两片完全相同的叶子。' }
-   ]},
- { id:'social', name:'友谊星域', tag:'🤝 社会的人', icon:'🤝', grad:'linear-gradient(135deg,#ff8f7a,#e85d75)',
-   desc:'学会换位思考、共情与负责', facts:'🤝',
-   levels:[
-    { id:'s1', icon:'👟', title:'换双鞋走一走',
-      task:'写一件你和朋友/家人之间发生的小事。然后，换到对方的角度，再写一遍："如果是 TA，会怎么想、怎么说、怎么感觉？"',
-      fact:'🧠 心理学叫它"观点采择"：能想象别人想法的人，朋友会越来越多，因为每个人都觉得"TA 懂我"。试试看，你今天会不会变成更懂朋友的人？' },
-    { id:'s2', icon:'🤲', title:'我帮过你，你帮过我',
-      task:'写一次你帮助别人的经历，或者别人帮助你的经历。当时是什么感觉？对方说了什么话？如果当时没有伸出那只手，会怎样？',
-      fact:'💞 帮助别人时，大脑会分泌"多巴胺"，让你又开心又骄傲——科学家叫它"助人的快乐"。帮助不一定要很大，一杯水、一句"我陪你"，都是光。' },
-    { id:'s3', icon:'🔄', title:'如果继续冷战……',
-      task:'写一件你和小伙伴闹小别扭的事：因为什么？当时你心里在想什么？写完后，点【让墨墨预演坏结局】，看看如果一直不理对方会发生什么。最后写下：如果可以重来，你会怎么做？',
-      fact:'🔮 冷战就像一堵越砌越高的墙，两个人站在墙两边，谁都不肯先开口，墙就越来越高。而"先开口"不是认输，是勇敢。真正的朋友，输给谁都不算输。' }
-   ]},
- { id:'dream', name:'梦想星域', tag:'🧘 精神的人', icon:'🧘', grad:'linear-gradient(135deg,#9b6cff,#6a3fd0)',
-   desc:'享受独处、审美与"不完美"的创作', facts:'🧘',
-   levels:[
-    { id:'d1', icon:'🌙', title:'梦境记录员',
-      task:'你最近做过什么梦？把梦里最难忘的画面写下来。不用连贯，想到哪写到哪——梦本来就是歪歪扭扭的。越怪、越不真实，越值得写。',
-      fact:'💤 科学家说我们每晚要做 4~6 个梦，只是大多数醒来就忘了。梦像大脑在"整理书架"：白天的记忆、想说的话，都会在梦里冒出来。把它写下来，就是给书架拍了一张照。' },
-    { id:'d2', icon:'🌸', title:'歪歪扭扭的小诗',
-      task:'写一首只属于你的小诗。不用押韵、不用工整，越"不完美"越好。你可以写：风在想什么、一支笔的梦想、一个只有你知道的秘密。',
-      fact:'🌷 世界上第一首被记住的诗，是几千年前一个无名作者写的。诗不一定要美得完美——你用手（而不是AI）写下的每一个字，都带着你的温度。' },
-    { id:'d3', icon:'🎵', title:'深夜的一首歌',
-      task:'想象你正坐在深夜的窗边，看着外面星星点点的灯火。如果这座城市想对人说一句话，会说什么？如果那盏最亮的灯是一个人，TA 在等谁？把这首"歌"写下来吧。',
-      fact:'🌃 万家灯火里，每一盏灯后面都有一个人在生活、在等待、在想念。你能想象出他们的故事，是因为你心里也住着一盏很亮的灯——它叫"同理心"。' }
-   ]},
- { id:'career', name:'未来星域', tag:'⚙️ 职业的人', icon:'⚙️', grad:'linear-gradient(135deg,#ffb35c,#f28c2e)',
-   desc:'学会提需求、整合资源、创造价值', facts:'⚙️',
-   levels:[
-    { id:'c1', icon:'🧑‍💼', title:'我的AI实习生',
-      task:'现在你是一位小主编！先给墨墨下一个需求（比如："写一个勇敢的小女孩发现会说话的星星的冒险开头"）。然后，把墨墨的初稿修改 3 次：第一次改得更生动，第二次改得更紧凑，第三次加一个惊喜！',
-      fact:'📌 未来的核心能力，不是"会用工具"，而是"会提需求"：把心里的想法，说清楚、说具体、说到别人（或AI）一听就懂。你每一次下需求，都在练习这个超能力！' },
-    { id:'c2', icon:'🗺️', title:'故事工厂',
-      task:'你来做故事设计师！想一个故事：主角是谁？TA 最想要什么？会遇到什么麻烦？最后怎么解决？把故事大纲写下来——这就是你的"设计方案"。完成后，让墨墨当你的"投资人"，给你的方案打分提建议。',
-      fact:'🏭 所有好故事都有骨架：一个想要东西的人 + 一个挡路的麻烦 + 一个拼命想办法的过程。你会写故事大纲，就已经在练习"统筹全局"的能力了！' },
-    { id:'c3', icon:'📚', title:'小小出版人',
-      task:'你的作品要"出版"啦！挑你最得意的一篇，为它写：① 一句能吸引人的封面标语 ② 作者简介（介绍一下你自己！）③ 给读者的一句话。最后给这本书起个名字。',
-      fact:'📖 出版一本书，需要"策划、包装、推广"——和做产品一模一样。你帮自己的作品写介绍，就是在练习"把好东西讲给别人听"的本领，这也是一种创造价值。' }
-   ]}
+/* ============ 101 个职业数据 ============ */
+const CATS = [
+  ['tech','🤖 科技'], ['health','🩺 医疗健康'], ['edu','📚 教育'], ['art','🎨 艺术创意'],
+  ['make','🔨 建造制造'], ['biz','💼 商业财经'], ['law','⚖️ 法律公共'], ['sci','🔭 科学探索'],
+  ['media','🎙️ 媒体传播'], ['life','🧘 生活服务'],
 ];
-function findLevel(id){
-  for(var i=0;i<DOMAINS.length;i++)
-    for(var j=0;j<DOMAINS[i].levels.length;j++)
-      if(DOMAINS[i].levels[j].id===id) return DOMAINS[i].levels[j];
-  return null;
-}
-function findDomain(domId){
-  for(var i=0;i<DOMAINS.length;i++) if(DOMAINS[i].id===domId) return DOMAINS[i];
-  return null;
-}
 
-/* ---------- 文本分析引擎（墨墨的"眼睛"） ---------- */
-var W={
-  visual:['光','亮','闪','金','红','蓝','绿','紫','白','黑','影','颜色','彩虹','星星','太阳','月亮','大海','云','天空','叶子','灯'],
-  audio:['声音','响','叫','唱','听','哗啦','叮咚','咕噜','叽叽','沙沙','风声','雨声','脚步','安静','悄悄','掌声'],
-  smell:['香','臭','花香','饭香','甜味','气味','味道'],
-  taste:['甜','酸','苦','辣','咸','好吃'],
-  touch:['凉','热','暖','冷','软','硬','滑','粗','刺','冰','烫','舒服','痛'],
-  emotion:['开心','高兴','快乐','幸福','兴奋','激动','喜欢','爱','难过','伤心','哭','生气','愤怒','害怕','担心','紧张','委屈','孤独','温暖','勇敢','感动','希望','惊喜','谢谢','对不起','心疼'],
-  simile:['像','仿佛','如同','好像','宛如','似的'],
-  verbs:['跳','跑','飞','飘','滚','转','伸','眨','爬','钻','冲','笑','喊','唱','舞','游','摇','躲','追','弯','抖'],
-  dialogue:['说','问','喊','叫','答','“','”'],
-  nouns:['风','雨','树','云','月亮','星星','太阳','花','草','虫','蚂蚁','小鸟','猫','狗','朋友','妈妈','爸爸','老师','哥哥','姐姐','弟弟','妹妹','书包','教室','家','床','梦','灯','路','雪','海','山','河','笔','信','心']
+/* 每个职业：名称, emoji, 所属分类, 详情页文件名(可选), 简介 */
+const JOBS = [
+  // —— 科技 (10) ——
+  ['Web 开发',   '🖥️', 'tech', 'web-development', '点亮世界的网页魔法师'],
+  ['游戏开发',   '🎮', 'tech', null, '创造好玩世界的造梦师'],
+  ['人工智能',   '🤖', 'tech', null, '让机器学会思考'],
+  ['数据科学',   '📊', 'tech', null, '从数字里发现秘密'],
+  ['网络安全',   '🔐', 'tech', null, '网络的超级保镖'],
+  ['机器人工程', '🦾', 'tech', null, '给机器人装上大脑'],
+  ['软件工程师', '💻', 'tech', null, '藏在电脑里的魔法师'],
+  ['无人机飞手', '🛸', 'tech', null, '天空的摄影师'],
+  ['3D 打印',    '🖨️', 'tech', null, '把想象变成实物'],
+  ['硬件工程师', '🔌', 'tech', null, '电脑元件的建筑师'],
+  // —— 医疗健康 (10) ——
+  ['医生',      '🩺', 'health', null, '守护健康的白衣天使'],
+  ['护士',      '💉', 'health', null, '最温暖的照顾者'],
+  ['牙医',      '🦷', 'health', null, '牙齿的微笑守护者'],
+  ['药剂师',    '💊', 'health', null, '配药的科学管家'],
+  ['兽医',      '🐾', 'health', null, '小动物的好医生'],
+  ['营养师',    '🥗', 'health', null, '搭配健康的魔法'],
+  ['心理医生',  '🧠', 'health', null, '心灵花园的园丁'],
+  ['康复师',    '🤸', 'health', null, '帮身体重新出发'],
+  ['眼科医生',  '👁️', 'health', null, '明亮世界的守护者'],
+  ['助产士',    '👶', 'health', null, '迎接新生命的双手'],
+  // —— 教育 (8) ——
+  ['小学老师',    '👩‍🏫', 'edu', null, '启蒙路上的领航员'],
+  ['大学教授',    '🎓', 'edu', null, '知识殿堂的导师'],
+  ['绘本作家',    '📚', 'edu', null, '用图画讲故事的人'],
+  ['科普讲解员',  '🔬', 'edu', null, '把科学讲得有趣'],
+  ['外语老师',    '🗣️', 'edu', null, '打开世界的钥匙'],
+  ['幼教老师',    '🧸', 'edu', null, '童年的快乐陪伴者'],
+  ['特教老师',    '🤗', 'edu', null, '用爱心点燃希望'],
+  ['体育教练',    '🏅', 'edu', null, '带着汗水追梦'],
+  // —— 艺术创意 (14) ——
+  ['画家',      '🎨', 'art', null, '把颜色变成心情'],
+  ['音乐家',    '🎵', 'art', null, '让音符开口说话'],
+  ['舞蹈家',    '💃', 'art', null, '用身体写诗'],
+  ['演员',      '🎭', 'art', null, '体验千万种人生'],
+  ['导演',      '🎬', 'art', null, '镜头后的总指挥'],
+  ['摄影师',    '📷', 'art', null, '定格瞬间的光影'],
+  ['插画师',    '✏️', 'art', null, '会讲故事的线条'],
+  ['动画师',    '🎞️', 'art', null, '让画活过来'],
+  ['服装设计师','👗', 'art', null, '用布料造梦'],
+  ['室内设计师','🛋️', 'art', null, '给房间画表情'],
+  ['建筑师',    '🏛️', 'art', null, '大地上的巨人积木'],
+  ['珠宝设计师','💎', 'art', null, '石头里的星光'],
+  ['陶艺师',    '🏺', 'art', null, '泥土与火的魔法'],
+  ['书法家',    '🖌️', 'art', null, '一笔一画的呼吸'],
+  // —— 建造制造 (19) ——
+  ['木匠',      '🪚', 'make', null, '木头里的手艺'],
+  ['电工',      '⚡', 'make', null, '电的驯服师'],
+  ['焊接工',    '🔥', 'make', null, '钢铁的缝纫师'],
+  ['面包师',    '🥖', 'make', null, '麦香味的清晨'],
+  ['厨师',      '👨‍🍳', 'make', null, '舌尖上的魔术师'],
+  ['甜品师',    '🍰', 'make', null, '甜甜的幸福制造者'],
+  ['裁缝',      '🧵', 'make', null, '针线里的温柔'],
+  ['修车技师',  '🚗', 'make', null, '汽车的好医生'],
+  ['飞行员',    '✈️', 'make', null, '云端上的领航员'],
+  ['船长',      '⛵', 'make', null, '大海的方向盘'],
+  ['火车司机',  '🚂', 'make', null, '铁轨上的列车长'],
+  ['快递员',    '📦', 'make', null, '城市里的信鸽'],
+  ['外卖骑手',  '🛵', 'make', null, '热饭的闪电侠'],
+  ['环卫工人',  '🧹', 'make', null, '城市的美容师'],
+  ['园丁',      '🌷', 'make', null, '花草的守护者'],
+  ['农民',      '🌾', 'make', null, '大地的播种者'],
+  ['渔夫',      '🎣', 'make', null, '江河湖海的捕手'],
+  ['牧场主',    '🐄', 'make', null, '草原上的管家'],
+  ['咖啡师',    '☕', 'make', null, '一杯香气的手艺人'],
+  // —— 商业财经 (9) ——
+  ['企业家',    '💼', 'biz', null, '创造价值的总设计师'],
+  ['会计',      '🧾', 'biz', null, '数字的账房先生'],
+  ['银行家',    '🏦', 'biz', null, '金钱的守门人'],
+  ['理财分析师','📈', 'biz', null, '数字里的远见者'],
+  ['保险顾问',  '🛡️', 'biz', null, '风险的保护伞'],
+  ['销售员',    '🛍️', 'biz', null, '把好物带给需要的人'],
+  ['市场经理',  '📣', 'biz', null, '让好产品被看见'],
+  ['直播主播',  '🎤', 'biz', null, '屏幕前的欢乐'],
+  ['电商运营',  '🛒', 'biz', null, '线上大掌柜'],
+  // —— 法律公共 (9) ——
+  ['法官',      '⚖️', 'law', null, '公平的天平'],
+  ['律师',      '🧑‍⚖️', 'law', null, '正义的代言人'],
+  ['警察',      '👮', 'law', null, '平安的守护者'],
+  ['消防员',    '🧑‍🚒', 'law', null, '逆行的英雄'],
+  ['军人',      '🪖', 'law', null, '祖国的钢铁长城'],
+  ['外交官',    '🌍', 'law', null, '国家之间的桥梁'],
+  ['公务员',    '🏢', 'law', null, '大家的服务员'],
+  ['海关关员',  '🛃', 'law', null, '国门的检查员'],
+  ['动物保护者','🐘', 'law', null, '地球朋友的代言人'],
+  // —— 科学探索 (10) ——
+  ['天文学家',    '🔭', 'sci', null, '仰望星空的诗人'],
+  ['海洋生物学家','🐠', 'sci', null, '蓝色世界的探秘者'],
+  ['地质学家',    '⛰️', 'sci', null, '大地的阅读者'],
+  ['化学家',      '🧪', 'sci', null, '分子的魔术师'],
+  ['物理学家',    '⚛️', 'sci', null, '宇宙规律的发现者'],
+  ['生物学家',    '🧬', 'sci', null, '生命的解密者'],
+  ['气象学家',    '🌦️', 'sci', null, '天空的预报员'],
+  ['考古学家',    '🦴', 'sci', null, '和历史对话的人'],
+  ['航天工程师',  '🚀', 'sci', null, '把梦想送上太空'],
+  ['环境科学家',  '🌍', 'sci', null, '地球的医生'],
+  // —— 媒体传播 (5) ——
+  ['记者',    '📰', 'media', null, '真相的发现者'],
+  ['编辑',    '📝', 'media', null, '文字的雕刻师'],
+  ['播音员',  '🎙️', 'media', null, '用声音传递温暖'],
+  ['视频剪辑','🎥', 'media', null, '画面的拼图师'],
+  ['游戏主播','🕹️', 'media', null, '欢乐的分享者'],
+  // —— 生活服务 (7) ——
+  ['运动员',    '🏃', 'life', null, '挑战极限的勇者'],
+  ['健身教练',  '🏋️', 'life', null, '健康的引路人'],
+  ['瑜伽老师',  '🧘', 'life', null, '身心平衡的导师'],
+  ['理发师',    '💇', 'life', null, '发丝的造型师'],
+  ['美妆师',    '💄', 'life', null, '自信的魔法师'],
+  ['宠物美容师','🐶', 'life', null, '毛孩子的好朋友'],
+  ['空乘人员',  '🛩️', 'life', null, '云端上的微笑'],
+];
+
+/* ============ 状态管理 ============ */
+const KEY_UNLOCKED = 'career101_unlocked';
+const KEY_DONE     = 'career101_done';
+function load(k, d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d; }catch(e){ return d; } }
+function save(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+
+/* 已解锁的职业（今天只点亮 Web 开发，未来的可在这里手动加） */
+const UNLOCKED = ['web-development'];
+/* 每个职业已完成课程的年份集合：{ 'web-development': ['1989','1991',...] } */
+const DONE = load(KEY_DONE, {});
+
+/* ============ 渲染 ============ */
+const CAT_NAME = {
+  tech:'科技', health:'医疗健康', edu:'教育', art:'艺术创意', make:'建造制造',
+  biz:'商业财经', law:'法律公共', sci:'科学探索', media:'媒体传播', life:'生活服务'
 };
-function hasAny(text,arr){ var out=[]; for(var i=0;i<arr.length;i++){ if(text.indexOf(arr[i])>=0) out.push(arr[i]); } return out; }
-function analyze(text){
-  return {
-    words:text.replace(/\s/g,'').length,
-    visual:hasAny(text,W.visual), audio:hasAny(text,W.audio), smell:hasAny(text,W.smell),
-    taste:hasAny(text,W.taste), touch:hasAny(text,W.touch), emotion:hasAny(text,W.emotion),
-    simile:hasAny(text,W.simile), verbs:hasAny(text,W.verbs), nouns:hasAny(text,W.nouns),
-    dialogue:hasAny(text,W.dialogue).length>0,
-    question:text.indexOf('？')>=0||text.indexOf('?')>=0||text.indexOf('吗')>=0||text.indexOf('为什么')>=0||text.indexOf('怎么')>=0,
-    excl:text.indexOf('！')>=0||text.indexOf('!')>=0
-  };
-}
+const gridEl = document.getElementById('grid');
+const catsEl = document.getElementById('cats');
+let activeCat = 'all';
 
-/* ---------- 墨墨离线大脑 ---------- */
-function momoFeedback(text, level){
-  var a=analyze(text), pts=[];
-  if(a.visual.length) pts.push('👁️ 你的文字里有画面：「'+pick(a.visual)+'」……读者眼前一下子就亮了，像在看一部小电影！');
-  if(a.audio.length) pts.push('👂 你写出了声音：「'+pick(a.audio)+'」，耳朵都跟着醒过来啦！');
-  if(a.smell.length||a.taste.length) pts.push('👃 连味道都写出来了（「'+pick(a.smell.concat(a.taste))+'」），你的五感全开！');
-  if(a.touch.length) pts.push('✋ 你写了触感（「'+pick(a.touch)+'」），让人好像真的摸到了一样！');
-  if(a.simile.length) pts.push('✨ 你用上了比喻（「'+pick(a.simile)+'……」），这是想象力在发光！');
-  if(a.emotion.length) pts.push('💗 你写出了真实的情绪（「'+pick(a.emotion)+'」），读到的人心会跟着动。');
-  if(a.dialogue) pts.push('🎭 你让角色开口说话了！有对话的故事，一下子就活了起来。');
-  if(a.question) pts.push('❓ 你会在文字里提问——这是小作家最宝贵的习惯：好奇心！');
-  if(a.excl) pts.push('🔥 感叹号用得很妙，情感一下子冲出来了！');
-  if(a.verbs.length) pts.push('🏃 你的动词选得活（「'+pick(a.verbs)+'」），画面真的在动！');
-  if(a.words<30) pts.push('💪 你已经写出 '+a.words+' 个字了！这是第一步，勇敢的小作家。');
-  else if(a.words<90) pts.push('📏 这关你写了 '+a.words+' 个字，故事的小宇宙已经成型啦！');
-  else pts.push('🚀 '+a.words+' 个字！篇幅已经很丰满，看得出你认真投入了。');
-  while(pts.length<3){ pts.push(pick([
-    '🌟 你愿意把心里的话写下来，这本身就是最珍贵的勇气。',
-    '🖊️ 每写一句，你都在悄悄变成更好的自己。',
-    '🌈 我读到了独属于你的表达，别人模仿不来。',
-    '🌱 写作就像种树，你今天又浇了一次水。',
-    '🎈 你的文字里有你自己的心跳声，真好听。'
-  ])); }
-  return pts.slice(0,3);
-}
-
-function momoQuestion(text, level){
-  var a=analyze(text);
-  var n=a.nouns.length?pick(a.nouns):pick(['那个画面','你的主人公','这件事']);
-  var dom=findDomain(level.domainId);
-  if(dom.id==='nature'){
-    return pick([
-      '你观察到的「'+n+'」，如果再靠近一点点看，还能发现什么别人没注意到的细节？',
-      '如果「'+n+'」会说话，它会怎么介绍自己的一天？',
-      '写完之后，你心里冒出了哪个"为什么"？把它记下来，这会是下一颗灵感种子。'
-    ]);
-  }
-  if(dom.id==='social'){
-    return pick([
-      '如果你是「'+n+'」，听到你写的这些话，TA 心里会是什么感觉？',
-      '这个故事里，有没有一个"如果重来一次"的时刻？你会怎么选？',
-      '你希望读到这个故事的人，心里留下一点什么？'
-    ]);
-  }
-  if(dom.id==='dream'){
-    return pick([
-      '你写的这一段里，哪一句最像"你自己"？为什么喜欢它？',
-      '如果给这段文字配一首歌，会是一首什么样的歌？',
-      '闭上眼睛十秒钟——你还能看到或闻到什么？把它也写进去。'
-    ]);
-  }
-  return pick([
-    '如果让读者一眼就记住「'+n+'」，你会改哪一句？',
-    '这个故事最想"卖"给读者的一个词是什么？',
-    '如果你有 100 次机会修改它，第 100 次你会把哪里改得不一样？'
-  ]);
-}
-
-function momoIdea(level){
-  var dom=findDomain(level.domainId);
-  if(dom.id==='nature'){
-    var s=pick(['一片会散步的云','一棵想学跳舞的树','一只戴着眼镜的蜗牛','半夜醒来的雨','一颗害羞的星星','会讲笑话的小石头','迷路的蒲公英','正在打哈欠的月亮']);
-    return '试试这个开头：「有一天，'+s+'……」然后写下去，看看会发生什么！';
-  }
-  if(dom.id==='social'){
-    var s2=pick(['一个不愿分享橡皮的同桌','楼下新搬来的神秘邻居','一只受伤需要帮忙的小鸟','把最后一块蛋糕让给你的朋友','误会了你又和好的人']);
-    return '灵感火花：写写「'+s2+'」——TA 心里会想什么？如果你能帮上忙，你会怎么做？';
-  }
-  if(dom.id==='dream'){
-    var s3=pick(['一支笔的梦想','风偷偷写给树叶的信','一个只有你知道的秘密','雨滴落下来的那一刻','窗台上发呆的玩具']);
-    return '小诗种子：试着用三行写「'+s3+'」。不用管好不好，先写出来！';
-  }
-  var s4=pick(['一间会出售梦的小店','一台能实现愿望但会讲价的机器','勇敢的小孩发现会说话的星星','一支能把画变成真的画笔']);
-  return '故事点子：如果开一家「'+s4+'」的店/机器，会怎样？给墨墨下个需求，我们一起把开头写出来！';
-}
-
-function momoDraft(req){
-  var hero=pick(['小女孩','小狐狸','会飞的猫','勇敢的狮子','爱画画的男孩','小机器人']);
-  var place=pick(['星星之城','会下糖雨的森林','海底书店','云朵上的学校','时间车站']);
-  var trouble=pick(['丢失了最重要的东西','迷路了','遇到了一个解不开的谜','发现了一个天大的秘密']);
-  var reqBrief=req&&req.trim()?req.trim().slice(0,40):'一个奇妙的故事';
-  return '收到需求：「'+reqBrief+'」\n\nAI 实习生的第一稿来啦：\n\n「'+hero+'住在'+place+'。有一天，TA'+trouble+'……」\n\n现在轮到小主编你啦！请修改它 3 次：\n① 第一次：改得更生动（加画面、加声音）\n② 第二次：改得更紧凑（删掉多余的）\n③ 第三次：加一个惊喜！（谁也没想到的转折）';
-}
-
-function momoBadEnding(text){
-  var a=analyze(text);
-  var who=a.nouns.length?pick(a.nouns):'TA';
-  return pick([
-    '如果继续冷战……\n\n第一天，你和「'+who+'」谁都没说话，像两座安静的小岛。\n第三天，你们擦肩而过，假装没看见。\n一周后，'+who+'开始和别的朋友一起玩，笑声从很远的地方传来。\n你忽然发现，有些话不说出口，就会变成一堵看不见的墙。\n\n——你希望故事停在这里，还是换一个结局？✍️',
-    '让我预演一下"坏结局"：\n\n冷战继续，一天，两天……\n你心里像堵了一块小石头，吃饭都不香了。\n而「'+who+'」那边，也在等你说第一句话。\n两个人都在等，就像两扇都关着的门。\n\n如果你愿意，故事可以在这一句转弯：「那天下午，我终于……」\n你打算怎么写下去？'
-  ]);
-}
-
-function momoFact(level){
-  return level.fact||'观察之后，再查一查原理——这就是科学家的工作方式！';
-}
-
-function momoInvest(text, level){
-  var a=analyze(text);
-  var score=Math.min(100, 60+a.words+ (a.nouns.length?8:0)+(a.emotion.length?8:0));
-  var tips=[];
-  if(a.words<40) tips.push('大纲再具体一点会更棒——主角想要什么？越清楚越好。');
-  if(!a.question) tips.push('故事里可以留一个"悬念"：让读者想知道"然后呢？"');
-  if(a.emotion.length) tips.push('你已经写出了情绪，这是故事打动人心的关键！');
-  if(!tips.length) tips.push('大纲很完整！下一步：给它写一个让人忘不掉的开头。');
-  return '我是投资人墨墨 💰\n\n给你的「'+level.title+'」方案打分：<b style="color:#f28c2e">'+score+' / 100</b> 分\n\n💡 建议：'+tips[0]+'\n\n记住：再好的故事，也要有人"想要"它——这就是你在练习的本领：让好东西被看见！';
-}
-
-/* 提需求训练：按意图匹配（离线版） */
-function momoRequest(msg, level){
-  if(/开头/.test(msg)) return '好嘞，小主编！三个开头供你挑：\n① 用一个声音开头：「嗒、嗒、嗒——」\n② 用一个动作开头：她一把推开门。\n③ 用一个问题开头：你相信星星会说话吗？\n挑一个，再添上你自己的主意！';
-  if(/结尾|结局/.test(msg)) return '结尾的三件套：① 主角的愿望实现了或改变了 ② 留下一个让人回味的画面 ③ 一句话点题。试试：把你想说的那句话，放到最后一句！';
-  if(/人物|主角|角色/.test(msg)) return '给主角加点"味道"：① 一个小习惯（比如紧张时咬嘴唇）② 一个愿望（越具体越好）③ 一个秘密。有这三样，主角就"活"了！';
-  if(/搞笑|好笑|有趣/.test(msg)) return '搞笑秘诀：让事情"出人意料"。比如：一只猫想当海盗，结果晕船；老师布置的作业是"抓一只云"。试试把正常的事，拐一个弯！';
-  if(/难过|悲伤|哭/.test(msg)) return '写难过时，别直接说"我很伤心"。试试写身体：眼泪在眼眶打转、鼻子一酸、声音变小了。让读者自己感觉到难过，才最动人。';
-  if(/冒险/.test(msg)) return '冒险故事三件套：一个目标（找宝藏/回家）+ 一个障碍（桥断了/怪兽挡路）+ 一个帮手（会说话的动物/神秘地图）。现在，把这三样串起来！';
-  if(/魔法|神奇|幻想|奇幻/.test(msg)) return '幻想世界的规则最重要：魔法从哪里来？用了魔法要付出什么代价？规则越清楚，故事越真实。你来定三条规则吧！';
-  if(/夸张|放大/.test(msg)) return '夸张范例：「他的喷嚏，把整条街的伞都吹开了。」夸张=把一件事放大到不可能。挑你文章里的一句，放大十倍试试！';
-  if(/自然|树|花|动物|云|天空/.test(msg)) return '写自然时用"五感"：看颜色、听声音、闻味道、摸温度、尝（如果敢的话）！把五种感觉都写进去，自然就"活"了。';
-  if(/怎么写|不会|帮帮|怎么开始/.test(msg)) return '别急，写不出来的第一步是"乱写"：把脑子里最笨的想法先写下来。等墨墨给你点火之后，我们再用【✨灵感火花】热热身！';
-  return '小主编，你的需求可以更具体哦！试试加上：\n· 主角是谁？\n· 想要什么？\n· 开头/结尾/人物/搞笑/难过……你想要哪种？\n描述得越清楚，我的"实习生"就越能干！💪';
-}
-
-/* 自由聊天（离线版） */
-function momoChatReply(msg){
-  if(/你好|嗨|哈喽|hello|Hi/i.test(msg)) return '你好呀，'+S.name+'！我是墨墨🖋️，你的写作搭档。今天想写点什么吗？';
-  if(/你是谁|你叫什么|介绍/.test(msg)) return '我是墨墨🖋️——住在写作星球上的灵感小精灵！我不会替你把文章写完，但我最会"问你问题、点亮灵感"。想不想试试？';
-  if(/帮我写|替我写|写一篇|写个|代写/.test(msg)) return '哈哈，我知道你有点想偷懒啦😄。不过你的文章，只有你自己写出来才最珍贵！要不我们先点【✨灵感火花】，我来给你点火？';
-  if(/累|不想写|好难|写不出|不会写/.test(msg)) return '嗯，我懂。写作有时候就像爬山，刚开始最累。今天不用写很多，先写三句话就好——我们一步一步来，我陪着你。';
-  if(/为什么/.test(msg)) return '好问题！❓ 好奇心是最棒的写作燃料。去「🌿 自然星域」写一篇观察日记，写完后我会给你讲一个小原理！';
-  if(/谢谢|爱你|真好/.test(msg)) return '不客气呀！你的每一个字，都是送给这个宇宙最好的礼物💝。';
-  if(/害怕|难过|伤心|生气|委屈|哭/.test(msg)) return '你好像有点心事……愿意把这种感觉写下来吗？写下来，它就会变得轻一点。我在这儿听着呢。';
-  if(/开心|高兴|兴奋|今天/.test(msg)) return '哇，听起来你今天有开心的事！快把它写进作品集——开心的回忆，写下来就永远不会丢。';
-  if(/？|吗|呢$/.test(msg)) return '这个问题真好！把它当成你下一篇文章的"种子"吧——先自己想一想，再回来和我聊。';
-  return pick([
-    '我在听呢！你说的这些，能不能变成一个小故事的开头？',
-    '有趣！如果给这句话配一个画面，你会想到什么？',
-    '嗯嗯，然后呢？写下去，我也想知道后面发生什么。',
-    '你知道吗？很多作家最好的灵感，都来自"随便聊聊"的时候。继续说！'
-  ]);
-}
-
-/* ---------- 可选：真·大模型接入 ---------- */
-function callLLM(messages){
-  return new Promise(function(resolve){
-    if(!S.api.enabled || !S.api.key){ resolve(null); return; }
-    var base=String(S.api.base||'').replace(/\/+$/,'');
-    fetch(base+'/chat/completions',{method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+S.api.key},
-      body:JSON.stringify({model:S.api.model||'deepseek-chat', messages:messages, max_tokens:500, temperature:0.85})
-    }).then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); })
-      .then(function(j){ var c=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content; resolve(c||null); })
-      .catch(function(){ resolve(null); });
+function renderCats(){
+  catsEl.innerHTML = '<button class="on" data-c="all">✨ 全部</button>' +
+    CATS.map(([k,n]) => `<button data-c="${k}">${n}</button>`).join('');
+  catsEl.querySelectorAll('button').forEach(b=>{
+    b.onclick = ()=>{ activeCat = b.dataset.c;
+      catsEl.querySelectorAll('button').forEach(x=>x.classList.toggle('on', x===b));
+      renderGrid(); };
   });
 }
-function llmSystem(){
-  return '你是"墨墨"，一个陪伴 10 岁女孩写作的 AI 灵感搭档。规则：永远不要替她完成整篇写作，而是①先表扬 3 个真实的闪光点（引用她写的具体词句）②提出 1 个引导思考的问题 ③语气温柔活泼、多用 emoji、用简体中文、文字简洁有温度。你住在"写作星球"，目标是帮助她成为自然的人、社会的人、精神的人、职业的人。';
-}
 
-/* ---------- 渲染：导航 & 地图 ---------- */
-var currentLevel=null;
-function showScreen(id){
-  var secs=['home','map','collection','growth','settings'];
-  secs.forEach(function(s){ var el=$('#'+s); if(el) el.classList.remove('on'); });
-  var el=$('#'+id); if(el) el.classList.add('on');
-  var btns=$all('#mainNav button');
-  btns.forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-nav')===id); });
-  if(id==='map') renderMap();
-  if(id==='collection') renderCollection();
-  if(id==='growth') renderGrowth();
-  if(id==='settings') renderSettings();
-}
-
-function renderMap(){
-  var html='';
-  DOMAINS.forEach(function(dom){
-    var done=0; dom.levels.forEach(function(lv){ if(S.done[lv.id]) done++; });
-    var all=done===dom.levels.length;
-    html+='<div class="domain-card" style="background:'+dom.grad+'" data-open-domain="'+dom.id+'">'
-      +'<div class="domain-head"><span class="ic">'+dom.icon+'</span>'
-      +'<div class="dt"><b>'+dom.name+'</b><span>'+dom.desc+'</span></div>'
-      +'<div class="badge-mark">'+(all?'🏅':done>0?'⏳':'')+'</div></div>'
-      +'<div class="domain-progress"><div class="pbar"><i style="width:'+(done/dom.levels.length*100)+'%"></i></div>'
-      +'<div class="plabel">'+dom.tag+' · 完成 '+done+' / '+dom.levels.length+' 关</div></div>';
-    dom.levels.forEach(function(lv){
-      var st=S.done[lv.id]?'✅':'▶️';
-      html+='<div class="level-item" data-open-level="'+lv.id+'">'
-        +'<span class="lic">'+lv.icon+'</span>'
-        +'<div class="lt"><b>'+lv.title+'</b><span>'+lv.id.slice(1)+' / '+dom.levels.length+' · '+(S.done[lv.id]?'已完成':'未开始')+'</span></div>'
-        +'<span class="lstate">'+st+'</span></div>';
-    });
-    html+='</div>';
-  });
-  $('#domainList').innerHTML=html;
-}
-
-function renderCollection(){
-  var el=$('#workList');
-  if(!S.works.length){ el.innerHTML='<div class="sub" style="text-align:center;padding:20px 0">还没有作品哦，去冒险地图写第一篇吧！✍️</div>'; return; }
-  var html='';
-  S.works.forEach(function(w,i){
-    html+='<div class="work-item" data-open-work="'+i+'">'
-      +'<b>'+esc(w.title)+'</b>'
-      +'<div class="p">'+esc(w.text.slice(0,46))+'……</div>'
-      +'<div class="meta">'+w.date+' · '+w.words+' 字'+(w.coins?' · +'+w.coins+'⭐':'')+'</div></div>';
-  });
-  el.innerHTML=html;
-}
-
-function renderGrowth(){
-  $('#stCoins').textContent=S.coins;
-  $('#stWords').textContent=S.totalWords;
-  $('#stStreak').textContent=S.streak;
-  var html='';
-  var metas={nature:['🌿 自然的人','好奇与观察'],social:['🤝 社会的人','共情与责任'],dream:['🧘 精神的人','审美与独处'],career:['⚙️ 职业的人','提需求与创造']};
-  DOMAINS.forEach(function(dom){
-    var got=S.badges[dom.id];
-    html+='<div class="badge'+(got?' got':'')+'"><div class="bi">'+(got?dom.icon:'🔒')+'</div>'
-      +'<div class="bn">'+metas[dom.id][0]+'</div><div class="bs">'+(got?'已点亮 🎉':metas[dom.id][1])+'</div></div>';
-  });
-  $('#badgeRow').innerHTML=html;
-}
-
-function renderSettings(){
-  $('#swOffline').classList.toggle('on', !!S.offline);
-  $('#apiBase').value=S.api.base;
-  $('#apiModel').value=S.api.model;
-  $('#apiKey').value=S.api.key||'';
-}
-
-/* ---------- 写作界面 ---------- */
-function openLevel(id){
-  currentLevel=findLevel(id);
-  if(!currentLevel) return;
-  // 自动补齐所属星域
-  for(var i=0;i<DOMAINS.length;i++){
-    if(DOMAINS[i].levels.indexOf(currentLevel)>=0){ currentLevel.domainId=DOMAINS[i].id; break; }
-  }
-  var dom=findDomain(currentLevel.domainId);
-  $('#wTitle').textContent=dom.icon+' '+currentLevel.icon+' '+currentLevel.title;
-  $('#wLevel').textContent=dom.name+' · '+dom.tag;
-  $('#wTask').textContent=currentLevel.task;
-  $('#draft').value='';
-  $('#momoCard').classList.remove('on');
-  $('#btnFinish').style.display='none';
-  $('#btnAgain').style.display='none';
-  updateRevTrack();
-  var c1=id==='c1';
-  $('#btnReq').style.display=c1?'inline-block':'none';
-  $('#draft').placeholder= c1 ? '先点【👑 给AI下需求】给墨墨派活，拿到初稿后再开始修改！' : '在这里开始写吧……墨墨会认真读你写的每一个字 ✍️';
-  updateCount();
-  $('#writingOverlay').classList.add('on');
-  $('#momoText').innerHTML='';
-}
-function closeWriting(){
-  $('#writingOverlay').classList.remove('on');
-  currentLevel=null;
-  renderMap();
-}
-function updateCount(){
-  var n=$('#draft').value.replace(/\s/g,'').length;
-  $('#wCount').textContent=n+' 字';
-}
-function updateRevTrack(){
-  var lv=currentLevel.id;
-  var n=S.revs[lv]||0;
-  if(currentLevel.id==='c1'){
-    $('#revTrack').style.display='flex';
-    var dots=''; for(var i=0;i<3;i++) dots+='<span class="dot'+(i<n?' on':'')+'"></span>';
-    $('#revDots').innerHTML=dots+' <span style="font-size:12px;color:#8a93b8">'+Math.min(n,3)+' / 3</span>';
-  } else $('#revTrack').style.display='none';
-}
-
-function showMomo(textHtml, showFinish, showAgain){
-  $('#momoText').innerHTML=textHtml;
-  $('#btnFinish').style.display=showFinish?'block':'none';
-  $('#btnAgain').style.display=showAgain?'block':'none';
-  $('#momoCard').classList.add('on');
-  $('#momoCard').scrollIntoView({behavior:'smooth', block:'nearest'});
-}
-function loadingHtml(){
-  return '<span class="loading-dots">墨墨正在认真读你的文字<span>.</span><span>.</span><span>.</span></span>';
-}
-
-/* 提交给墨墨 */
-function submitToMomo(){
-  var text=$('#draft').value.trim();
-  if(!text){ showToast('先写一点内容，再交给墨墨吧 ✍️'); return; }
-  var lv=currentLevel;
-  $('#momoText').innerHTML=loadingHtml();
-  $('#momoCard').classList.add('on');
-  var buildHtml=function(fb,q,extra){
-    var h='<span class="glow"><b>💡 墨墨的 3 个闪光点：</b></span>';
-    fb.forEach(function(x){ h+='<span class="glow">'+x+'</span>'; });
-    h+='<span class="glow"><b>🤔 墨墨想问你：</b><br>'+q+'</span>';
-    if(extra) h+=extra;
-    return h;
-  };
-  if(S.api.enabled){
-    callLLM([
-      {role:'system', content:llmSystem()},
-      {role:'user', content:'我的名字是'+S.name+'。这是我在「'+findDomain(lv.domainId).name+'」写的作品：\n\n'+text+'\n\n请按你的规则给我反馈。'}
-    ]).then(function(ai){
-      if(ai){ showMomo(esc(ai).replace(/\n/g,'<br>'), true, true); return; }
-      fallbackMomo(text, lv, buildHtml);
-    });
-  } else {
-    fallbackMomo(text, lv, buildHtml);
-  }
-}
-function fallbackMomo(text, lv, buildHtml){
-  var fb=momoFeedback(text, lv);
-  var q=momoQuestion(text, lv);
-  var extra='';
-  if(lv.domainId==='nature') extra='<span class="glow"><b>🔬 先做后查·小原理：</b><br>'+momoFact(lv)+'</span>';
-  if(lv.id==='s3') extra='<span class="glow"><b>🔮 让墨墨预演坏结局：</b><br>'+momoBadEnding(text)+'</span>';
-  if(lv.id==='c2') extra='<span class="glow">'+momoInvest(text, lv)+'</span>';
-  showMomo(buildHtml(fb,q,extra), true, true);
-}
-/* 完成流程：保存作品、发奖励、点亮徽章；返回是否首次完成 */
-function finishFlow(text){
-  var lv=currentLevel;
-  var dom=findDomain(lv.domainId);
-  if(!S.done[lv.id]){
-    var now=todayStr();
-    var todayCount=S.totalWords||0;
-    S.works.push({id:lv.id, title:dom.icon+' '+lv.title, text:text, words:text.replace(/\s/g,'').length, date:now, coins:10});
-    S.done[lv.id]=true;
-    S.coins+=10;
-    S.totalWords+=text.replace(/\s/g,'').length;
-    if(S.lastDate!==now){ S.streak=(S.lastDate && daysBetween(S.lastDate,now)===1)?(S.streak||0)+1:1; S.lastDate=now; }
-    checkBadge(dom);
-    save();
-    renderMap();
-    return true;
-  } else {
-    // 已完成的关：只更新作品，发少量追加奖励
-    S.works.push({id:lv.id, title:dom.icon+' '+lv.title+' (再写)', text:text, words:text.replace(/\s/g,'').length, date:todayStr(), coins:5});
-    S.coins+=5;
-    S.totalWords+=text.replace(/\s/g,'').length;
-    save();
-    return false;
-  }
-}
-function daysBetween(a,b){
-  var da=new Date(a), db=new Date(b);
-  return Math.round((db-da)/86400000);
-}
-function checkBadge(dom){
-  var all=dom.levels.every(function(lv){ return !!S.done[lv.id]; });
-  if(all && !S.badges[dom.id]){
-    S.badges[dom.id]=true;
-    S.coins+=50;
-    save();
-    var metas={nature:['🌿','你点亮了「自然的人」徽章！'],social:['🤝','你点亮了「社会的人」徽章！'],dream:['🧘','你点亮了「精神的人」徽章！'],career:['⚙️','你点亮了「职业的人」徽章！']};
-    showCelebrate(metas[dom.id][0], metas[dom.id][1], '好奇心、共情、审美与创造——你正在长成最完整的人！');
-    checkAll();
-  }
-}
-function checkAll(){
-  var all=['nature','social','dream','career'].every(function(k){ return S.badges[k]; });
-  if(all){
-    setTimeout(function(){
-      showCelebrate('🏆','四种人 · 全徽章！','你集齐了 🌿🤝🧘⚙️ 四枚徽章，成为「写作星球」最闪亮的小作家！桌子的四条腿，你都稳稳地站住了。');
-    },2600);
-  }
-}
-function showCelebrate(icon,title,text){
-  $('#celIcon').textContent=icon;
-  $('#celTitle').textContent=title;
-  $('#celText').textContent=text;
-  $('#celebrate').classList.add('on');
-}
-
-/* ---------- 聊天 ---------- */
-function openChat(){
-  $('#chatBody').innerHTML='';
-  S.chat.forEach(function(m){ addMsg(m.who, m.text, false); });
-  if(!S.chat.length){
-    addMsg('momo','你好呀，'+S.name+'！我是墨墨🖋️。有什么想聊的？或者，直接说"给我个灵感"！', false);
-  }
-  $('#chatOverlay').classList.add('on');
-  setTimeout(function(){ $('#chatInput').focus(); },300);
-}
-function addMsg(who, text, store){
-  var body=$('#chatBody');
-  var div=document.createElement('div');
-  div.className='msg '+(who==='me'?'mine':'momo');
-  div.innerHTML=(who==='me'?'':'<div class="mini"></div>')
-    +'<div class="bubble">'+esc(text)+'</div>';
-  body.appendChild(div);
-  body.scrollTop=body.scrollHeight;
-  if(store){
-    S.chat.push({who:who, text:text});
-    if(S.chat.length>60) S.chat.shift();
-    save();
-  }
-}
-function sendChat(){
-  var inp=$('#chatInput');
-  var msg=inp.value.trim();
-  if(!msg) return;
-  inp.value='';
-  addMsg('me', msg, true);
-  if(S.api.enabled){
-    addMsg('momo','墨墨在想…', false);
-    callLLM([
-      {role:'system', content:llmSystem()},
-      {role:'user', content:'（这是聊天，不是交作业）'+S.name+'对我说：「'+msg+'」，请像朋友一样回应，简洁、温暖、有引导性。'}
-    ]).then(function(ai){
-      var body=$('#chatBody'); if(body.lastChild) body.removeChild(body.lastChild);
-      addMsg('momo', ai||momoChatReply(msg), true);
-    });
-  } else {
-    addMsg('momo', momoChatReply(msg), true);
-  }
-}
-
-/* ---------- 事件绑定 ---------- */
-function bindEvents(){
-  $('#mainNav').addEventListener('click', function(e){
-    var b=e.target.closest('button'); if(!b) return;
-    var nav=b.getAttribute('data-nav');
-    if(nav==='education'){ location.href='guide.html'; return; }
-    showScreen(nav);
-  });
-  $('#btnStart').addEventListener('click', function(){
-    var name=$('#playerName').value.trim()||'小作家';
-    S.name=name; save();
-    $('#home').classList.remove('on');
-    showScreen('map');
-    showToast('欢迎登船，'+name+'！🚀');
-  });
-  $('#playerName').addEventListener('keydown', function(e){ if(e.key==='Enter') $('#btnStart').click(); });
-
-  document.addEventListener('click', function(e){
-    var lv=e.target.closest('[data-open-level]');
-    if(lv){ openLevel(lv.getAttribute('data-open-level')); return; }
-    var wk=e.target.closest('[data-open-work]');
-    if(wk){ openWork(parseInt(wk.getAttribute('data-open-work'),10)); return; }
-    var d=e.target.closest('[data-open-domain]');
-    if(d){ e.stopPropagation(); return; }
-  });
-
-  $('#wBack').addEventListener('click', closeWriting);
-  $('#draft').addEventListener('input', updateCount);
-
-  $('#btnIdea').addEventListener('click', function(){
-    if(!currentLevel) return;
-    var idea=momoIdea(currentLevel);
-    showMomo('<span class="glow"><b>✨ 灵感火花（来自墨墨）：</b><br>'+idea+'</span>', false, false);
-  });
-
-  $('#btnSubmit').addEventListener('click', submitToMomo);
-
-  $('#btnReq').addEventListener('click', function(){
-    if(!currentLevel) return;
-    var req=$('#draft').value.trim()||'一个奇妙的故事';
-    $('#momoText').innerHTML=loadingHtml();
-    $('#momoCard').classList.add('on');
-    if(S.api.enabled){
-      callLLM([
-        {role:'system', content:'你是墨墨，一位被小主编派活的"AI实习生"。她给你下写作需求，请按需求产出一个短小的开头（80字以内），然后请她修改3次。用简体中文。'},
-        {role:'user', content:'我的需求是：「'+req+'」'}
-      ]).then(function(ai){
-        if(ai){ showMomo(esc(ai).replace(/\n/g,'<br>'), false, false); return; }
-        showMomo(esc(momoDraft(req)).replace(/\n/g,'<br>'), false, false);
-      });
-    } else {
-      showMomo(esc(momoDraft(req)).replace(/\n/g,'<br>'), false, false);
+function renderGrid(){
+  const jobs = activeCat==='all' ? JOBS : JOBS.filter(j=>j[2]===activeCat);
+  gridEl.innerHTML = jobs.map(j=>{
+    const [name, emoji, cat, page, desc] = j;
+    const lit = page && UNLOCKED.includes(page);
+    if(lit){
+      return `<div class="job lit" data-page="${page}" title="${desc}">
+        <span class="badge">✨ 已点亮</span>
+        <span class="ic">${emoji}</span>
+        <span class="nm">${name}</span>
+        <span class="cat-tag">${CAT_NAME[cat]}</span>
+      </div>`;
     }
-  });
+    return `<div class="job lock" data-name="${name}" title="未解锁">
+        <span class="lock-ic">🔒</span>
+        <span class="ic">${emoji}</span>
+        <span class="nm">${name}</span>
+        <span class="cat-tag">${CAT_NAME[cat]}</span>
+      </div>`;
+  }).join('');
 
-  $('#btnFinish').addEventListener('click', function(){
-    if(!currentLevel) return;
-    if(currentLevel.id==='c1'){
-      var n=S.revs[currentLevel.id]||0;
-      if(n<3){ showToast('别急！先把 AI 的初稿修改满 3 次哦 ✏️'); return; }
-    }
-    var text=$('#draft').value.trim();
-    if(!text){ showToast('先把你的作品写好再完成哦 ✍️'); return; }
-    var isNew=finishFlow(text);
-    showToast(isNew?'🎉 太棒了，过关啦！':'✍️ 已更新到作品集！');
-    renderGrowth();
-    closeWriting();
+  gridEl.querySelectorAll('.job.lit').forEach(el=>{
+    el.onclick = ()=>{ location.href = 'careers/' + el.dataset.page + '.html'; };
   });
-
-  $('#btnAgain').addEventListener('click', function(){
-    if(!currentLevel) return;
-    if(currentLevel.id==='c1'){
-      S.revs[currentLevel.id]=(S.revs[currentLevel.id]||0)+1;
-      updateRevTrack();
-      showToast('第 '+(S.revs[currentLevel.id])+' 次修改完成，继续打磨！');
-      save();
-    }
-    $('#momoCard').classList.remove('on');
-    $('#draft').focus();
-  });
-
-  $('#btnChat').addEventListener('click', openChat);
-  $('#cBack').addEventListener('click', function(){ $('#chatOverlay').classList.remove('on'); });
-  $('#btnSend').addEventListener('click', sendChat);
-  $('#chatInput').addEventListener('keydown', function(e){ if(e.key==='Enter') sendChat(); });
-
-  $('#swOffline').addEventListener('click', function(){
-    S.offline=!S.offline; save(); renderSettings();
-    showToast(S.offline?'离线 AI 引擎已开启':'已关闭（不推荐，离线引擎是默认体验）');
-  });
-  $('#btnSaveApi').addEventListener('click', function(){
-    S.api.base=$('#apiBase').value.trim();
-    S.api.model=$('#apiModel').value.trim();
-    S.api.key=$('#apiKey').value.trim();
-    S.api.enabled=!!S.api.key;
-    save();
-    showToast(S.api.enabled?'已开启真·大模型模式 🤖✨':'已保存（未填 Key，继续用离线引擎）');
-  });
-
-  $('#celBtn').addEventListener('click', function(){
-    $('#celebrate').classList.remove('on');
-    renderMap(); renderGrowth();
+  gridEl.querySelectorAll('.job.lock').forEach(el=>{
+    el.onclick = ()=> toast(`🔒「${el.dataset.name}」还没点亮，先完成已点亮的职业再回来吧！`);
   });
 }
 
-function openWork(idx){
-  var w=S.works[idx]; if(!w) return;
-  var lv=findLevel(w.id); if(!lv) return;
-  openLevel(w.id);
-  $('#draft').value=w.text;
-  updateCount();
+/* Toast */
+let toastTimer;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2400);
 }
 
-/* ---------- 初始化 ---------- */
-function init(){
-  load();
-  if(S.name) $('#playerName').value=S.name;
-  if(S.name) showScreen('map'); // 有名字直接进地图
-  bindEvents();
-  renderGrowth();
-}
-document.addEventListener('DOMContentLoaded', init);
+/* 进度 */
+document.getElementById('pnum').textContent = `已点亮 ${UNLOCKED.length} / 101`;
+document.getElementById('pbar').style.width = (UNLOCKED.length/101*100) + '%';
+document.getElementById('today').textContent = new Date().toLocaleDateString('zh-CN', {month:'long', day:'numeric'});
+
+renderCats();
+renderGrid();
 </script>
 </body>
 </html>

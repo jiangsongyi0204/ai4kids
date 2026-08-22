@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web 开发 · 时间轴课程</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { height:100%; }
+  body {
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:linear-gradient(170deg,#0f2a4a 0%,#144a6e 40%,#1d3d7a 100%);
+    color:#2b2f4a; min-height:100%; overflow-x:hidden;
+  }
+  .bg { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .stars { position:absolute; inset:0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20% 30%, #fff, transparent),
+      radial-gradient(1px 1px at 70% 15%, #fff, transparent),
+      radial-gradient(2px 2px at 40% 70%, #ffe9a8, transparent),
+      radial-gradient(1px 1px at 85% 55%, #fff, transparent),
+      radial-gradient(1px 1px at 55% 40%, #fff, transparent);
+    animation:twinkle 4s ease-in-out infinite alternate; }
+  @keyframes twinkle { from{opacity:.35} to{opacity:1} }
+
+  #app { position:relative; z-index:1; max-width:820px; margin:0 auto; padding:12px 14px 90px; }
+
+  /* 顶栏 */
+  .topbar { display:flex; align-items:center; gap:10px;
+    background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.16);
+    backdrop-filter:blur(8px); border-radius:22px; padding:10px 14px; margin-bottom:14px;
+    position:sticky; top:10px; z-index:10; }
+  .back { background:rgba(255,255,255,.14); border:none; color:#fff; font-size:13px; font-weight:700;
+    padding:8px 12px; border-radius:16px; cursor:pointer; transition:.15s; }
+  .back:active { transform:scale(.95); }
+  .topbar .t { flex:1; color:#fff; font-weight:800; font-size:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .topbar .pr { color:#ffd76a; font-size:12px; font-weight:700; white-space:nowrap; }
+
+  /* 职业 Hero */
+  .hero { text-align:center; padding:22px 10px 8px; }
+  .hero .big { font-size:84px; display:inline-block; animation:float 3.4s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  .hero h1 { color:#fff; font-size:28px; margin:8px 0 6px; }
+  .hero .tagline { color:#bfe0ff; font-size:15px; }
+  .hero .meta { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:14px; }
+  .chip { background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); color:#fff;
+    font-size:12px; font-weight:700; padding:6px 12px; border-radius:30px; }
+
+  /* 通用卡片 */
+  .card { background:#fff; border-radius:24px; padding:18px; box-shadow:0 14px 34px rgba(0,0,0,.25);
+    margin:14px 0; }
+  .card h3 { font-size:16px; color:#1c2150; margin-bottom:8px; }
+  .card p { font-size:14px; line-height:1.8; color:#4a507a; }
+
+  /* 时间轴 */
+  .tl { position:relative; margin-top:8px; padding-bottom:10px; }
+  .tl::before { content:''; position:absolute; left:26px; top:8px; bottom:8px; width:4px;
+    background:linear-gradient(180deg,#ffd76a,#ff9ad5,#7c8bff); border-radius:4px; opacity:.85; }
+  .node { position:relative; padding-left:64px; margin-bottom:16px; }
+  .node .dot { position:absolute; left:12px; top:14px; width:32px; height:32px; border-radius:50%;
+    background:#fff; border:3px solid #7c8bff; display:flex; align-items:center; justify-content:center;
+    font-size:16px; z-index:1; box-shadow:0 4px 10px rgba(0,0,0,.15); }
+  .node .ncard { background:#fff; border-radius:20px; padding:14px 16px; cursor:pointer;
+    box-shadow:0 10px 24px rgba(0,0,0,.2); border:3px solid transparent; transition:.18s; }
+  .node .ncard:active { transform:scale(.98); }
+  .node .ncard.done { border-color:#4cd07d; }
+  .node .ncard.cur  { border-color:#ffd76a; }
+  .node .year { display:inline-block; background:linear-gradient(135deg,#7c8bff,#5a6bff); color:#fff;
+    font-size:12px; font-weight:800; padding:3px 10px; border-radius:20px; margin-bottom:6px; }
+  .node .row { display:flex; align-items:center; gap:8px; }
+  .node .row .em { font-size:26px; }
+  .node .row .tt { flex:1; }
+  .node .row .tt b { font-size:16px; color:#1c2150; display:block; }
+  .node .row .tt span { font-size:12px; color:#8a93b8; }
+  .node .state { font-size:15px; }
+  .node .ncard.done .state::after { content:'完成'; font-size:10px; color:#fff; background:#4cd07d;
+    border-radius:12px; padding:2px 7px; margin-left:4px; font-weight:700; vertical-align:middle; }
+
+  /* 课程弹层 */
+  #modal { position:fixed; inset:0; z-index:30; background:rgba(15,22,45,.75); backdrop-filter:blur(6px);
+    display:none; align-items:flex-start; justify-content:center; overflow-y:auto; padding:18px 10px 60px; }
+  #modal.open { display:flex; }
+  .lesson { background:#fff; border-radius:26px; max-width:640px; width:100%; padding:22px 20px 20px;
+    animation:up .35s ease; }
+  @keyframes up { from{opacity:0; transform:translateY(24px)} to{opacity:1; transform:none} }
+  .lesson .l-head { text-align:center; margin-bottom:14px; }
+  .lesson .l-head .lemo { font-size:60px; display:block; }
+  .lesson .l-head .lyear { display:inline-block; background:linear-gradient(135deg,#7c8bff,#5a6bff);
+    color:#fff; font-size:12px; font-weight:800; padding:3px 12px; border-radius:20px; }
+  .lesson .l-head h2 { font-size:22px; color:#1c2150; margin:6px 0 2px; }
+  .lesson .l-head .ltag { font-size:13px; color:#8a93b8; }
+  .sec { border-radius:18px; padding:14px 16px; margin-top:12px; }
+  .sec h4 { font-size:14px; font-weight:800; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+  .sec p, .sec li { font-size:14px; line-height:1.85; color:#4a507a; }
+  .sec.story { background:#fff7e0; } .sec.story h4 { color:#b97800; }
+  .sec.teach { background:#eaf2ff; } .sec.teach h4 { color:#3a5bb0; }
+  .sec.act   { background:#eafff2; } .sec.act h4 { color:#1d9e5c; }
+  .sec.act ol { padding-left:20px; }
+  .sec.act li { margin:4px 0; }
+  .sec.think { background:#f6efff; } .sec.think h4 { color:#7a3fbf; }
+  .sec.quiz { background:#fff0f5; } .sec.quiz h4 { color:#c44a8f; }
+  .quiz-q { font-size:15px; font-weight:700; color:#3a3f6e; margin-bottom:10px; line-height:1.7; }
+  .opt { display:block; width:100%; text-align:left; background:#fff; border:2px solid #e6e0e8;
+    border-radius:14px; padding:10px 14px; margin-top:8px; font-size:14px; color:#4a507a; cursor:pointer;
+    transition:.15s; font-family:inherit; }
+  .opt:hover { border-color:#c44a8f; }
+  .opt.right { border-color:#4cd07d; background:#eafff2; color:#177a45; font-weight:700; }
+  .opt.wrong { border-color:#ff6b6b; background:#ffeaea; color:#b03333; }
+  .opt:disabled { cursor:default; }
+  .quiz-fb { display:none; margin-top:10px; font-size:13px; line-height:1.7; border-radius:12px;
+    padding:10px 12px; }
+  .quiz-fb.show { display:block; }
+  .quiz-fb.ok { background:#eafff2; color:#177a45; }
+  .quiz-fb.no { background:#ffeaea; color:#b03333; }
+
+  .l-nav { display:flex; gap:10px; margin-top:16px; }
+  .l-nav button { flex:1; border:none; border-radius:16px; padding:13px; font-size:15px; font-weight:800;
+    cursor:pointer; transition:.15s; }
+  .l-nav button:active { transform:scale(.97); }
+  .btn-next { background:linear-gradient(135deg,#7c8bff,#5a6bff); color:#fff; }
+  .btn-prev { background:#eef0f7; color:#5a607a; }
+  .btn-next.done { background:linear-gradient(135deg,#4cd07d,#1d9e5c); }
+  .l-close { position:absolute; top:18px; right:18px; background:rgba(255,255,255,.2); border:none;
+    color:#fff; font-size:13px; padding:8px 12px; border-radius:14px; cursor:pointer; }
+
+  .foot { text-align:center; color:#9ab4d8; font-size:12px; margin-top:22px; line-height:1.8; }
+  #toast { position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(20px);
+    background:rgba(30,26,66,.95); color:#fff; padding:12px 20px; border-radius:30px; font-size:13px;
+    font-weight:600; z-index:99; opacity:0; pointer-events:none; transition:.3s; max-width:86vw; text-align:center; }
+  #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+  @media (min-width:720px){
+    .tl::before { left:50%; margin-left:-2px; }
+    .node { width:50%; padding-left:0; }
+    .node:nth-child(odd){ left:0; padding-right:40px; text-align:right; }
+    .node:nth-child(even){ left:50%; padding-left:40px; }
+    .node .dot { left:auto; right:-16px; top:14px; }
+    .node:nth-child(even) .dot { left:-16px; right:auto; }
+    .node .row { justify-content:flex-start; }
+    .node:nth-child(odd) .row { justify-content:flex-end; }
+    .node:nth-child(odd) .ncard .state::after { margin-left:0; margin-right:4px; }
+  }
+</style>
+</head>
+<body>
+<div class="bg"><div class="stars"></div></div>
+
+<div id="app">
+  <header class="topbar">
+    <button class="back" onclick="location.href='../index.html'">← 返回宇宙</button>
+    <span class="t">🖥️ Web 开发 · 时间轴课程</span>
+    <span class="pr" id="pr"></span>
+  </header>
+
+  <section class="hero">
+    <span class="big">🖥️</span>
+    <h1>Web 开发工程师</h1>
+    <p class="tagline">用一行行代码，搭建看得见的魔法世界</p>
+    <div class="meta">
+      <span class="chip">📅 诞生 1989</span>
+      <span class="chip">🎓 16 堂课</span>
+      <span class="chip">⚡ 难度 ★★☆</span>
+    </div>
+  </section>
+
+  <div class="card">
+    <h3>🧐 这个职业是做什么的？</h3>
+    <p>你每天看的网站、玩的网页游戏、点的在线视频，都是 <b>Web 开发工程师</b> 用代码搭出来的！他们像「网页魔法师」，负责让一个个网站从无到有、又好用又漂亮。现在，让我们一起钻进时间隧道，从 1989 年它「出生」那天开始，一堂堂学懂这门魔法！</p>
+  </div>
+
+  <div class="card">
+    <h3>🛰️ 时间隧道 · 从诞生到今天</h3>
+    <p style="font-size:13px;color:#8a93b8;">沿着时间轴往下走，每一个节点就是<b>一堂课</b>。点开它，就能学到那个年代 Web 开发的大魔法！学完一堂，节点会变绿 🌱。</p>
+    <div class="tl" id="tl"></div>
+  </div>
+
+  <div class="foot">🎉 全部学完 16 堂课，你就点亮了「Web 开发」这颗职业星球！<br>进度只保存在本机浏览器。</div>
+</div>
+
+<!-- 课程弹层 -->
+<div id="modal">
+  <button class="l-close" onclick="closeLesson()">✕ 关闭</button>
+  <div class="lesson" id="lesson"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* =====================================================
+   Web 开发 · 时间轴课程数据
+   每堂课：故事（story）→ 知识（teach）→ 动手（activity）
+            → 小测试（quiz）→ 思考（think）
+===================================================== */
+const COURSES = [
+{
+  year:'1989', emoji:'🌐', title:'万维网的诞生', tag:'一切的开始',
+  brief:'蒂姆叔叔用三件宝贝，让全世界连成一张大网',
+  story:'在英国 CERN 实验室，有一位头发乱蓬蓬的科学家蒂姆·伯纳斯-李（Tim Berners-Lee）。他有个烦恼：实验室里几千位科学家，每个人的电脑里都有重要资料，可互相之间谁也看不到谁。于是他想：如果我用一种「魔法链接」把这些电脑连成一张大网，让大家一点就能看到别人的资料，该多好啊！1989 年，他把这个想法写成了方案——万维网（World Wide Web）就这样诞生了！',
+  teach:'「万维网」和「互联网」不是一回事哦！互联网像一条条「公路」，连接着全世界的电脑；万维网是建在这些公路上的一座座「房子」——也就是我们说的网站。想进这些房子，需要三件宝贝：<br>📄 <b>HTML</b>——房子的图纸和内容；<br>🔗 <b>URL</b>——房子的门牌地址；<br>🚚 <b>HTTP</b>——快递员，负责把内容送到你眼前。<br>这三样东西，就是整个 Web 世界的地基！',
+  activity:{title:'动手：画一张「我的网页图纸」', steps:[
+    '拿出一张纸，画出你想象中的网页：标题、文字、图片框各放哪里？',
+    '用标签给它们「盖章」：标题写 &lt;h1&gt;，段落写 &lt;p&gt;，图片框写 &lt;img&gt;，链接写 &lt;a&gt;。',
+    '像最早的 HTML 那样，只画「图纸」，不着急真的做出来——先当一天小设计师！']},
+  quiz:{q:'万维网（WWW）到底是什么？', options:[
+    '一种交通工具','建在互联网上的「网站之网」','一种游戏','一台很大的电脑'], answer:1,
+    explain:'万维网是「建在互联网上的网站之网」，用 HTML、URL、HTTP 三件宝贝组成。'},
+  think:'如果没有「网址」，我们该怎么找到想看的网页呢？你每天上网，用的哪件宝贝最多？'
+},
+{
+  year:'1991', emoji:'📄', title:'第一个网页上线', tag:'第一颗种子',
+  brief:'世界上第一个网站正式上线，只有文字，却震惊世界',
+  story:'1991 年 8 月 6 日，世界上第一个网站正式上线啦！它的地址是 info.cern.ch。这个网站非常简单，就是介绍「万维网是什么、怎么用」。在今天看起来普普通通的页面，在当时可是震惊世界的奇迹！如今全世界有几十亿个网页，全都是从这一个「小种子」长出来的。',
+  teach:'网页是用 <b>HTML</b> 写的。HTML 就像搭积木：&lt;标题&gt;、&lt;段落&gt;、&lt;链接&gt; 这些「积木」拼在一起，就组成一个网页。最早的网页只有文字，像一页没有图画的书。HTML 的全名是 HyperText Markup Language，中文叫「超文本标记语言」——记住「标记语言 = 搭网页的积木」就好啦！',
+  activity:{title:'动手：写出你的第一个网页', steps:[
+    '打开电脑的「记事本」，新建一个文件。',
+    '敲入三行字：&lt;h1&gt;你好，世界！&lt;/h1&gt; 和 &lt;p&gt;这是我写的第一个网页&lt;/p&gt;。',
+    '把文件保存为 mypage.html，双击用浏览器打开——哇，这就是网页！']},
+  quiz:{q:'世界上第一个网站是由谁制作的？', options:[
+    '比尔·盖茨','蒂姆·伯纳斯-李','乔布斯','埃隆·马斯克'], answer:1,
+    explain:'第一个网站由蒂姆·伯纳斯-李在 CERN 制作，1991 年上线。'},
+  think:'几十亿个网页都从第一个网页开始，这告诉你一个什么道理？（提示：伟大的事情往往从小小的开始）'
+},
+{
+  year:'1993', emoji:'🧭', title:'浏览器出现了', tag:'上网变简单',
+  brief:'Mosaic 让网页第一次变漂亮，从此人人会上网',
+  story:'最早的网页可难看了，黑底白字，还只能在特定电脑上看。1993 年，美国伊利诺伊大学的几个学生做了一个叫 Mosaic 的「窗口」，让网页第一次有了漂亮的图标和图片。后来 Netscape（网景）浏览器，让「上网」变得人人都会。你猜怎么着？我们现在用的 Chrome、Safari、Edge，都是这些「老前辈」的后代！',
+  teach:'浏览器是你的<b>魔法望远镜</b>，专门帮你看懂网页。你在地址栏输入网址，浏览器就派出「快递员」（HTTP）去取回网页内容，再把 HTML「积木」翻译成漂亮的画面给你看。所以「打开网页」这个动作，其实是浏览器在帮你完成一次「翻译」！',
+  activity:{title:'动手：认识你的浏览器', steps:[
+    '打开你常用的浏览器，数一数工具栏上有哪些按钮？',
+    '点一下「刷新」「返回」「前进」，看看它们分别让网页发生了什么变化？',
+    '在地址栏敲一个新网址，观察浏览器是怎么「出发取件」的。']},
+  quiz:{q:'浏览器最主要的工作是？', options:[
+    '造电脑','把网页「翻译」成我们能看的画面','储存文件','玩游戏'], answer:1,
+    explain:'浏览器负责把 HTML 等网页代码翻译成漂亮的画面，就像「魔法望远镜」。'},
+  think:'如果没有浏览器，我们上网会是什么样子？为什么说浏览器让互联网走进了千家万户？'
+},
+{
+  year:'1994', emoji:'🛒', title:'域名与第一次网购', tag:'网址和商店',
+  brief:'好记的网址诞生，全世界第一笔网上购物成交',
+  story:'网页越来越多，大家发现需要好记的「门牌号」。1994 年，人们开始普及<b>域名系统（DNS）</b>：不用再记一串难懂的 IP 数字（比如 93.184.216.34），只要记住好听的 www.example.com 就行。同一年，世界上第一笔网络购物成交了——有人用信用卡在线买了一张 CD！网上商店的时代开始啦。',
+  teach:'每个网站都有两个地址：一个是像「真名」一样的 <b>IP 地址</b>（一串数字），一个是像「外号」一样的 <b>域名</b>（好记的单词）。DNS 就像一本巨大的「电话簿」，负责把外号翻译成真名。域名后面的 .com、.cn、.org 叫「后缀」，就像门牌号的省份。记住了吗？上淘宝 = 记外号，DNS = 帮你找到真名！',
+  activity:{title:'动手：当一次「域名侦探」', steps:[
+    '观察你常去的 3 个网站，把它们的域名写在纸上。',
+    '数一数每个域名的后缀是什么（.com？.cn？.org？），猜猜它们分别代表什么。',
+    '想一想：哪个域名最好记？为什么？']},
+  quiz:{q:'网址 www.example.com 中的 .com 是什么？', options:[
+    '网站的名字','域名的后缀','一种浏览器','登录密码'], answer:1,
+    explain:'.com 是域名的后缀，就像门牌号上的「省份」，表示网站的类型。'},
+  think:'为什么我们要用好记的域名，而不是直接记 IP 数字？如果 DNS 电话簿坏了会怎样？'
+},
+{
+  year:'1995', emoji:'⚡', title:'JavaScript 诞生', tag:'网页变「活」',
+  brief:'天才用 10 天造出编程语言，网页从此会「动」',
+  story:'1995 年，网景公司请来一位天才程序员 Brendan Eich。他居然只用了 <b>10 天</b>，就创造了一门全新的编程语言——JavaScript！从此以后，网页不再是一张「死」的纸，它能和你聊天、弹窗、动起来。你点的按钮、玩的游戏、看的轮播图，背后都有 JavaScript 在悄悄工作。',
+  teach:'如果把网页比作一个人：<br>🦴 <b>HTML</b> 是身体骨架，<br>🎨 <b>CSS</b> 是衣服和妆容，<br>🧠 <b>JavaScript</b> 是大脑和动作！<br>它让网页能「听懂」你：你点击、滑动、输入，它立刻做出反应。JavaScript 和 Java 可不是一回事哦——JavaScript 是网页的「大脑」，跟 Java 这门编程语言没什么血缘关系，只是名字像而已！',
+  activity:{title:'动手：让网页跟你打招呼', steps:[
+    '用浏览器打开任意一个网页，按 F12 打开「开发者工具」。',
+    '点上面的 Console（控制台）标签。',
+    '输入 alert(\'你好，我是 JavaScript！\') 按回车，看看网页发生了什么！']},
+  quiz:{q:'JavaScript 让网页获得了什么新本领？', options:[
+    '能打印文件','能「动」起来、和人互动','能烧热水','能开车'], answer:1,
+    explain:'JavaScript 是网页的「大脑」，让网页能响应点击、输入，动起来。'},
+  think:'你平时见过哪些「动」起来的网页效果？它们背后很可能都用到了 JavaScript 哦。'
+},
+{
+  year:'1995', emoji:'🗄️', title:'前端与后端', tag:'点菜与厨房',
+  brief:'网站学会「记住你」，分成看得见的前端和藏起来的后端',
+  story:'网页越来越热闹，光会「展示」不够了，还得会「存储」。1995 年前后，PHP 语言和 MySQL 数据库诞生了。网站开始能记住你的登录名、购物车和留言。这形成了网站的两个重要部分：你眼睛看到的叫<b>前端</b>，藏在服务器里管数据的叫<b>后端</b>。',
+  teach:'把网站想成一家餐厅：<br>🍽️ <b>前端</b> 是「点菜的菜单和餐桌」，你直接看到、点击；<br>👨‍🍳 <b>后端</b> 是「厨房和仓库」，负责处理数据和存储。<br>你点一下「登录」按钮，就像向厨房下了一单，厨房查完数据库，把结果送回来。前端和后端，是一对永远互相配合的好搭档！',
+  activity:{title:'动手：玩一次「餐厅点单」游戏', steps:[
+    '和爸爸妈妈分工：一人当「点菜员」（前端），一人当「厨房」（后端）。',
+    '点菜员喊「我要一份红烧肉！」（相当于点按钮）。',
+    '厨房查查「冰箱」（数据库），回答「有的！」并把菜端出来（返回结果）。',
+    '换角色再来一次，感受前端和后端的分工！']},
+  quiz:{q:'网站中的「后端」主要负责什么？', options:[
+    '展示好看的界面','处理和存储数据','播放背景音乐','画可爱的图标'], answer:1,
+    explain:'后端像厨房和仓库，负责处理数据、存取信息。',
+  },
+  think:'为什么购物网站能记住「你买过什么」？这些数据存在哪里？是谁在管理它们？'
+},
+{
+  year:'1998', emoji:'🔍', title:'Google 与搜索', tag:'大海捞针',
+  brief:'两个学生做了一个搜索引擎，让全世界「找得到」',
+  story:'网站越来越多，大家迷路了！1998 年，两个斯坦福大学的博士生拉里和谢尔盖创立了 Google。他们的「搜索引擎」像一张超级大网，爬遍全世界的网页，编成一本巨大的「目录书」。从此，想找什么，输入几个字，「叮」一下就能找到。',
+  teach:'搜索引擎的工作分三步：<br>① <b>爬取</b>——「蜘蛛程序」把网页内容搬回来；<br>② <b>索引</b>——像图书馆给每本书编目录；<br>③ <b>排名</b>——按「谁最有用」排好给你看。<br>排在前面的大多是<b>最相关、最受信任</b>的网页。下次搜索时，你能看出它为什么排前面吗？',
+  activity:{title:'动手：当一次「搜索裁判」', steps:[
+    '想一个你好奇的问题（比如「为什么天空是蓝色的？」）。',
+    '用搜索引擎搜一搜，把前 3 个结果记下来。',
+    '猜一猜：为什么这三个排最前面？是内容相关，还是大家都爱点？']},
+  quiz:{q:'搜索结果排在前面的一般有什么特点？', options:[
+    '付费最多','最相关、最受信任','字数最多','名字最长'], answer:1,
+    explain:'搜索引擎按相关性和信任度排名，帮你快速找到好内容。'},
+  think:'如果世界上没有搜索引擎，你想找一份资料得有多麻烦？它是怎么做到「大海捞针」的？'
+},
+{
+  year:'2004', emoji:'👥', title:'Web 2.0 社交时代', tag:'人人可创作',
+  brief:'网站从「图书馆」变成「大广场」，人人都是作者',
+  story:'早期的网页只有「管理员」能发内容，我们只能「看」。2004 年起，Web 2.0 时代来了！博客、维基百科、Facebook、YouTube……每个人都能发表文章、上传视频、点赞评论。网站从「图书馆」变成了「大广场」，人人都成了作者！',
+  teach:'Web 2.0 最核心的精神是<b>「用户生成内容」</b>——内容不只是公司做的，而是千千万万个你和我创造的。你看的短视频、发的朋友圈、写的评论，都是 Web 2.0 的产物。网站不再是单向的「我看你发」，而是「我们一起创造」。',
+  activity:{title:'动手：写一条「我的小百科」', steps:[
+    '像维基百科的作者一样，写一段 100 字左右的介绍，介绍你最喜欢的一样东西。',
+    '先写标题，再写 3 句话：它是什么、它有什么特点、你为什么喜欢。',
+    '读给家人听——恭喜你，你已经是 Web 2.0 的创作者啦！']},
+  quiz:{q:'Web 2.0 时代最大的变化是什么？', options:[
+    '网页加载更快','人人都能创作和分享','电脑变得更小','广告消失了'], answer:1,
+    explain:'Web 2.0 的核心是「用户生成内容」，每个人都能创作和分享。'},
+  think:'你发的每一条内容都在「创造」网络。你觉得在网上创作时，应该注意什么？'
+},
+{
+  year:'2007', emoji:'📱', title:'智能手机时代', tag:'移动互联网',
+  brief:'iPhone 问世，上网从「坐电脑前」变成「随时随地」',
+  story:'2007 年，乔布斯举起一台叫 iPhone 的小设备，说「这将改变世界」。果然！从那以后，上网不再需要坐在电脑前。我们用手指滑动、点击，随时随地「移动上网」。网页设计师们发现：网页必须能在手机的小屏幕上也好看！于是，「响应式设计」诞生了。',
+  teach:'<b>响应式设计</b> = 一个网页「智能变形」。同样的内容，在电脑大屏幕上铺开，在手机上就自动竖起来排好、图片自动缩放。背后的秘密是 CSS 里的「媒体查询」——它像变色龙，先看看屏幕多大，再决定怎么排版。一句话：一个网站，处处都好看！',
+  activity:{title:'动手：给网页「量尺寸」', steps:[
+    '打开同一个网站（比如学校的官网）。',
+    '先在手机上打开，观察页面长什么样。',
+    '再在电脑上打开同一个网站，对比一下布局有什么变化？',
+    '找出「自适应」的证据，比如图片大小、菜单位置的不同。']},
+  quiz:{q:'「响应式设计」是什么意思？', options:[
+    '网页会自己跑动','网页根据屏幕大小自动调整布局','网页会自动变色','网页会唱歌'], answer:1,
+    explain:'响应式设计让一个网页在手机、平板、电脑上都自动调整、好看好用。'},
+  think:'为什么手机上的网页和电脑上的不一样？这种「智能变形」方便了谁？'
+},
+{
+  year:'2008', emoji:'🧱', title:'HTML5 新标准', tag:'网页的新积木',
+  brief:'网页原生支持视频动画，不用再装插件',
+  story:'过去想在网页里放视频、做动画，得装额外的「插件」（比如 Flash），很麻烦还不安全。2008 年，HTML5 标准出炉！网页原生支持视频、音频、画布、离线存储。从此网页更强大，甚至能直接玩 3D 游戏、画画、录音！',
+  teach:'HTML5 像一套「升级版乐高」，多了很多新积木：<br>🎬 <b>&lt;video&gt;</b> 直接放视频，<br>🎨 <b>&lt;canvas&gt;</b> 用来画画和做游戏，<br>🎵 <b>&lt;audio&gt;</b> 放音乐。<br>今天的「网页应用」（比如在线文档、网页版修图工具），很多都靠它。不用下载，打开就能用！',
+  activity:{title:'动手：找找身边的「网页应用」', steps:[
+    '想一想、找一找：有哪些工具「不用下载 App，打开网页就能用」？',
+    '比如在线地图、在线表格、网页版画图工具……把它们记下来。',
+    '说说它们各自用到了 HTML5 的哪些能力（视频？画画？存数据？）']},
+  quiz:{q:'HTML5 带来的新能力包括？', options:[
+    '直接播放视频','网页里画画、做游戏','播放音频','以上都是'], answer:3,
+    explain:'HTML5 让网页原生支持视频、音频、画布、离线存储等强大能力。',
+  },
+  think:'「不用下载 App 也能用」的网页工具，给你带来了什么方便？你最喜欢哪个？'
+},
+{
+  year:'2009', emoji:'🚂', title:'Node.js 全栈时代', tag:'JS 统治前后端',
+  brief:'JavaScript 跑进服务器，一个语言通吃前后端',
+  story:'2009 年，一位叫 Ryan Dahl 的程序员做了一个疯狂的决定：让 JavaScript 不只待在浏览器里，还要跑到「服务器」上工作！他创造了 Node.js。从此，一个工程师用同一种语言，就能同时写前端和后端——「全栈工程师」诞生了！',
+  teach:'以前前端和后端要用两种不同的语言，工程师要学两套本领。Node.js 让 JavaScript「通吃」前后端，就像学会一种「世界语」，走到哪都能交流。现在很多网站的后台、甚至我们写代码用的 VSCode 编辑器，都在用 Node.js 呢！',
+  activity:{title:'动手：理解「全栈」的省事', steps:[
+    '想象搭一个房子：如果所有积木都是同一种型号，是不是比混着两种积木更省事？',
+    '试着用乐高或积木，只用手边有的「一种积木」搭一个小房子。',
+    '和用「两种积木」比一比，哪种更快更顺？这就是全栈工程师的快乐！']},
+  quiz:{q:'Node.js 让 JavaScript 能做到什么以前做不到的事？', options:[
+    '在服务器上运行','在打印机上运行','在冰箱上运行','在电视上运行'], answer:0,
+    explain:'Node.js 让 JavaScript 能在服务器上运行，从而实现「一个语言通吃前后端」。'},
+  think:'「全栈工程师」为什么厉害？他一个人做了以前需要两个人才做的事，省去了什么麻烦？'
+},
+{
+  year:'2013', emoji:'⚛️', title:'前端框架时代', tag:'组件化乐高',
+  brief:'React、Vue 出现，网页变成能拼装的乐高',
+  story:'网站越做越大，代码乱成一团。2013 年，Facebook 发布了 React；之后 Vue、Angular 等「前端框架」也火了起来。它们教大家把网页拆成一块块小「组件」，像乐高一样拼装，还能高效地更新页面。复杂的应用（比如在线聊天、网盘）从此不再乱糟糟。',
+  teach:'<b>组件</b> = 网页里可以重复使用的小积木。比如一个「点赞按钮」做成组件，页面里 100 个地方要用，只需要写一次、调用 100 次；改一处，全部更新。这就是「组件化」的魔法——让工程变得又整洁又高效。',
+  activity:{title:'动手：像组件一样「复制」', steps:[
+    '用乐高或积木搭一朵小花（这是一个「组件」）。',
+    '想一想：如果要做 100 朵一样的花，你会怎么做？',
+    '把「搭一朵的步骤」写成一张小卡片，然后按卡片重复做——这就是组件的思路：先做好一个，反复使用！']},
+  quiz:{q:'前端框架（如 React）最大的好处是？', options:[
+    '让网页变丑','把界面拆成组件、方便维护','故意制造 Bug','让电脑变快'], answer:1,
+    explain:'前端框架提倡组件化：把界面拆成可复用的小积木，方便维护和更新。',
+  },
+  think:'为什么大网站都要用组件？如果是只给家人看的小网站，有必要吗？'
+},
+{
+  year:'2016', emoji:'🧰', title:'前后端分离与工程化', tag:'专业分工',
+  brief:'网站变成大工厂，前端后端通过 API 协作',
+  story:'现代网站越来越大，一个团队几十上百人一起开发。大家发现：把前端和后端彻底分开，通过「接口（API）」协作，效率最高。同时各种「构建工具」出现，帮工程师自动压缩代码、检查错误。Web 开发变成了一个「大工厂」，各司其职。',
+  teach:'<b>API</b>（应用程序接口）= 前后端之间「点菜的窗口」。前端说要什么，后端就通过 API 端出来。<b>构建工具</b> = 工厂里的「自动流水线」，把一堆零件（代码文件）组装、压缩成能上架的「成品」。一个现代网站，背后往往是很多个团队在分工合作。',
+  activity:{title:'动手：聊聊「分工合作」', steps:[
+    '回想一次和同学一起分工的经历（比如一起做大扫除、一起搭帐篷）。',
+    '说说：分工之后，是更快了还是更慢了？为什么？',
+    '把「分工」的道理讲给爸爸妈妈听——这和前后端分离是一个道理！']},
+  quiz:{q:'前端和后端之间主要通过什么协作？', options:[
+    '打电话','API 接口','寄信','发微信红包'], answer:1,
+    explain:'API 是前后端协作的「点菜窗口」，前端要数据、后端通过 API 送数据。'},
+  think:'如果一个人又要管店面、又要管厨房，餐厅会怎么样？为什么大项目要分工？'
+},
+{
+  year:'2019', emoji:'☁️', title:'云计算与 Serverless', tag:'网站住进云端',
+  brief:'不用自己买服务器，网站也能住进「云上的大房子」',
+  story:'以前想建网站，得自己买服务器、自己当「房东」打理。2019 年前后，「云计算」越来越普及：阿里云、亚马逊……你可以按需租用「云上的房子」，不用自己买电脑。更神奇的是「Serverless（无服务器）」：连租都不用操心，用完按次数付费，像用水用电一样方便！',
+  teach:'<b>云</b> = 全世界的「巨型数据中心」，你的网站可以「住」进去，随时扩容。<b>Serverless</b> 的意思是「你只管写代码，服务器的事云平台全包了，用多少付多少」。这大大降低了创业成本——一个小团队也能做出服务千万人的产品！',
+  activity:{title:'动手：用水电理解云计算', steps:[
+    '和爸爸妈妈聊聊家里的水电是怎么计费的：是不是「用多少付多少」？',
+    '想一想：为什么不用自己挖井、自己发电？因为城市里有「共享的云」。',
+    '把这个道理写下来：云计算 = 全世界的「共享水电房」。']},
+  quiz:{q:'「云计算」是什么？', options:[
+    '天上的云','用网络租用远程的电脑资源','一种天气预报','一种游戏'], answer:1,
+    explain:'云计算是通过网络租用远处数据中心的电脑资源，像用水用电一样按需取用。'},
+  think:'如果网站突然火了（比如上了热搜），云平台是怎么帮它「扛住」成千上万人的访问的？'
+},
+{
+  year:'2022', emoji:'🤖', title:'AI 辅助编程', tag:'AI 结对编程',
+  brief:'GitHub Copilot 出现，写代码变成「和 AI 聊天」',
+  story:'2021-2022 年，一场革命悄悄来临：GitHub Copilot、ChatGPT 等 AI 工具，让「写代码」变成「和 AI 聊天」。你描述需求，AI 帮你写出代码；代码有问题，AI 帮你找 Bug。工程师们没有被替代，而是多了个「超级队友」！',
+  teach:'AI 编程的原理：AI 读过海量代码，学会了「代码的语言规律」。你给它清晰的指令（这叫「提需求」！），它就能生成代码。未来的关键能力，不是死记代码，而是<b>「准确描述问题」</b>和<b>「审查 AI 的结果」</b>——这才是最值钱的本领！',
+  activity:{title:'动手：给 AI 下指令', steps:[
+    '打开一个 AI 工具（ChatGPT、DeepSeek 等都行）。',
+    '试着让它帮你生成「一个会变色的按钮」的 HTML 代码。',
+    '把代码复制到记事本存成 .html 打开，看看效果；再试着改一个颜色，体会「审查和修改」！']},
+  quiz:{q:'AI 时代，程序员最重要的能力变成什么？', options:[
+    '背代码','准确提需求 + 审查结果','打字最快','买最好的电脑'], answer:1,
+    explain:'AI 能写代码后，人会「准确描述需求」和「审查结果」变得比背代码更重要。',
+  },
+  think:'如果 AI 能写代码，人还需要学编程吗？学编程到底在锻炼你什么能力？'
+},
+{
+  year:'2024', emoji:'🌟', title:'AI 智能体时代', tag:'指挥 AI 的未来',
+  brief:'AI 能自己干活建网站，开发者更像「导演」',
+  story:'到了今天，AI 已经不只是「帮你写代码」，而是能自己「干活」：你说「帮我做个网站」，AI 智能体能自己规划、写代码、测试、上线！未来的 Web 开发者，越来越像一个「导演」，指挥一群 AI 演员完成作品。',
+  teach:'<b>AI 智能体（Agent）</b> = 能自己思考、做计划、调用工具、完成任务的小 AI 管家。未来开发者的日常：把大目标拆成小任务，交给不同的 AI，再把它们的结果拼成完整作品。你的<b>想象力 + 逻辑 + 审美</b>，是 AI 永远替代不了的！',
+  activity:{title:'动手：画一张「未来的网站」', steps:[
+    '用笔画出你心中最酷的未来网站（可以是你梦想中的游戏官网！）。',
+    '在旁边写下：如果让 AI 帮你建它，你会怎么「指挥」？写下 3 条精确指令。',
+    '比如「帮我做一个星空背景的首页」「按钮要圆角、会发光」「能记录闯关分数」。',
+    '把这张纸贴起来——说不定 10 年后，你亲手把它实现！']},
+  quiz:{q:'未来的 Web 开发者更像什么角色？', options:[
+    '打字员','指挥 AI 的导演','快递员','收银员'], answer:1,
+    explain:'未来开发者把大目标拆给小任务交给 AI，再把结果拼成作品，像导演指挥演员。'},
+  think:'长大后，你希望 AI 帮你做什么？你想成为「指挥 AI」的那个人吗？'
+}
+];
+
+/* ============ 状态管理 ============ */
+const KEY = 'career101_done';
+function load(k, d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d; }catch(e){ return d; } }
+function save(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+
+let done = load(KEY, {});
+let doneSet = new Set(done['web-development'] || []);
+
+function persist(){
+  done['web-development'] = [...doneSet];
+  save(KEY, done);
+}
+
+/* ============ 渲染时间轴 ============ */
+const tl = document.getElementById('tl');
+let current = 0;
+
+function renderTimeline(){
+  tl.innerHTML = COURSES.map((c,i)=>{
+    const isDone = doneSet.has(c.year);
+    const cls = isDone ? 'done' : (i===0 ? 'cur' : '');
+    const state = isDone ? '✅' : (i===0 ? '▶️' : '🔓');
+    return `<div class="node">
+      <div class="dot">${c.emoji}</div>
+      <div class="ncard ${cls}" data-i="${i}">
+        <span class="year">${c.year}</span>
+        <div class="row">
+          <span class="em">${c.emoji}</span>
+          <span class="tt"><b>${i+1}. ${c.title}</b><span>${c.brief}</span></span>
+          <span class="state">${state}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  tl.querySelectorAll('.ncard').forEach(el=>{
+    el.onclick = ()=>{ current = +el.dataset.i; openLesson(); };
+  });
+}
+
+function updateProgress(){
+  document.getElementById('pr').textContent = `已学 ${doneSet.size}/${COURSES.length}`;
+}
+
+/* ============ 课程弹层 ============ */
+const modal = document.getElementById('modal');
+const lesson = document.getElementById('lesson');
+
+function renderLesson(){
+  const c = COURSES[current];
+  const doneNow = doneSet.has(c.year);
+  const isLast = current === COURSES.length-1;
+  const isFirst = current === 0;
+  lesson.innerHTML = `
+    <div class="l-head">
+      <span class="lyear">${c.year} 年</span>
+      <span class="lemo">${c.emoji}</span>
+      <h2>${current+1}. ${c.title}</h2>
+      <span class="ltag">${c.tag} · Web 开发时间轴第 ${current+1} 站</span>
+    </div>
+    <div class="sec story"><h4>🕰️ 故事时间 · 那时候发生了什么？</h4><p>${c.story}</p></div>
+    <div class="sec teach"><h4>📖 知识小课堂 · 记住这个魔法！</h4><p>${c.teach}</p></div>
+    <div class="sec act"><h4>🖐️ 动手小任务 · 亲自试一试</h4><ol>${c.activity.steps.map(s=>`<li>${s}</li>`).join('')}</ol></div>
+    <div class="sec quiz" id="quizBox">
+      <h4>❓ 小测试 · 你学会了吗？</h4>
+      <p class="quiz-q">${c.quiz.q}</p>
+      ${c.quiz.options.map((o,i)=>`<button class="opt" data-i="${i}">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}
+      <div class="quiz-fb" id="fb"></div>
+    </div>
+    <div class="sec think"><h4>💭 思考时间 · 和爸爸妈妈聊一聊</h4><p>${c.think}</p></div>
+    <div class="l-nav">
+      <button class="btn-prev" id="prevBtn" ${isFirst?'disabled style="opacity:.4"':''}>← 上一课</button>
+      <button class="btn-next ${doneNow?'done':''}" id="nextBtn">${isLast?'🏁 完成全部课程':(doneNow?'✅ 已完成 · 下一课 →':'🎯 完成本课 · 下一课 →')}</button>
+    </div>`;
+
+  /* 小测试交互 */
+  const opts = lesson.querySelectorAll('.opt');
+  const fb = lesson.querySelector('#fb');
+  let answered = false;
+  opts.forEach(o=>{
+    o.onclick = ()=>{
+      if(answered) return; answered = true;
+      const i = +o.dataset.i;
+      opts.forEach(x=>x.disabled = true);
+      if(i === c.quiz.answer){
+        o.classList.add('right');
+        fb.className = 'quiz-fb show ok';
+        fb.innerHTML = `🎉 答对啦！${c.quiz.explain}`;
+      } else {
+        o.classList.add('wrong');
+        opts[c.quiz.answer].classList.add('right');
+        fb.className = 'quiz-fb show no';
+        fb.innerHTML = `🤔 再想想哦！正确答案是 ${String.fromCharCode(65+c.quiz.answer)}。${c.quiz.explain}`;
+      }
+    };
+  });
+
+  lesson.querySelector('#prevBtn').onclick = ()=>{ if(!isFirst){ current--; renderLesson(); } };
+  lesson.querySelector('#nextBtn').onclick = ()=>{
+    if(!doneSet.has(c.year)){
+      doneSet.add(c.year); persist(); updateProgress(); renderTimeline();
+      toast(`✅ 完成 ${c.year} 年 · ${c.title}！`);
+    }
+    if(isLast){ closeLesson(); renderTimeline(); }
+    else { current++; renderLesson(); }
+  };
+}
+
+function openLesson(){ renderLesson(); modal.classList.add('open'); document.body.style.overflow='hidden'; }
+function closeLesson(){ modal.classList.remove('open'); document.body.style.overflow=''; }
+
+modal.addEventListener('click', e=>{ if(e.target === modal) closeLesson(); });
+
+let toastTimer;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+renderTimeline();
+updateProgress();
+</script>
+</body>
+</html>
