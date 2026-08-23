@@ -4,18 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI时代教育全景导航：从焦虑到行动</title>
+    <link rel="stylesheet" href="/css/common.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: #f2f6fc;
-            padding: 30px 20px;
-            display: flex;
-            justify-content: center;
         }
         .container {
             max-width: 1300px;
@@ -239,23 +233,8 @@
             .footnote { flex-direction: column; gap: 12px; align-items: flex-start; }
         }
 /* ===== 绘本主题背景（与主页统一：明亮、绘本风） ===== */
-.stars,.stars2{position:fixed;inset:0;pointer-events:none;z-index:0;}
-.stars{background-image:radial-gradient(2px 2px at 12% 20%,#fff,transparent),radial-gradient(1.5px 1.5px at 30% 10%,#ffe9a8,transparent),radial-gradient(2px 2px at 55% 7%,#fff,transparent),radial-gradient(1.5px 1.5px at 78% 18%,#ffd7f0,transparent),radial-gradient(2px 2px at 90% 9%,#fff,transparent),radial-gradient(1.5px 1.5px at 42% 26%,#c9e4ff,transparent),radial-gradient(2px 2px at 64% 28%,#ffe9a8,transparent),radial-gradient(1.5px 1.5px at 8% 36%,#fff,transparent);animation:twinkle 3.5s ease-in-out infinite alternate;}
-.stars2{background-image:radial-gradient(1.5px 1.5px at 50% 55%,#fff,transparent),radial-gradient(1.5px 1.5px at 15% 45%,#fff,transparent),radial-gradient(2px 2px at 65% 85%,#ffe9a8,transparent);animation:twinkle 6s ease-in-out infinite alternate-reverse;}
-@keyframes twinkle{from{opacity:.4}to{opacity:1}}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:linear-gradient(180deg,#a9e0ff 0%,#d9f3ff 45%,#fff6dc 100%);color:#2f3557;padding:0;display:block;}
+.stars2{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(1.5px 1.5px at 50% 55%,#fff,transparent),radial-gradient(1.5px 1.5px at 15% 45%,#fff,transparent),radial-gradient(2px 2px at 65% 85%,#ffe9a8,transparent);animation:twinkle 6s ease-in-out infinite alternate-reverse;}
 body::after{content:'';position:fixed;left:-15%;right:-15%;bottom:-12%;height:34%;background:radial-gradient(130% 120% at 50% 0%,#bde68f 0%,#8fd063 50%,transparent 72%);border-radius:50% 50% 0 0/35% 35% 0 0;opacity:.9;z-index:0;pointer-events:none;}
-.sun{position:fixed;top:14px;right:18px;font-size:84px;line-height:1;z-index:0;filter:drop-shadow(0 0 20px rgba(255,200,60,.85));animation:sunSpin 30s linear infinite;}
-@keyframes sunSpin{to{transform:rotate(360deg)}}
-.cloud{position:fixed;background:#fff;border-radius:60px;opacity:.92;box-shadow:0 6px 18px rgba(110,160,220,.22);animation:drift 8s ease-in-out infinite;}
-.cloud::before,.cloud::after{content:'';position:absolute;background:#fff;border-radius:50%;}
-.cloud.c1{width:150px;height:42px;top:96px;left:3%;}
-.cloud.c1::before{width:56px;height:56px;top:-24px;left:26px;}
-.cloud.c1::after{width:40px;height:40px;top:-14px;left:86px;}
-.cloud.c2{width:118px;height:36px;top:64px;right:7%;animation-duration:10s;}
-.cloud.c2::before{width:46px;height:46px;top:-20px;left:20px;}
-.cloud.c2::after{width:34px;height:34px;top:-12px;left:72px;}
-@keyframes drift{0%,100%{transform:translateX(0)}50%{transform:translateX(14px)}}
 .page{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:14px 14px 40px;}
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(255,255,255,.88);border:2px solid #fff;box-shadow:0 8px 24px rgba(90,140,200,.18);border-radius:24px;padding:10px 16px;margin-bottom:14px;}
 .logo{color:#2f4a8a;font-weight:800;font-size:18px;letter-spacing:.5px;white-space:nowrap;}
