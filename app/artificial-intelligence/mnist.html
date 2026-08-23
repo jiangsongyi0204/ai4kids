@@ -89,25 +89,6 @@
   .mn-bar-row.best .b { background:linear-gradient(90deg,#ffd76a,#ff9a3d); }
   .mn-bar-row .pct { text-align:right; font-family:Consolas,Menlo,monospace; color:#5a6b96; }
 
-  /* 8x8 输入网格 */
-  .mn-grid { display:grid; grid-template-columns:repeat(8,1fr); gap:1px; width:120px; margin:0 auto;
-    background:#dbe7ff; padding:2px; border-radius:8px; }
-  .mn-grid .g { aspect-ratio:1; background:#fff; }
-  .mn-grid .g.on { background:#2f4a8a; }
-
-  /* 简单网络图（点亮动画） */
-  .mn-net { display:flex; align-items:center; justify-content:center; gap:22px; margin-top:12px;
-    font-size:12px; color:#5a6b96; flex-wrap:wrap; }
-  .mn-layer { display:flex; flex-direction:column; align-items:center; gap:4px; }
-  .mn-layer .dots { display:grid; grid-template-columns:repeat(8,10px); gap:3px; }
-  .mn-layer .dots .d { width:10px; height:10px; border-radius:50%; background:#c9d6f0; }
-  .mn-layer .dots .d.on { background:#34d399; box-shadow:0 0 6px rgba(52,211,153,.6); }
-  .mn-layer.out .dots { grid-template-columns:repeat(5,14px); }
-  .mn-layer.out .dots .d { width:14px; height:14px; background:#f3c6dd; }
-  .mn-layer.out .dots .d.on { background:#ec4899; box-shadow:0 0 8px rgba(236,72,153,.6); }
-  .mn-layer .lbl { font-weight:800; color:#2f4a8a; }
-  .mn-arrow { font-size:26px; color:#94a3b8; font-weight:300; }
-
   .muted { color:#8a93b8; font-size:12px; }
 </style>
 </head>
@@ -224,26 +205,6 @@
             <div class="lbl" id="mnLbl">先训练，再写一个数字试试！</div>
           </div>
           <div class="mn-bars" id="mnBars"></div>
-        </div>
-        <div class="panel" style="margin-top:12px;">
-          <div class="panel-title">🧠 网络看到了什么（8×8 输入）</div>
-          <div class="mn-grid" id="mnGrid"></div>
-          <div class="mn-net">
-            <div class="mn-layer">
-              <span class="lbl">输入 64</span>
-              <div class="dots" id="mnIn"></div>
-            </div>
-            <div class="mn-arrow">→</div>
-            <div class="mn-layer">
-              <span class="lbl">隐藏 16</span>
-              <div class="dots" id="mnHid"></div>
-            </div>
-            <div class="mn-arrow">→</div>
-            <div class="mn-layer out">
-              <span class="lbl">输出 10</span>
-              <div class="dots" id="mnOut"></div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -663,20 +624,6 @@ function downsample(){
   }
   return out;
 }
-function renderInputGrid(inp){
-  const el = document.getElementById('mnGrid');
-  el.innerHTML = inp.map(v=>`<div class="g ${v?'on':''}"></div>`).join('');
-  const inEl = document.getElementById('mnIn');
-  inEl.innerHTML = inp.map(v=>`<div class="d ${v?'on':''}"></div>`).join('');
-}
-function renderHidOut(){
-  const a1 = app.nn.cache.a1 || [], a2 = app.nn.cache.a2 || [];
-  document.getElementById('mnHid').innerHTML =
-    a1.map(v=>`<div class="d ${v>0.5?'on':''}"></div>`).join('');
-  const best = a2.indexOf(Math.max(...a2));
-  document.getElementById('mnOut').innerHTML =
-    a2.map((v,i)=>`<div class="d ${i===best?'on':''}"></div>`).join('');
-}
 function renderBars(p){
   const el = document.getElementById('mnBars');
   const max = Math.max(...p) || 1;
@@ -689,9 +636,8 @@ function renderBars(p){
 }
 function recognize(){
   const inp = downsample();
-  renderInputGrid(inp);
   const p = app.nn.predict(inp);
-  renderHidOut(); renderBars(p);
+  renderBars(p);
   const pred = p.indexOf(Math.max(...p));
   const numEl = document.getElementById('mnNum');
   numEl.textContent = pred;
@@ -706,7 +652,7 @@ document.getElementById('mnClear').onclick = ()=>{
   document.getElementById('mnNum').textContent = '?';
   document.getElementById('mnNum').classList.remove('hot');
   document.getElementById('mnLbl').textContent = '写一个数字，点「识别」试试！';
-  renderInputGrid(Array(64).fill(0)); renderBars(Array(10).fill(0));
+  renderBars(Array(10).fill(0));
 };
 
 /* ============================================================
@@ -734,7 +680,7 @@ function init(){
   renderNetViz(); renderDataList(); renderDataPanel();
   drawLossCurve([]);
   updateStatus('就绪', app.nn.loss, app.nn.stepCount);
-  renderCanvas(); renderInputGrid(Array(64).fill(0)); renderBars(Array(10).fill(0));
+  renderCanvas(); renderBars(Array(10).fill(0));
 }
 init();
 </script>
