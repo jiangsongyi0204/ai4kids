@@ -6,7 +6,7 @@
      const COURSES = [ ...课程数据... ];
      initTimeline({ courses: COURSES, careerKey: 'web-development', name: 'Web 开发' });
    ============================================================ */
-function initTimeline({ courses, careerKey, name }){
+function initTimeline({ courses, careerKey, name, timelineUrl }){
   const KEY = 'career101_done';
   let done = load(KEY, {});
   let doneSet = new Set(done[careerKey] || []);
@@ -39,7 +39,10 @@ function initTimeline({ courses, careerKey, name }){
       </div>`;
     }).join('');
     tl.querySelectorAll('.ncard').forEach(el=>{
-      el.onclick = ()=>{ current = +el.dataset.i; openLesson(); };
+      el.onclick = ()=>{
+        if(timelineUrl){ location.href = timelineUrl + '?year=' + courses[+el.dataset.i].year; return; }
+        current = +el.dataset.i; openLesson();
+      };
     });
   }
 

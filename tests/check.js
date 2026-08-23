@@ -66,6 +66,7 @@ async function main() {
   await checkTitle('/artificial-intelligence/neural-network.html', '神经网络实验', '神经网络');
   await checkTitle('/artificial-intelligence/mnist.html', '手写数字识别', '手写数字识别');
   await checkTitle('/artificial-intelligence/cnn.html', '卷积神经网络', '卷积神经网络');
+  await checkTitle('/artificial-intelligence/timeline.html', '时间轴页', '人工智能 · 时间轴');
 
   // 二、关键元素
   console.log('\n-- 2. 关键元素 --');
@@ -87,6 +88,8 @@ async function main() {
   await checkContains('/artificial-intelligence/cnn.html', '卷积', '训练数据格式', '数据格式段落');
   await checkContains('/artificial-intelligence/cnn.html', '卷积', 'CNN 可视化训练器', '可视化训练器');
   await checkContains('/artificial-intelligence/cnn.html', '卷积', '互动演示', '互动演示段落');
+  await checkContains('/artificial-intelligence/timeline.html', '人工智能', '1950', 'Tab 起点年份');
+  await checkContains('/artificial-intelligence/timeline.html', '人工智能', '2024', 'Tab 终点年份');
 
   // 三、导航跳转
   console.log('\n-- 3. 导航跳转 --');
@@ -99,6 +102,7 @@ async function main() {
   log(aiPage.html.includes('neural-network.html'), '人工智能 神经网络按钮', '链接到神经网络实验');
   log(aiPage.html.includes('mnist.html'), '人工智能 手写数字按钮', '链接到手写数字识别');
   log(aiPage.html.includes('cnn.html'), '人工智能 卷积网络按钮', '链接到卷积神经网络');
+  log(aiPage.html.includes("timelineUrl: '/artificial-intelligence/timeline.html'"), '人工智能 时间轴跳转', '卡片跳转 timeline.html');
 
   // 四、API 端点
   console.log('\n-- 4. API --');
