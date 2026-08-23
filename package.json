@@ -2,11 +2,11 @@
   "name": "ai4kids",
   "version": "1.0.0",
   "private": true,
-  "description": "AI+教育小游戏：职业宇宙 · 101个职业启蒙（Node.js + Express + TypeScript）",
+  "description": "AI+教育小游戏：儿童职业启蒙101（Node.js + Express + TypeScript）",
   "main": "server/server.ts",
   "scripts": {
     "start": "ts-node server/server.ts",
-    "dev": "ts-node server/server.ts",
+    "dev": "node --watch --require ts-node/register server/server.ts",
     "build": "tsc",
     "test": "node tests/check.js",
     "test:pages": "node tests/check.js"

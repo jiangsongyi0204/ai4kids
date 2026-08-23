@@ -1,5 +1,5 @@
 /**
- * ai4kids · 职业宇宙 Express 入口
+ * ai4kids · 儿童职业启蒙101 Express 入口
  *
  * 结构对齐 sx-aitrialclass（课程星云）：
  *   - public/    主站前端（静态服务，根目录）
@@ -7,8 +7,9 @@
  *   - database/  运行时数据（AI 生成的图像/文字/视频/音乐 + SQLite）
  *   - tests/     自动化测试
  *
- * 启动：npm start / npm run dev   （ts-node 直跑，无需编译）
- * 如需改端口：PORT=8080 npm start
+ * 启动：npm run dev   （监听模式，改 server 文件自动重启）
+ *       npm start     （生产模式，ts-node 直跑）
+ * 如需改端口：PORT=8080 npm run dev
  */
 import express from 'express';
 import cors from 'cors';
@@ -121,7 +122,7 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, HOST, () => {
-  console.log(`🚀 ai4kids 职业宇宙服务器已启动: http://${HOST}:${PORT}`);
+  console.log(`🚀 ai4kids 儿童职业启蒙101 服务器已启动: http://${HOST}:${PORT}`);
   console.log(`   主站首页:  http://${HOST}:${PORT}/`);
   for (const name of APPS) {
     console.log(`   ${name}: http://${HOST}:${PORT}/${name}/`);

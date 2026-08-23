@@ -10,10 +10,12 @@
 
 ```bash
 npm install        # 安装依赖
-npm run dev        # 启动服务（ts-node 直跑，无需编译）
+npm run dev        # 启动服务（监听模式：改 server 文件自动重启）
 ```
 
-服务运行在 `http://localhost:80`（Windows/Mac 权限受限时可 `PORT=8080 npm start`）。
+服务运行在 `http://localhost:80`（Windows/Mac 权限受限时可 `PORT=8080 npm run dev`）。
+
+> 💡 开发提示：改动 **前端** 文件（`public/`、`app/` 下的 HTML）**无需重启**，刷新浏览器即可；改动 **后端**（`server/`）文件，`npm run dev` 会自动重启。
 
 ---
 
@@ -21,10 +23,10 @@ npm run dev        # 启动服务（ts-node 直跑，无需编译）
 
 | 页面 | 地址 |
 |------|------|
-| 首页（职业宇宙 · 101个职业） | `http://localhost:80/` |
+| 首页（儿童职业启蒙101） | `http://localhost:80/` |
 | AI时代教育全景导航 | `http://localhost:80/guide.html` |
 | Web 开发 · 时间轴课程 | `http://localhost:80/web-development/` |
-| 写作星球 · 墨墨的灵感宇宙 | `http://localhost:80/writingplanet/` |
+| 人工智能 · 时间轴课程 | `http://localhost:80/artificial-intelligence/` |
 
 ---
 
@@ -47,14 +49,14 @@ ai4kids/
 ├── server/                        # 后端（TypeScript + Express）
 │   └── server.ts                  # Express 入口，静态服务，/api/apps 自动扫描
 ├── public/                        # 主站前端
-│   ├── index.html                 # 首页（职业宇宙 · 101个职业卡片）
+│   ├── index.html                 # 首页（儿童职业启蒙101 · 101个职业卡片）
 │   └── guide.html                 # AI时代教育全景导航
 ├── app/                           # 子应用源码（纯 HTML/CSS/JS）
 │   ├── web-development/           # Web 开发 · 时间轴课程（1989→现在，16堂课）
 │   │   ├── config.json            # 首页卡片配置
 │   │   └── index.html
-│   └── writingplanet/             # 写作星球 · 墨墨的灵感宇宙
-│       ├── config.json
+│   └── artificial-intelligence/   # 人工智能 · 时间轴课程（1950→现在，12堂课）
+│       ├── config.json            # 首页卡片配置
 │       └── index.html
 ├── database/                      # 运行时数据（AI 生成物 + SQLite）
 │   ├── images/                    # 大模型生成的图像
@@ -71,7 +73,7 @@ ai4kids/
 
 ---
 
-## 🧭 职业宇宙 · 101 个职业启蒙
+## 🧭 儿童职业启蒙101
 
 把「职业启蒙」变成一场点亮星球的游戏：
 
@@ -156,7 +158,6 @@ npm test            # 页面完整性 + API 检查（需先启动服务）
 ## 🔒 隐私与数据
 
 - 孩子的学习进度仅保存在**本机浏览器**（localStorage），不会上传。
-- 原「写作星球」游戏已迁移为子应用 `app/writingplanet/`（`/writingplanet/` 访问）。
 
 ## 系列规划（待续）
 

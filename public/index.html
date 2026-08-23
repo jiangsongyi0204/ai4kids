@@ -3,90 +3,93 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>101个职业启蒙 · 职业宇宙</title>
+<title>儿童职业启蒙101</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html,body { height:100%; }
   body {
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
-    background:linear-gradient(165deg,#1b2a6b 0%,#3b2a7a 45%,#7a2a6b 100%);
-    color:#2b2f4a; min-height:100%; overflow-x:hidden;
+    background:linear-gradient(180deg,#a9e0ff 0%,#d9f3ff 45%,#fff6dc 100%);
+    color:#2f3557; min-height:100%; overflow-x:hidden;
   }
-  /* 星星与星球背景 */
+  /* 绘本风格背景：阳光 / 白云 / 星星 / 气球 / 草地 */
   .bg { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .bg::after { content:''; position:absolute; left:-15%; right:-15%; bottom:-12%;
+    height:34%; background:radial-gradient(130% 120% at 50% 0%, #bde68f 0%, #8fd063 50%, transparent 72%);
+    border-radius:50% 50% 0 0/35% 35% 0 0; opacity:.9; }
+  .sun { position:absolute; top:14px; right:18px; font-size:84px; line-height:1; z-index:0;
+    filter:drop-shadow(0 0 20px rgba(255,200,60,.85)); animation:sunSpin 30s linear infinite; }
+  @keyframes sunSpin { to { transform:rotate(360deg); } }
   .stars { position:absolute; inset:0;
     background-image:
-      radial-gradient(1.5px 1.5px at 20% 30%, #fff, transparent),
-      radial-gradient(1px 1px at 70% 15%, #fff, transparent),
-      radial-gradient(2px 2px at 40% 70%, #ffe9a8, transparent),
-      radial-gradient(1px 1px at 85% 55%, #fff, transparent),
-      radial-gradient(2px 2px at 10% 80%, #c9e4ff, transparent),
-      radial-gradient(1px 1px at 55% 40%, #fff, transparent),
-      radial-gradient(1px 1px at 30% 12%, #fff, transparent),
-      radial-gradient(2px 2px at 92% 82%, #ffd7f0, transparent);
-    animation:twinkle 4s ease-in-out infinite alternate; }
-  @keyframes twinkle { from{opacity:.35} to{opacity:1} }
-  .planet { position:absolute; border-radius:50%; opacity:.5; }
-  .planet.p1 { width:140px; height:140px; top:-40px; right:-40px;
-    background:radial-gradient(circle at 30% 30%, #ff9ad5, #b44a8f); }
-  .planet.p2 { width:90px; height:90px; bottom:8%; left:-30px;
-    background:radial-gradient(circle at 30% 30%, #9ad5ff, #4a7ab4); }
-  .ring { position:absolute; width:220px; height:60px; top:16%; left:-90px;
-    border:3px solid rgba(255,255,255,.18); border-radius:50%; transform:rotate(-18deg); }
+      radial-gradient(2px 2px at 12% 20%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 30% 10%, #ffe9a8, transparent),
+      radial-gradient(2px 2px at 55% 7%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 78% 18%, #ffd7f0, transparent),
+      radial-gradient(2px 2px at 90% 9%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 42% 26%, #c9e4ff, transparent),
+      radial-gradient(2px 2px at 64% 28%, #ffe9a8, transparent),
+      radial-gradient(1.5px 1.5px at 8% 36%, #fff, transparent);
+    animation:twinkle 3.5s ease-in-out infinite alternate; }
+  @keyframes twinkle { from{opacity:.4} to{opacity:1} }
+  .cloud { position:absolute; background:#fff; border-radius:60px; opacity:.92;
+    box-shadow:0 6px 18px rgba(110,160,220,.22); animation:drift 8s ease-in-out infinite; }
+  .cloud::before,.cloud::after { content:''; position:absolute; background:#fff; border-radius:50%; }
+  .cloud.c1 { width:150px; height:42px; top:96px; left:6%; }
+  .cloud.c1::before { width:56px; height:56px; top:-24px; left:26px; }
+  .cloud.c1::after { width:40px; height:40px; top:-14px; left:86px; }
+  .cloud.c2 { width:118px; height:36px; top:64px; left:56%; animation-duration:10s; }
+  .cloud.c2::before { width:46px; height:46px; top:-20px; left:20px; }
+  .cloud.c2::after { width:34px; height:34px; top:-12px; left:72px; }
+  .cloud.c3 { width:168px; height:42px; bottom:26%; left:28%; opacity:.7; animation-duration:12s; }
+  .cloud.c3::before { width:58px; height:58px; top:-26px; left:30px; }
+  .cloud.c3::after { width:42px; height:42px; top:-16px; left:98px; }
+  @keyframes drift { 0%,100%{transform:translateX(0)} 50%{transform:translateX(14px)} }
+  .balloon { position:absolute; font-size:54px; line-height:1; opacity:.92; animation:floaty 5s ease-in-out infinite; }
+  .balloon.b1 { left:4%; top:56%; }
+  .balloon.b2 { right:5%; top:42%; animation-duration:6.5s; animation-delay:1.2s; }
+  @keyframes floaty { 0%,100%{transform:translateY(0) rotate(-5deg)} 50%{transform:translateY(-16px) rotate(5deg)} }
 
-  #app { position:relative; z-index:1; max-width:900px; margin:0 auto; padding:14px 14px 90px; }
+  #app { position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:14px 14px 90px; }
 
   /* 顶栏 */
   .topbar { display:flex; align-items:center; justify-content:space-between; gap:8px;
-    background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.16);
-    backdrop-filter:blur(8px); border-radius:22px; padding:10px 14px; margin-bottom:16px; }
-  .logo { color:#fff; font-weight:800; font-size:17px; letter-spacing:.5px; }
-  .logo small { font-size:11px; color:#ffd76a; font-weight:700; margin-left:6px;
-    background:rgba(255,215,106,.18); padding:2px 8px; border-radius:20px; }
-  .topbar .right { font-size:12px; color:#e6ebff; font-weight:600; }
-
-  /* Hero */
-  .hero { text-align:center; padding:20px 12px 6px; }
-  .hero .astro { font-size:74px; display:inline-block; animation:float 3.2s ease-in-out infinite; }
-  @keyframes float { 0%,100%{transform:translateY(0) rotate(-3deg)} 50%{transform:translateY(-10px) rotate(3deg)} }
-  .hero h1 { color:#fff; font-size:30px; margin:10px 0 8px; letter-spacing:1px; }
-  .hero h1 em { font-style:normal; color:#ffd76a; }
-  .hero p { color:#cdd8ff; font-size:14px; line-height:1.7; max-width:600px; margin:0 auto; }
-  .hero p b { color:#fff; }
-
-  /* 进度卡 */
-  .progress-card { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.16);
-    backdrop-filter:blur(8px); border-radius:22px; padding:14px 16px; margin:18px 0 6px;
-    display:flex; align-items:center; gap:14px; }
-  .progress-card .p-label { color:#fff; font-size:13px; font-weight:700; white-space:nowrap; }
-  .progress-card .p-bar { flex:1; height:12px; background:rgba(255,255,255,.2); border-radius:20px; overflow:hidden; }
-  .progress-card .p-bar i { display:block; height:100%; width:0.99%;
-    background:linear-gradient(90deg,#ffd76a,#ff9ad5); border-radius:20px;
-    transition:width .6s; }
-  .progress-card .p-num { color:#ffd76a; font-size:15px; font-weight:800; white-space:nowrap; }
-
-  /* 分类筛选 */
-  .cats { display:flex; gap:8px; overflow-x:auto; padding:14px 2px 4px; scrollbar-width:none; }
-  .cats::-webkit-scrollbar { display:none; }
-  .cats button { flex-shrink:0; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.14);
-    color:#e6ebff; font-size:13px; font-weight:700; padding:8px 14px; border-radius:30px; cursor:pointer;
-    transition:.15s; }
-  .cats button.on { background:#fff; color:#4a3a8a; border-color:#fff; }
-  .cats button:active { transform:scale(.95); }
+    background:rgba(255,255,255,.88); border:2px solid #fff;
+    box-shadow:0 8px 24px rgba(90,140,200,.18); border-radius:24px; padding:10px 16px; margin-bottom:16px; }
+  .logo { color:#2f4a8a; font-weight:800; font-size:19px; letter-spacing:.5px;
+    display:flex; align-items:center; gap:5px; }
+  .logo-ic { font-size:26px; line-height:1; display:inline-block; animation:logoBounce 2.4s ease-in-out infinite; }
+  @keyframes logoBounce { 0%,100%{transform:translateY(0) rotate(-8deg)} 50%{transform:translateY(-4px) rotate(8deg)} }
+  .logo-name { position:relative; }
+  .logo-name::after { content:''; position:absolute; left:0; right:0; bottom:0; height:5px;
+    background:linear-gradient(90deg,#ffd76a,#ff9ad5,#8fd063); border-radius:4px; opacity:.5; }
+  .logo-num { font-style:italic; background:linear-gradient(135deg,#ff9a3d,#ff5e7e); color:#fff;
+    padding:1px 9px; border-radius:14px; font-size:14px; transform:rotate(-5deg);
+    box-shadow:0 3px 8px rgba(255,110,110,.35); }
+  .topbar .right { display:flex; align-items:center; gap:8px; }
+  .topbar .right .date { font-size:12px; color:#5a6b96; font-weight:700;
+    background:#eef6ff; border:1px solid #dcebff; padding:4px 10px; border-radius:16px; }
+  .btn-guide { display:inline-flex; align-items:center; gap:4px;
+    background:linear-gradient(135deg,#ffd76a,#ffb84d); color:#7a4a00; font-size:13px; font-weight:800;
+    padding:7px 14px; border-radius:20px; text-decoration:none;
+    border:2px solid #fff; box-shadow:0 4px 12px rgba(255,180,77,.4); transition:.15s; }
+  .btn-guide:hover { transform:translateY(-2px); box-shadow:0 6px 16px rgba(255,180,77,.55); }
+  .btn-guide:active { transform:scale(.95); }
 
   /* 职业卡片网格 */
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(118px,1fr)); gap:12px; margin-top:14px; }
-  .job { position:relative; background:#fff; border-radius:20px; padding:16px 8px 12px; text-align:center;
-    cursor:pointer; transition:.18s; border:3px solid transparent; user-select:none; }
-  .job:active { transform:scale(.95); }
-  .job .ic { font-size:38px; line-height:1; display:block; }
-  .job .nm { font-size:13px; font-weight:800; color:#3a3f6e; margin-top:8px; display:block; }
-  .job .cat-tag { font-size:10px; color:#a5abc9; font-weight:600; margin-top:3px; display:block; }
+  .job { position:relative; background:#fff; border-radius:22px; padding:16px 8px 12px; text-align:center;
+    cursor:pointer; transition:.18s; border:3px solid #eaf3ff; user-select:none;
+    box-shadow:0 8px 18px rgba(120,160,210,.18); }
+  .job:hover { transform:translateY(-3px); box-shadow:0 12px 26px rgba(120,160,210,.28); }
+  .job .ic { font-size:40px; line-height:1; display:block; }
+  .job .nm { font-size:13px; font-weight:800; color:#3a4470; margin-top:8px; display:block; }
+  .job .cat-tag { font-size:10px; color:#8aa0c9; font-weight:700; margin-top:3px; display:block; }
 
   /* 已点亮 */
-  .job.lit { border-color:#ffd76a; box-shadow:0 10px 26px rgba(255,215,106,.35);
-    background:linear-gradient(180deg,#fffdf5,#fff7e0); animation:glow 2.4s ease-in-out infinite; }
-  @keyframes glow { 0%,100%{box-shadow:0 10px 26px rgba(255,215,106,.35)} 50%{box-shadow:0 10px 34px rgba(255,215,106,.65)} }
+  .job.lit { border-color:#ffd76a; box-shadow:0 10px 28px rgba(255,200,80,.45);
+    background:linear-gradient(180deg,#fffdf5,#fff3cf); animation:glow 2.4s ease-in-out infinite; }
+  @keyframes glow { 0%,100%{box-shadow:0 10px 28px rgba(255,200,80,.45)} 50%{box-shadow:0 10px 40px rgba(255,200,80,.72)} }
   .job.lit .badge { position:absolute; top:-11px; left:50%; transform:translateX(-50%);
     background:linear-gradient(135deg,#ffd76a,#ff9a3d); color:#7a3a00; font-size:11px; font-weight:800;
     padding:3px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 4px 10px rgba(255,154,61,.4); }
@@ -94,7 +97,7 @@
   @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
 
   /* 未点亮（灰色锁定） */
-  .job.lock { background:#e9ebf2; border-color:#dfe2ec; filter:grayscale(1); opacity:.82; cursor:not-allowed; }
+  .job.lock { background:#f0f3fa; border-color:#e2e8f4; filter:grayscale(1); opacity:.82; cursor:not-allowed; }
   .job.lock .ic { opacity:.55; }
   .job.lock .nm { color:#9aa0b8; }
   .job.lock .lock-ic { position:absolute; top:10px; right:10px; font-size:13px; opacity:.8; }
@@ -102,41 +105,35 @@
 
   /* 提示 Toast */
   #toast { position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(20px);
-    background:rgba(30,26,66,.95); color:#fff; padding:12px 20px; border-radius:30px; font-size:13px;
+    background:rgba(84,74,160,.96); color:#fff; padding:12px 20px; border-radius:30px; font-size:13px;
     font-weight:600; z-index:99; opacity:0; pointer-events:none; transition:.3s; max-width:86vw; text-align:center;
-    box-shadow:0 10px 30px rgba(0,0,0,.3); }
+    box-shadow:0 10px 30px rgba(0,0,0,.25); }
   #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
-  .foot { text-align:center; color:#9aa6d8; font-size:12px; margin-top:26px; line-height:1.8; }
+  .foot { text-align:center; color:#5a6b96; font-size:12px; margin-top:26px; line-height:1.8;
+    background:rgba(255,255,255,.6); border:1px solid rgba(255,255,255,.9);
+    border-radius:18px; padding:12px 16px; }
 </style>
 </head>
 <body>
 <div class="bg">
+  <div class="sun">☀️</div>
   <div class="stars"></div>
-  <div class="planet p1"></div>
-  <div class="planet p2"></div>
-  <div class="ring"></div>
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="cloud c3"></div>
+  <div class="balloon b1">🎈</div>
+  <div class="balloon b2">🎈</div>
 </div>
 
 <div id="app">
   <header class="topbar">
-    <div class="logo">🧭 职业宇宙 <small>101 个职业启蒙</small></div>
-    <div class="right" id="today"></div>
+    <div class="logo"><span class="logo-ic">🚀</span><span class="logo-name">儿童职业启蒙</span><span class="logo-num">101</span></div>
+    <div class="right">
+      <a class="btn-guide" href="/guide.html">📖 教育理念</a>
+      <span class="date" id="today"></span>
+    </div>
   </header>
-
-  <section class="hero">
-    <span class="astro">🚀</span>
-    <h1>点亮你的<em>第一个职业</em>！</h1>
-    <p>宇宙里有 <b>101 个闪闪发光的职业星球</b>。每点亮一颗，就能钻进它的时间隧道，从它「出生」的那天开始，一步一步学懂这个职业！今天，先点亮第一颗 —— <b>Web 开发</b>。</p>
-  </section>
-
-  <div class="progress-card">
-    <span class="p-label">已点亮</span>
-    <div class="p-bar"><i id="pbar"></i></div>
-    <span class="p-num" id="pnum">1 / 101</span>
-  </div>
-
-  <nav class="cats" id="cats"></nav>
 
   <main class="grid" id="grid"></main>
 
@@ -147,18 +144,12 @@
 
 <script>
 /* ============ 101 个职业数据 ============ */
-const CATS = [
-  ['tech','🤖 科技'], ['health','🩺 医疗健康'], ['edu','📚 教育'], ['art','🎨 艺术创意'],
-  ['make','🔨 建造制造'], ['biz','💼 商业财经'], ['law','⚖️ 法律公共'], ['sci','🔭 科学探索'],
-  ['media','🎙️ 媒体传播'], ['life','🧘 生活服务'],
-];
-
 /* 每个职业：名称, emoji, 所属分类, 详情页文件名(可选), 简介 */
 const JOBS = [
   // —— 科技 (10) ——
   ['Web 开发',   '🖥️', 'tech', 'web-development', '点亮世界的网页魔法师'],
   ['游戏开发',   '🎮', 'tech', null, '创造好玩世界的造梦师'],
-  ['人工智能',   '🤖', 'tech', null, '让机器学会思考'],
+  ['人工智能',   '🤖', 'tech', 'artificial-intelligence', '让机器学会思考'],
   ['数据科学',   '📊', 'tech', null, '从数字里发现秘密'],
   ['网络安全',   '🔐', 'tech', null, '网络的超级保镖'],
   ['机器人工程', '🦾', 'tech', null, '给机器人装上大脑'],
@@ -275,31 +266,19 @@ function load(k, d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d; }catc
 function save(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
 
 /* 已解锁的职业（今天只点亮 Web 开发，未来的可在这里手动加） */
-const UNLOCKED = ['web-development'];
+const UNLOCKED = ['web-development', 'artificial-intelligence'];
 /* 每个职业已完成课程的年份集合：{ 'web-development': ['1989','1991',...] } */
 const DONE = load(KEY_DONE, {});
 
 /* ============ 渲染 ============ */
 const CAT_NAME = {
-  tech:'科技', health:'医疗健康', edu:'教育', art:'艺术创意', make:'建造制造',
-  biz:'商业财经', law:'法律公共', sci:'科学探索', media:'媒体传播', life:'生活服务'
+  tech:'科技', health:'医疗', edu:'教育', art:'艺术', make:'建造',
+  biz:'商业', law:'法律', sci:'科学', media:'媒体', life:'生活'
 };
 const gridEl = document.getElementById('grid');
-const catsEl = document.getElementById('cats');
-let activeCat = 'all';
-
-function renderCats(){
-  catsEl.innerHTML = '<button class="on" data-c="all">✨ 全部</button>' +
-    CATS.map(([k,n]) => `<button data-c="${k}">${n}</button>`).join('');
-  catsEl.querySelectorAll('button').forEach(b=>{
-    b.onclick = ()=>{ activeCat = b.dataset.c;
-      catsEl.querySelectorAll('button').forEach(x=>x.classList.toggle('on', x===b));
-      renderGrid(); };
-  });
-}
 
 function renderGrid(){
-  const jobs = activeCat==='all' ? JOBS : JOBS.filter(j=>j[2]===activeCat);
+  const jobs = JOBS;
   gridEl.innerHTML = jobs.map(j=>{
     const [name, emoji, cat, page, desc] = j;
     const lit = page && UNLOCKED.includes(page);
@@ -336,12 +315,9 @@ function toast(msg){
   toastTimer = setTimeout(()=>t.classList.remove('show'), 2400);
 }
 
-/* 进度 */
-document.getElementById('pnum').textContent = `已点亮 ${UNLOCKED.length} / 101`;
-document.getElementById('pbar').style.width = (UNLOCKED.length/101*100) + '%';
+/* 顶部日期 */
 document.getElementById('today').textContent = new Date().toLocaleDateString('zh-CN', {month:'long', day:'numeric'});
 
-renderCats();
 renderGrid();
 </script>
 </body>
