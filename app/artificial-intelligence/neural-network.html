@@ -726,7 +726,8 @@ function valid(x,y){ return x>=0&&x<N&&y>=0&&y<N; }
 function resetMap(){
   grid = Array.from({length:N},()=>Array(N).fill(0));
   let placed=0;
-  while(placed<20){ const x=Math.floor(Math.random()*N), y=Math.floor(Math.random()*N);
+  const FOOD_TOTAL = Math.floor(N*N*0.5); // 食物数量 = 格子总数的 50%
+  while(placed<FOOD_TOTAL){ const x=Math.floor(Math.random()*N), y=Math.floor(Math.random()*N);
     if(grid[y][x]===0){ grid[y][x]=1; placed++; } }
   do{ bx=Math.floor(Math.random()*N); by=Math.floor(Math.random()*N); }while(grid[by][bx]===1);
   score=0; steps=0; renderMap();
