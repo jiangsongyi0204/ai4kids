@@ -85,7 +85,7 @@ async function main() {
   await checkContains('/artificial-intelligence/mnist.html', '手写数字', '200 组', '训练数据200组');
   await checkContains('/artificial-intelligence/cnn.html', '卷积', '实际问题', '实际问题段落');
   await checkContains('/artificial-intelligence/cnn.html', '卷积', '训练数据格式', '数据格式段落');
-  await checkContains('/artificial-intelligence/cnn.html', '卷积', 'ANN 可视化训练器', '可视化训练器');
+  await checkContains('/artificial-intelligence/cnn.html', '卷积', 'CNN 可视化训练器', '可视化训练器');
   await checkContains('/artificial-intelligence/cnn.html', '卷积', '互动演示', '互动演示段落');
 
   // 三、导航跳转
