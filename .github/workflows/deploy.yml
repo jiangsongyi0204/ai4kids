@@ -20,14 +20,18 @@ jobs:
           script: |
             cd /root/projects/ai4kids
 
+            # 任一步失败立即中止（避免"假成功"）
+            set -e
+
             # 0. 指定 Node.js 版本
             export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            nvm use 24 2>/dev/null || nvm use 18 2>/dev/null || nvm use default
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" || true
+            nvm use 24 2>/dev/null || nvm use 18 2>/dev/null || nvm use default || true
 
-            # 1. 丢弃本地修改，拉取最新代码
-            git checkout -- .
-            git pull origin main
+            # 1. 强制对齐远端代码（丢弃本地修改 + 删除未跟踪文件，如 package-lock.json）
+            git fetch origin main
+            git reset --hard origin/main
+            git clean -fd
 
             # 2. 安装依赖
             npm install
