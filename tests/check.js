@@ -65,6 +65,7 @@ async function main() {
   await checkTitle('/artificial-intelligence/', '人工智能课程', '人工智能');
   await checkTitle('/artificial-intelligence/neural-network.html', '神经网络实验', '神经网络');
   await checkTitle('/artificial-intelligence/mnist.html', '手写数字识别', '手写数字识别');
+  await checkTitle('/artificial-intelligence/cnn.html', '卷积神经网络', '卷积神经网络');
 
   // 二、关键元素
   console.log('\n-- 2. 关键元素 --');
@@ -82,6 +83,10 @@ async function main() {
   await checkContains('/artificial-intelligence/mnist.html', '手写数字', 'ANN 可视化训练器', '可视化训练器');
   await checkContains('/artificial-intelligence/mnist.html', '手写数字', '互动演示', '互动演示段落');
   await checkContains('/artificial-intelligence/mnist.html', '手写数字', '200 组', '训练数据200组');
+  await checkContains('/artificial-intelligence/cnn.html', '卷积', '实际问题', '实际问题段落');
+  await checkContains('/artificial-intelligence/cnn.html', '卷积', '训练数据格式', '数据格式段落');
+  await checkContains('/artificial-intelligence/cnn.html', '卷积', 'ANN 可视化训练器', '可视化训练器');
+  await checkContains('/artificial-intelligence/cnn.html', '卷积', '互动演示', '互动演示段落');
 
   // 三、导航跳转
   console.log('\n-- 3. 导航跳转 --');
@@ -93,6 +98,7 @@ async function main() {
   const aiPage = await fetchHtml('/artificial-intelligence/');
   log(aiPage.html.includes('neural-network.html'), '人工智能 神经网络按钮', '链接到神经网络实验');
   log(aiPage.html.includes('mnist.html'), '人工智能 手写数字按钮', '链接到手写数字识别');
+  log(aiPage.html.includes('cnn.html'), '人工智能 卷积网络按钮', '链接到卷积神经网络');
 
   // 四、API 端点
   console.log('\n-- 4. API --');
