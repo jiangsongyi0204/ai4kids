@@ -1,0 +1,101 @@
+/**
+ * ai4kids · 职业宇宙 页面自动化检查脚本
+ * 纯 HTTP 请求，无需浏览器，零依赖
+ * 包含：页面加载 + 关键元素 + API 端点
+ * 用法: node tests/check.js          （默认 http://localhost:80）
+ *       BASE=http://localhost:8080 node tests/check.js
+ */
+
+const BASE = process.env.BASE || 'http://localhost:80';
+
+let passed = 0, failed = 0, total = 0;
+const results = [];
+
+function log(ok, label, detail = '') {
+  total++;
+  if (ok) passed++; else failed++;
+  console.log(`  ${ok ? '✅' : '❌'} ${label}${detail ? ` — ${detail}` : ''}`);
+  results.push({ ok, label, detail });
+}
+
+async function get(path, opts = {}) {
+  const headers = { Connection: 'close', ...(opts.headers || {}) };
+  try { return await fetch(BASE + path, { ...opts, headers }); }
+  catch (e) { return { status: 0, _error: e.message }; }
+}
+
+async function fetchHtml(path) {
+  const res = await get(path, { redirect: 'follow' });
+  return { res, html: res.status === 200 ? await res.text() : '' };
+}
+
+async function checkPage(path, name) {
+  const res = await get(path, { redirect: 'follow' });
+  log(res.status === 200, `${name} 页面加载`, `GET ${path} -> ${res.status}`);
+  return res;
+}
+
+async function checkTitle(path, name, expectedText) {
+  const { res, html } = await fetchHtml(path);
+  if (res.status !== 200) { log(false, `${name} 标题`, `页面返回 ${res.status}`); return; }
+  const m = html.match(/<title>([^<]*)<\/title>/i);
+  const title = m ? m[1] : '';
+  const ok = title.includes(expectedText);
+  log(ok, `${name} 标题`, ok ? `"${title}"` : `期望含"${expectedText}" 实际"${title}"`);
+}
+
+async function checkContains(path, name, text, desc) {
+  const { res, html } = await fetchHtml(path);
+  if (res.status !== 200) { log(false, `${name} ${desc}`, `页面返回 ${res.status}`); return; }
+  log(html.includes(text), `${name} ${desc}`, text.slice(0, 50));
+}
+
+// ========== 主测试 ==========
+async function main() {
+  console.log('\n========================================');
+  console.log('   ai4kids · 职业宇宙 自动化测试');
+  console.log('   BASE = ' + BASE);
+  console.log('========================================\n');
+
+  // 一、页面加载
+  console.log('-- 1. 页面加载 --');
+  await checkTitle('/', '首页（职业宇宙）', '职业宇宙');
+  await checkTitle('/guide.html', '教育全景导航', 'AI时代教育全景导航');
+  await checkTitle('/web-development/', 'Web开发课程', 'Web 开发');
+  await checkTitle('/writingplanet/', '写作星球', '写作星球');
+
+  // 二、关键元素
+  console.log('\n-- 2. 关键元素 --');
+  await checkContains('/', '首页', '101 个闪闪发光的职业星球', '101职业文案');
+  await checkContains('/', '首页', 'Web 开发', 'Web开发卡片');
+  await checkContains('/', '首页', 'career101_unlocked', '解锁进度存储');
+  await checkContains('/web-development/', 'Web开发', '时间轴', '时间轴组件');
+  await checkContains('/web-development/', 'Web开发', '1989', '起点年份');
+  await checkContains('/writingplanet/', '写作星球', '灵感宇宙', '标题文案');
+
+  // 三、导航跳转
+  console.log('\n-- 3. 导航跳转 --');
+  const home = await fetchHtml('/');
+  log(home.html.includes("'/'") || home.html.includes('"/"'), '首页 职业卡片跳转', '职业卡片链接到 /web-development/');
+  const wd = await fetchHtml('/web-development/');
+  log(/location\.href\s*=\s*['"]\//.test(wd.html) || /href=["']\//.test(wd.html), 'Web开发 返回宇宙按钮', '可返回首页');
+
+  // 四、API 端点
+  console.log('\n-- 4. API --');
+  const appsRes = await get('/api/apps');
+  let appsData = null;
+  try { appsData = await appsRes.json(); } catch {}
+  log(appsRes.status === 200, 'GET /api/apps', `status=${appsRes.status}`);
+  log(Array.isArray(appsData), '/api/apps 返回数组', `长度=${Array.isArray(appsData) ? appsData.length : 'N/A'}`);
+  log(Array.isArray(appsData) && appsData.some(a => a.id === 'web-development'), '/api/apps 含 web-development',
+    Array.isArray(appsData) && appsData.some(a => a.id === 'web-development') ? '找到' : '未找到');
+  log(Array.isArray(appsData) && appsData.some(a => a.id === 'writingplanet'), '/api/apps 含 writingplanet',
+    Array.isArray(appsData) && appsData.some(a => a.id === 'writingplanet') ? '找到' : '未找到');
+
+  console.log('\n' + '='.repeat(40));
+  console.log(`结果: ${passed} 通过 / ${failed} 失败 / 共 ${total}`);
+  console.log('='.repeat(40));
+  process.exitCode = failed > 0 ? 1 : 0;
+}
+
+main();

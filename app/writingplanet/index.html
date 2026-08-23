@@ -978,7 +978,7 @@ function bindEvents(){
   $('#mainNav').addEventListener('click', function(e){
     var b=e.target.closest('button'); if(!b) return;
     var nav=b.getAttribute('data-nav');
-    if(nav==='education'){ location.href='guide.html'; return; }
+    if(nav==='education'){ location.href='/guide.html'; return; }
     showScreen(nav);
   });
   $('#btnStart').addEventListener('click', function(){

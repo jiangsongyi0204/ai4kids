@@ -1,0 +1,7 @@
+# 运行时数据目录：大模型生成物 + SQLite 数据库
+# - images/    大模型生成的图像
+# - text/      大模型生成的文字
+# - videos/    大模型生成的视频
+# - music/     大模型生成的音乐
+# - ai4kids.db SQLite 数据库（未来）
+# 内容已被 .gitignore 忽略，仅保留目录骨架

@@ -320,7 +320,7 @@ function renderGrid(){
   }).join('');
 
   gridEl.querySelectorAll('.job.lit').forEach(el=>{
-    el.onclick = ()=>{ location.href = 'careers/' + el.dataset.page + '.html'; };
+    el.onclick = ()=>{ location.href = '/' + el.dataset.page + '/'; };
   });
   gridEl.querySelectorAll('.job.lock').forEach(el=>{
     el.onclick = ()=> toast(`🔒「${el.dataset.name}」还没点亮，先完成已点亮的职业再回来吧！`);

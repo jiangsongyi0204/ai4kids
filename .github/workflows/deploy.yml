@@ -32,8 +32,11 @@ jobs:
             # 2. 安装依赖
             npm install
 
-            # 3. 重启 Node 静态服务器（监听 80 端口）
-            pm2 delete ai4kids 2>/dev/null || true
-            pm2 start npm --name ai4kids -- run start
+            # 3. 在 HTML 中注入时间戳（缓存破坏）
+            TIMESTAMP=$(date +%s)
+            find public app -name "*.html" -exec sed -i "s|\.css\"|.css?v=${TIMESTAMP}\"|g; s|\.js\"|.js?v=${TIMESTAMP}\"|g" {} \; || true
+
+            # 4. 重启服务（Express + ts-node，监听 80 端口）
+            pm2 restart ai4kids 2>/dev/null || pm2 start npm --name ai4kids -- run start
 
             echo "✅ 部署完成 — $(date)"
