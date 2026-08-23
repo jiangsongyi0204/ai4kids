@@ -64,6 +64,7 @@ async function main() {
   await checkTitle('/web-development/', 'Web开发课程', 'Web 开发');
   await checkTitle('/artificial-intelligence/', '人工智能课程', '人工智能');
   await checkTitle('/artificial-intelligence/neural-network.html', '神经网络实验', '神经网络');
+  await checkTitle('/artificial-intelligence/mnist.html', '手写数字识别', '手写数字识别');
 
   // 二、关键元素
   console.log('\n-- 2. 关键元素 --');
@@ -76,6 +77,11 @@ async function main() {
   await checkContains('/artificial-intelligence/', '人工智能', '1950', '起点年份');
   await checkContains('/artificial-intelligence/neural-network.html', '神经网络', '10×10', '10x10地图');
   await checkContains('/artificial-intelligence/neural-network.html', '神经网络', '训练数据格式', '数据格式');
+  await checkContains('/artificial-intelligence/mnist.html', '手写数字', '实际问题', '实际问题段落');
+  await checkContains('/artificial-intelligence/mnist.html', '手写数字', '训练数据格式', '数据格式段落');
+  await checkContains('/artificial-intelligence/mnist.html', '手写数字', 'ANN 可视化训练器', '可视化训练器');
+  await checkContains('/artificial-intelligence/mnist.html', '手写数字', '互动演示', '互动演示段落');
+  await checkContains('/artificial-intelligence/mnist.html', '手写数字', '200 组', '训练数据200组');
 
   // 三、导航跳转
   console.log('\n-- 3. 导航跳转 --');
@@ -86,6 +92,7 @@ async function main() {
   log(/location\.href\s*=\s*['"]\//.test(wd.html) || /href=["']\//.test(wd.html), 'Web开发 返回首页按钮', '可返回首页');
   const aiPage = await fetchHtml('/artificial-intelligence/');
   log(aiPage.html.includes('neural-network.html'), '人工智能 神经网络按钮', '链接到神经网络实验');
+  log(aiPage.html.includes('mnist.html'), '人工智能 手写数字按钮', '链接到手写数字识别');
 
   // 四、API 端点
   console.log('\n-- 4. API --');
