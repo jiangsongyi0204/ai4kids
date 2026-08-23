@@ -63,6 +63,7 @@ async function main() {
   await checkTitle('/guide.html', '教育全景导航', 'AI时代教育全景导航');
   await checkTitle('/web-development/', 'Web开发课程', 'Web 开发');
   await checkTitle('/artificial-intelligence/', '人工智能课程', '人工智能');
+  await checkTitle('/artificial-intelligence/neural-network.html', '神经网络实验', '神经网络');
 
   // 二、关键元素
   console.log('\n-- 2. 关键元素 --');
@@ -73,6 +74,8 @@ async function main() {
   await checkContains('/web-development/', 'Web开发', '1989', '起点年份');
   await checkContains('/artificial-intelligence/', '人工智能', '时间轴', '时间轴组件');
   await checkContains('/artificial-intelligence/', '人工智能', '1950', '起点年份');
+  await checkContains('/artificial-intelligence/neural-network.html', '神经网络', '10×10', '10x10地图');
+  await checkContains('/artificial-intelligence/neural-network.html', '神经网络', '训练数据格式', '数据格式');
 
   // 三、导航跳转
   console.log('\n-- 3. 导航跳转 --');
@@ -81,6 +84,8 @@ async function main() {
   log(home.html.includes('href="/guide.html"'), '首页 教育理念按钮', '链接到 guide.html');
   const wd = await fetchHtml('/web-development/');
   log(/location\.href\s*=\s*['"]\//.test(wd.html) || /href=["']\//.test(wd.html), 'Web开发 返回首页按钮', '可返回首页');
+  const aiPage = await fetchHtml('/artificial-intelligence/');
+  log(aiPage.html.includes('neural-network.html'), '人工智能 神经网络按钮', '链接到神经网络实验');
 
   // 四、API 端点
   console.log('\n-- 4. API --');
