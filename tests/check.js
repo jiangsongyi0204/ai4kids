@@ -64,6 +64,7 @@ async function main() {
   await checkTitle('/web-development/', 'Web开发课程', 'Web 开发');
   await checkTitle('/artificial-intelligence/', '人工智能课程', '人工智能');
   await checkTitle('/artificial-intelligence/neural-network.html', '神经网络实验', '神经网络');
+  await checkTitle('/artificial-intelligence/perceptron.html', '单层感知机', '单层感知机');
   await checkTitle('/artificial-intelligence/mnist.html', '手写数字识别', '手写数字识别');
   await checkTitle('/artificial-intelligence/cnn.html', '卷积神经网络', '卷积神经网络');
   await checkTitle('/artificial-intelligence/gpt.html', 'GPT唐诗生成', 'GPT');
@@ -107,8 +108,10 @@ async function main() {
   const wd = await fetchHtml('/web-development/');
   log(/location\.href\s*=\s*['"]\//.test(wd.html) || /href=["']\//.test(wd.html), 'Web开发 返回首页按钮', '可返回首页');
   const aiPage = await fetchHtml('/artificial-intelligence/');
-  log(aiPage.html.includes('lab.html'), '人工智能 实验室入口', '链接到实验室页');
+  const tlPage = await fetchHtml('/artificial-intelligence/timeline.html');
+  log(tlPage.html.includes('lab.html'), '时间轴 进入实验室按钮', '链接到实验室页');
   const labPage = await fetchHtml('/artificial-intelligence/lab.html');
+  log(labPage.html.includes('perceptron.html'), '实验室 单层感知机按钮', '链接到单层感知机');
   log(labPage.html.includes('neural-network.html'), '实验室 神经网络按钮', '链接到神经网络实验');
   log(labPage.html.includes('mnist.html'), '实验室 手写数字按钮', '链接到手写数字识别');
   log(labPage.html.includes('cnn.html'), '实验室 卷积网络按钮', '链接到卷积神经网络');

@@ -31,7 +31,95 @@
   .tab:active { transform:scale(.96); }
 
   /* 课程内容卡片（与上方 Tab 卡片同宽） */
-  .lesson { box-shadow:0 12px 30px rgba(120,160,210,.18); max-width:none; width:100%; margin:6px 0 20px; }
+  .lesson { box-shadow:0 12px 30px rgba(120,160,210,.18); max-width:none; width:100%; margin:6px 0 20px;
+    padding:14px 14px 22px; background:linear-gradient(180deg,#fffef9,#fff6e6); }
+
+  /* ===== 绘本化课程设计 ===== */
+  .pb-cover { border-radius:24px; overflow:hidden; border:3px solid #fff;
+    box-shadow:0 12px 26px rgba(120,160,210,.28); margin-bottom:16px; position:relative; }
+  .pb-scene { position:relative; height:210px; overflow:hidden; }
+  .pb-char { position:absolute; left:50%; bottom:24px; transform:translateX(-50%); font-size:92px; z-index:3;
+    filter:drop-shadow(0 10px 14px rgba(0,0,0,.22)); animation:pbFloat 3.2s ease-in-out infinite; }
+  .pb-year { position:absolute; right:12px; top:12px; z-index:4; background:rgba(255,255,255,.88); border:2px solid #fff;
+    color:#7a4a00; font-weight:800; font-size:13px; padding:4px 14px; border-radius:30px; box-shadow:0 4px 10px rgba(0,0,0,.12); }
+  .pb-cloud { position:absolute; font-size:36px; opacity:.95; animation:pbDrift 6s ease-in-out infinite; z-index:2; }
+  .pb-cloud.pbc1 { left:6%; top:14%; }
+  .pb-cloud.pbc2 { left:74%; top:22%; animation-delay:2.2s; }
+  .pb-spark { position:absolute; color:rgba(255,255,255,.95); font-size:16px; animation:pbTwinkle 2.4s ease-in-out infinite; z-index:2; }
+  .pb-spark.s1 { left:22%; top:10%; }
+  .pb-spark.s2 { left:64%; top:6%; font-size:12px; animation-delay:.8s; }
+  .pb-spark.s3 { left:86%; top:40%; font-size:13px; animation-delay:1.4s; }
+  .pb-deco { position:absolute; font-size:26px; z-index:2; filter:drop-shadow(0 4px 6px rgba(0,0,0,.16));
+    animation:pbFloat 3.6s ease-in-out infinite; }
+  .pb-hill { position:absolute; left:-8%; right:-8%; bottom:-36px; height:126px; border-radius:50% 50% 0 0; z-index:1; opacity:.95; }
+  .pb-title { position:relative; z-index:4; text-align:center; background:#fff; padding:14px 16px 18px; }
+  .pb-title h2 { font-size:24px; color:#1c2150; margin:0; }
+  .pb-title .pb-tag { display:inline-block; margin-top:8px; font-size:12px; font-weight:800; color:#8a6d3b;
+    background:#fff3d6; border:2px solid #ffe7a8; border-radius:30px; padding:3px 14px; }
+
+  @keyframes pbFloat { 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-8px);} }
+  @keyframes pbDrift { 0%,100%{ transform:translateX(0);} 50%{ transform:translateX(10px);} }
+  @keyframes pbTwinkle { 0%,100%{ opacity:.3;} 50%{ opacity:1;} }
+
+  /* 绘本分节卡片 */
+  .sec { position:relative; overflow:hidden; padding:16px 20px 16px 58px; border-radius:22px; margin-top:14px;
+    border:3px solid #fff; box-shadow:0 8px 18px rgba(120,160,210,.16); }
+  .sec::before { content:''; position:absolute; left:0; top:0; bottom:0; width:42px; }
+  .sec::after { content:attr(data-e); position:absolute; right:-6px; bottom:-18px; font-size:84px; opacity:.13;
+    transform:rotate(-8deg); pointer-events:none; }
+  .sec h4 { position:relative; z-index:1; }
+  .sec h4::before { content:''; display:inline-block; width:30px; height:30px; border-radius:50%; background:#fff;
+    box-shadow:0 2px 6px rgba(31,41,55,.14); flex-shrink:0; }
+  .sec.story { background:linear-gradient(135deg,#fffdf2,#ffeebd); } .sec.story::before{ background:#ffc93c; } .sec.story h4{ color:#b97800; }
+  .sec.teach { background:linear-gradient(135deg,#f1f7ff,#d9e9ff); } .sec.teach::before{ background:#6aa6ff; } .sec.teach h4{ color:#3a5bb0; }
+  .sec.act { background:linear-gradient(135deg,#effbf3,#d3f2df); } .sec.act::before{ background:#43c878; } .sec.act h4{ color:#1d9e5c; }
+  .sec.think { background:linear-gradient(135deg,#f7f1ff,#e6d9ff); } .sec.think::before{ background:#b28aff; } .sec.think h4{ color:#7a3fbf; }
+  .sec.quiz { background:linear-gradient(135deg,#fff2f7,#ffdceb); } .sec.quiz::before{ background:#ff8fc0; } .sec.quiz h4{ color:#c44a8f; }
+  .sec.person { background:linear-gradient(135deg,#fff7ec,#ffe7cd); } .sec.person::before{ background:#ffa94d; } .sec.person h4{ color:#b96a1e; }
+  .pp { display:flex; align-items:center; gap:18px; position:relative; z-index:1; }
+  .pp-img { width:96px; height:96px; border-radius:50%; object-fit:cover; border:4px solid #fff; flex-shrink:0;
+    box-shadow:0 6px 14px rgba(120,160,210,.38); }
+  .pp-fb { width:96px; height:96px; border-radius:50%; background:#ffd9a8; border:4px solid #fff; flex-shrink:0;
+    display:none; align-items:center; justify-content:center; font-size:44px; box-shadow:0 6px 14px rgba(120,160,210,.38); }
+  .pp-name { font-size:19px; font-weight:800; color:#8a4a12; }
+  .pp-role { font-size:12px; color:#a0692f; margin-top:3px; line-height:1.6; }
+  .pp-credit { font-size:9px; color:#c9a06b; margin-top:6px; }
+
+  /* 感知机结构图卡片 */
+  .sec.struct { background:linear-gradient(135deg,#eaf7f5,#cdeee8); }
+  .sec.struct::before { background:#2bb3a3; }
+  .sec.struct h4 { color:#147a6e; }
+  .struct-intro { font-size:14px; line-height:1.85; color:#4a507a; }
+  .formula { margin:10px 0 4px; background:#fff; border:2px dashed #2bb3a3; border-radius:14px; padding:10px 14px;
+    font-family:Consolas,Menlo,monospace; font-size:13px; font-weight:700; color:#147a6e; text-align:center; }
+  .cmp { display:flex; gap:8px; align-items:stretch; margin:12px 0 4px; }
+  .cmp-col { flex:1; background:#fff; border:3px solid #fff; border-radius:16px; padding:8px 6px 4px;
+    box-shadow:0 4px 10px rgba(31,41,55,.08); min-width:0; }
+  .cmp-title { text-align:center; font-size:13px; font-weight:800; color:#3a4470; margin-bottom:2px; }
+  .cmp-svg { width:100%; height:auto; display:block; }
+  .cmp-arrow { align-self:center; font-size:22px; flex-shrink:0; }
+  .cmp-tbl { width:100%; border-collapse:separate; border-spacing:0; margin-top:8px; background:#fff;
+    border-radius:14px; overflow:hidden; box-shadow:0 4px 10px rgba(31,41,55,.08); font-size:12px; }
+  .cmp-tbl th { background:#2bb3a3; color:#fff; padding:7px 8px; font-size:12px; }
+  .cmp-tbl td { padding:7px 8px; text-align:center; border-top:1px solid #eef3f8; color:#3a4470; font-weight:600; }
+  .sd { position:relative; margin-top:14px; background:#fff; border:3px solid #fff; border-radius:16px; padding:10px 8px 6px;
+    box-shadow:0 4px 10px rgba(31,41,55,.08); }
+  .sd-lab { position:absolute; top:10px; right:10px; z-index:2;
+    background:linear-gradient(135deg,#b07cff,#7c3aed); color:#fff; font-size:11px; font-weight:800;
+    padding:5px 12px; border-radius:30px; text-decoration:none; border:2px solid #fff;
+    box-shadow:0 4px 10px rgba(124,58,237,.4); transition:.15s; }
+  .sd-lab:hover { transform:translateY(-2px); box-shadow:0 8px 16px rgba(124,58,237,.55); }
+  .sd-lab:active { transform:scale(.95); }
+  .sd-title { text-align:center; font-size:14px; font-weight:800; color:#147a6e; }
+  .sd svg { width:100%; height:auto; display:block; margin-top:4px; }
+  .sd-note-wrap { text-align:center; margin-top:6px; }
+  .sd-note { display:inline-block; text-align:center; font-size:12px; font-weight:700; color:#8a6d3b;
+    background:#fff3d6; border-radius:30px; padding:4px 12px; }
+  .struct-hist { margin-top:12px; font-size:13px; line-height:1.8; color:#4a507a; background:rgba(255,255,255,.6);
+    border-radius:14px; padding:10px 12px; }
+  @media (max-width:560px){ .cmp { flex-direction:column; } }
+  .opt { border-radius:16px; }
+  @media (max-width:520px){ .pb-scene{ height:168px; } .pb-char{ font-size:64px; } }
 
   /* 固定返回按钮 */
   .back-fixed { position:fixed; top:14px; left:14px; z-index:20; box-shadow:0 6px 18px rgba(120,160,210,.35); }
@@ -71,6 +159,8 @@ const COURSES = [
 {
   year:'1950', emoji:'💬', title:'图灵测试', tag:'一切的开始',
   brief:'图灵爷爷问了一个问题：机器能思考吗？',
+  scene:['🤖','👤','🔍','💭','🗣️'],
+  person:{ name:'艾伦·图灵', role:'计算机科学之父 · 提出图灵测试', img:'https://commons.wikimedia.org/wiki/Special:FilePath/Alan_Turing_Aged_16.jpg' },
   story:'1950 年，英国数学家阿兰·图灵在一篇论文里提出一个有趣的问题：「机器能像人一样思考吗？」他还设计了一个「模仿游戏」来检验：让你隔着屏幕，同时和一个人、一台机器聊天。如果你分不清哪个是机器、哪个是人，那就说明这台机器「会思考」！这就是著名的<b>图灵测试</b>，也是人工智能故事的起点。',
   teach:'人工智能 = 让机器学会做「需要人类智慧才能做的事」，比如看、听、说、思考、做决定。图灵爷爷用「聊天」来考验机器，是因为「像人一样好好说话」特别难——既要听懂意思，又要答得合理、有感情。',
   activity:{title:'动手：玩一次「模仿游戏」', steps:[
@@ -86,6 +176,8 @@ const COURSES = [
 {
   year:'1956', emoji:'🌱', title:'人工智能诞生', tag:'种下种子',
   brief:'一群科学家开会，正式给「聪明的机器」起了名字',
+  scene:['🌱','🏫','🧑‍🔬','📜','💡'],
+  person:{ name:'约翰·麦卡锡', role:'「人工智能」命名者 · 达特茅斯会议发起人', img:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/John_McCarthy_Stanford.jpg/330px-John_McCarthy_Stanford.jpg' },
   story:'1956 年夏天，美国达特茅斯学院的一次会议上，一群科学家聚在一起，正式把「让机器变聪明」这门学问命名为——<b>人工智能（Artificial Intelligence）</b>。从此，AI 成了一门正式的科学，全世界的研究者都朝着「造一个会思考的机器」这个梦想出发。',
   teach:'「人工智能」拆开看，就是「人工（人造的）+ 智能（会思考的本领）」。科学家们想模仿人类的大脑，做出能学习、能推理、能解决问题的机器。它就像种下的一颗种子——今天你手机里的语音助手，都是这颗种子的后代！',
   activity:{title:'动手：找找身边的 AI', steps:[
@@ -100,6 +192,9 @@ const COURSES = [
 {
   year:'1957', emoji:'🧠', title:'感知机诞生', tag:'第一次「学习」',
   brief:'第一台会「学习」的机器，像一颗小小的神经元',
+  scene:['🧠','🐶','🏓','✨','🔋'],
+  struct:'perceptron',
+  person:{ name:'弗兰克·罗森布拉特', role:'感知机发明者 · 机器学习先驱', img:'https://commons.wikimedia.org/wiki/Special:FilePath/Frank_Rosenblatt.jpg' },
   story:'1957 年，美国心理学家罗森布拉特发明了一个叫「感知机」（Perceptron）的机器。它像一个小小的「神经元」，能通过一次次练习学会分辨东西——比如学会分辨左边和右边。这是人类第一次造出会「学习」的机器，就像给人工智能装上了一颗小小的「学习大脑」。',
   teach:'感知机的原理，就像训练一只小狗狗：每次做对了，就奖励一下；做错了，就纠正一下。它通过无数次「做对→记住」，慢慢学会本领。今天我们常说的人工智能「深度学习」，就是从这颗小小的「感知机」一步步进化来的！',
   activity:{title:'动手：当一次「小感知机」', steps:[
@@ -112,8 +207,10 @@ const COURSES = [
   think:'你自己是靠什么学会一件新本领的？和感知机「练习→纠正」的道理像不像？'
 },
 {
-  year:'1966', emoji:'💬', title:'第一个聊天机器人 ELIZA', tag:'AI 学会聊天',
+  year:'1966', emoji:'💬', title:'ELIZA', tag:'AI 学会聊天',
   brief:'世界上第一个会聊天的程序，假装成心理医生',
+  scene:['🗣️','💊','🛋️','💛','🤖'],
+  person:{ name:'约瑟夫·魏泽鲍姆', role:'第一个聊天机器人 ELIZA 的作者', img:'https://commons.wikimedia.org/wiki/Special:FilePath/Joseph_Weizenbaum.jpg' },
   story:'1966 年，麻省理工学院的约瑟夫·魏泽鲍姆写了一个叫 ELIZA 的程序。它假装成一位「心理医生」，你输入什么，它就用固定的句子回应你。其实它什么都不懂，可很多人和它聊着聊着，竟真的把它当成了「知心朋友」！这是世界上第一个聊天机器人。',
   teach:'ELIZA 其实很「笨」——它只是用一些规则，把你话里的关键词抓出来，再套进准备好的句子里。比如你说「我很难过」，它就问「你为什么难过？」。但它让人类第一次体验到「和机器聊天」的神奇，也为今天的聊天机器人埋下了伏笔。',
   activity:{title:'动手：测试一个「假医生」', steps:[
@@ -128,6 +225,8 @@ const COURSES = [
 {
   year:'1980', emoji:'🏥', title:'专家系统', tag:'AI 上班了',
   brief:'AI 把专家的经验装进电脑，当起了「专家顾问」',
+  scene:['🏥','🩺','📋','💻','⚕️'],
+  person:{ name:'爱德华·费根鲍姆', role:'「专家系统之父」· 知识工程开创者', img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/27._Dr._Edward_A._Feigenbaum_1994-1997.jpg/330px-27._Dr._Edward_A._Feigenbaum_1994-1997.jpg' },
   story:'1980 年代，人工智能开始「上班」了！科学家们把很多专家的经验写进电脑，造出了「专家系统」——有看病的、有找矿的、有判断机器故障的。医生可以问它「这个病人可能是什么病」，它能给出专家级的建议。这是 AI 第一次真正走进现实世界帮人干活。',
   teach:'专家系统 = 「把专家的大脑装进电脑」。它靠的是「如果……那么……」的规则，比如「如果发烧 + 咳嗽，那么可能是感冒」。它不会自己思考新东西，但能记住成千上万条规则，比人记得多、算得快。',
   activity:{title:'动手：玩「如果……那么……」接龙', steps:[
@@ -142,6 +241,8 @@ const COURSES = [
 {
   year:'1997', emoji:'♟️', title:'深蓝战胜棋王', tag:'电脑赢了世界冠军',
   brief:'超级计算机第一次在正式比赛打败国际象棋世界冠军',
+  scene:['♟️','👑','💻','⚡','🏆'],
+  person:{ name:'加里·卡斯帕罗夫', role:'国际象棋世界冠军 · 深蓝的对手', img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Garri_Kasparow_%2818776605665%29_%28cropped%29_2.jpg/330px-Garri_Kasparow_%2818776605665%29_%28cropped%29_2.jpg' },
   story:'1997 年，IBM 的超级计算机「深蓝」（Deep Blue）在正式比赛中，打败了国际象棋世界冠军卡斯帕罗夫！全世界都震惊了——这是电脑第一次在「人类智慧的巅峰」国际象棋上，堂堂正正赢了世界第一。人们开始相信：机器，真的能比人算得快。',
   teach:'深蓝为什么能赢？因为它算得快——它每秒能计算几亿个棋步，把所有可能都想一遍，再选出最好的一步。但它靠的不是「聪明」，而是「算得多」。今天的人工智能早已超越了它，但它教会我们：机器最擅长的事，就是又快又准地「算」。',
   activity:{title:'动手：下一盘「深蓝式」的棋', steps:[
@@ -156,6 +257,8 @@ const COURSES = [
 {
   year:'2012', emoji:'🐱', title:'电脑学会了认猫', tag:'深度学习爆发',
   brief:'AI 自己看了几百万张图，自己学会了认出「猫」',
+  scene:['🐱','🐶','🖼️','🔍','📸'],
+  person:{ name:'杰弗里·辛顿', role:'深度学习之父 · 让神经网络复兴', img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Geoffrey_Hinton_in_2026.jpg/330px-Geoffrey_Hinton_in_2026.jpg' },
   story:'2012 年，谷歌的科学家让一个叫「神经网络」的程序，自己看了几百万张图片。结果——它竟然自己「学会」了认猫！不是有人告诉它猫长什么样，而是它自己从无数图片里找出了规律。这就是「深度学习」的威力：机器开始像婴儿一样，自己看、自己学。',
   teach:'深度学习 = 让机器「自己找规律」。它的「神经网络」像一张巨大的蜘蛛网，一层层分析：先看线条，再看形状，最后认出「这是一只猫」。今天能认出人脸、听懂语音、翻译文字，全靠它。深度学习让 AI 从「笨小孩」变成了「学霸」！',
   activity:{title:'动手：观察「认脸」的 AI', steps:[
@@ -170,6 +273,8 @@ const COURSES = [
 {
   year:'2016', emoji:'🎯', title:'AlphaGo 战胜李世石', tag:'AI 有了「直觉」',
   brief:'围棋变化比宇宙原子还多，AI 却学会了「棋感」',
+  scene:['🎯','⚫','⚪','🧘','🏆'],
+  person:{ name:'戴密斯·哈萨比斯', role:'DeepMind 创始人 · AlphaGo 缔造者', img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Demis_Hassabis%2C_2024_Nobel_Prize_Laureate_in_Chemistry_7_%28cropped%29.jpg/330px-Demis_Hassabis%2C_2024_Nobel_Prize_Laureate_in_Chemistry_7_%28cropped%29.jpg' },
   story:'2016 年，谷歌的 AlphaGo 在围棋比赛中，4 比 1 战胜了世界冠军李世石！围棋的变化比宇宙中的原子还多，根本没法靠「算」来赢。AlphaGo 学会了「直觉」——它自己跟自己下了几百万盘棋，练出了棋感。围棋大师们纷纷惊呼：机器真的会「思考」了！',
   teach:'围棋有太多可能，深蓝那种「算遍所有」的办法行不通。AlphaGo 换了个思路：它用「强化学习」自己和自己对弈，在无数盘棋里总结经验，像人一样有了「棋感」。这告诉我们：AI 不仅会算，还能「练」出像直觉一样的本领。',
   activity:{title:'动手：感受你的「直觉」', steps:[
@@ -184,6 +289,8 @@ const COURSES = [
 {
   year:'2018', emoji:'📚', title:'大语言模型', tag:'AI 读懂了文字',
   brief:'AI 读过全世界的书，学会了文字之间的规律',
+  scene:['📚','📝','🔠','🤖','💡'],
+  person:{ name:'伊利亚·苏茨克维', role:'GPT 大语言模型的核心科学家', img:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Ilya_Sutskever_and_Sam_Altman_in_TAU_%28cropped%29.jpg/330px-Ilya_Sutskever_and_Sam_Altman_in_TAU_%28cropped%29.jpg' },
   story:'2018 年起，科学家们做出了越来越大、越来越聪明的「大语言模型」（比如 GPT 系列）。它们读过全世界的书和网页，学会了文字之间的规律。你给它开头，它能接着写下去；你问它问题，它能给出像模像样的回答。AI 终于「看懂」了人类的语言！',
   teach:'大语言模型 = 「读过海量文字的大读书家」。它靠「预测下一个字」来学习：给它「今天天气真」，它知道下一个字最可能是「好」。读得越多，猜得越准，最后能聊天、写作文、写代码。它其实不懂「意思」，但它掌握了「文字排列的规律」——神奇吧！',
   activity:{title:'动手：玩「猜下一个词」', steps:[
@@ -198,6 +305,8 @@ const COURSES = [
 {
   year:'2022', emoji:'💬', title:'ChatGPT 走进千家万户', tag:'人人都会用 AI',
   brief:'只要会提问，人人都能请 AI 帮你写作文、查资料',
+  scene:['💬','✍️','🌍','🤖','💭'],
+  person:{ name:'山姆·奥特曼', role:'OpenAI CEO · ChatGPT 走向大众的推手', img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Meeting_with_Masayoshi_Son_and_Sam_Altman_%28February_3%2C_2025%29_%283x4_cropped_on_Altman%29.jpg/330px-Meeting_with_Masayoshi_Son_and_Sam_Altman_%28February_3%2C_2025%29_%283x4_cropped_on_Altman%29.jpg' },
   story:'2022 年底，一个叫 ChatGPT 的工具突然火遍全世界！不需要高深的学问，只要会打字、会提问，任何人都能请 AI 帮你写作文、查资料、出主意。短短几个月，几亿人用上了它。人工智能第一次真正走进千家万户，成为每个人的「超级帮手」。',
   teach:'ChatGPT 厉害的地方是「会说人话」：你用日常的语言问它，它用日常的语言答你。它的秘诀是「提示词（Prompt）」——你问得越清楚，它答得越好。所以，学会「问对问题」，成了 AI 时代最重要的本领之一。',
   activity:{title:'动手：向 AI 提个好问题', steps:[
@@ -212,6 +321,8 @@ const COURSES = [
 {
   year:'2023', emoji:'🎨', title:'多模态 AI', tag:'AI 能看会画',
   brief:'AI 不只读文字，还能看图片、听声音、画画',
+  scene:['🎨','🖼️','🎵','📷','🌈'],
+  person:{ name:'李飞飞', role:'计算机视觉科学家 · AI4ALL 创始人', img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Fei-Fei_Li_at_AI_for_Good_2017.jpg/330px-Fei-Fei_Li_at_AI_for_Good_2017.jpg' },
   story:'2023 年，AI 变得更全能了！它不只「读文字」，还能「看」图片、「听」声音、「画」画。你说「画一只戴宇航员头盔的小猫」，它「唰」地画给你看；你说「把照片里的背景换成星空」，它也能做到。AI 从「文字小书虫」变成了「全能小艺术家」。',
   teach:'「多模态」就是「多种感官」：文字、图片、声音、视频，AI 都能处理。它能「看图说话」——看到照片就描述内容；能「听音辨字」——把语音变成文字。多模态让 AI 更贴近人类，因为我们就是同时用眼睛、耳朵、嘴巴认识世界的。',
   activity:{title:'动手：让 AI 帮你创作', steps:[
@@ -226,6 +337,8 @@ const COURSES = [
 {
   year:'2024', emoji:'🤖', title:'AI 智能体时代', tag:'指挥 AI 的未来',
   brief:'AI 不只回答问题，还能自己拆步骤、做计划、完成任务',
+  scene:['🤖','📋','🗺️','✅','🧭'],
+  person:{ name:'黄仁勋', role:'NVIDIA 创始人 · 智能体与机器人时代推手', img:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Jen-Hsun_Huang_2025.jpg/330px-Jen-Hsun_Huang_2025.jpg' },
   story:'到了今天，AI 已经不只是「回答问题」，而是能自己「干活」了！你告诉它目标，它能自己拆步骤、做计划、调用工具、一步步完成——比如帮你整理一周的作业计划、规划一次家庭旅行。这样的「AI 智能体（Agent）」，就像一个能独立工作的小管家。',
   teach:'AI 智能体 = 「会自己动手做事的 AI」。它有目标、有计划、会行动，还能检查自己做得好不好。未来的关键能力，是像「导演」一样指挥 AI：把大目标讲清楚、分给小任务、检查结果。你的想象力、判断力和责任感，是 AI 永远替代不了的！',
   activity:{title:'动手：当一次「小导演」', steps:[
@@ -274,28 +387,203 @@ function renderTabs(){
   if(act) act.scrollIntoView({ block:'nearest', inline:'nearest' });
 }
 
+const PALETTES = [
+  ['linear-gradient(180deg,#fff1c9,#ffd9a8)','#ffc98f'],
+  ['linear-gradient(180deg,#d8ecff,#a7d0ff)','#8fbef0'],
+  ['linear-gradient(180deg,#ffe9f5,#ffc6e6)','#f4b2d8'],
+  ['linear-gradient(180deg,#e5f7da,#bdebac)','#a6dc8f'],
+  ['linear-gradient(180deg,#ece4ff,#cdbbff)','#bba7ee'],
+  ['linear-gradient(180deg,#d5f7f3,#a2e8de)','#8bd9cf']
+];
+const DECO_POS = [
+  {l:'8%',t:'16%'},{l:'20%',t:'6%'},{l:'74%',t:'10%'},{l:'88%',t:'26%'},
+  {l:'6%',t:'46%'},{l:'90%',t:'50%'},{l:'14%',t:'58%'},{l:'84%',t:'62%'},{l:'46%',t:'4%'},{l:'58%',t:'52%'}
+];
+
+/* ===== 感知机结构图（1957 感知机诞生 补充内容） ===== */
+const PERCEPTRON_STRUCT_HTML = `
+<div class="sec struct" data-e="🧩">
+  <h4>🧠 感知机小课堂 · 它怎么「思考」？</h4>
+  <p class="struct-intro">感知机（Perceptron）是<b>第一个有完整算法描述的人工神经网络</b>，被叫做神经网络的「Hello World」。它像一颗小神经元，三步做决定：<b>① 接收信号 → ② 加权求和 → ③ 激活输出</b>。</p>
+  <div class="formula">output = 1（当 w₁·x₁ + w₂·x₂ + … + b &gt; 0），否则 output = 0</div>
+
+  <div class="cmp">
+    <div class="cmp-col">
+      <div class="cmp-title">🧫 生物神经元</div>
+      <svg class="cmp-svg" viewBox="0 0 220 150">
+        <path d="M12 38 Q45 40 72 52" stroke="#c2410c" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M8 70 Q48 62 70 64" stroke="#c2410c" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M14 104 Q48 96 72 84" stroke="#c2410c" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <circle cx="14" cy="38" r="4" fill="#ec4899"/>
+        <circle cx="10" cy="70" r="4" fill="#ec4899"/>
+        <circle cx="16" cy="104" r="4" fill="#ec4899"/>
+        <ellipse cx="100" cy="72" rx="34" ry="30" fill="#ffd76a" stroke="#f59e0b" stroke-width="3"/>
+        <circle cx="94" cy="66" r="7" fill="#b97800"/>
+        <path d="M132 68 Q158 62 178 68" stroke="#c2410c" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M178 68 Q192 58 202 54" stroke="#c2410c" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M178 68 Q194 72 204 80" stroke="#c2410c" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <circle cx="203" cy="54" r="4" fill="#ec4899"/>
+        <circle cx="205" cy="80" r="4" fill="#ec4899"/>
+        <text x="36" y="138" font-size="9" fill="#8a4a12" text-anchor="middle">🌿 树突</text>
+        <text x="102" y="130" font-size="9" fill="#8a4a12" text-anchor="middle">细胞体</text>
+        <text x="196" y="100" font-size="9" fill="#8a4a12" text-anchor="middle">轴突</text>
+      </svg>
+    </div>
+    <div class="cmp-arrow">↔️</div>
+    <div class="cmp-col">
+      <div class="cmp-title">🤖 感知机</div>
+      <svg class="cmp-svg" viewBox="0 0 220 150">
+        <circle cx="30" cy="30" r="14" fill="#a7d0ff" stroke="#3a5bb0" stroke-width="2"/>
+        <text x="30" y="34" font-size="11" fill="#1c2f6b" text-anchor="middle">x₁</text>
+        <circle cx="30" cy="75" r="14" fill="#a7d0ff" stroke="#3a5bb0" stroke-width="2"/>
+        <text x="30" y="79" font-size="11" fill="#1c2f6b" text-anchor="middle">x₂</text>
+        <circle cx="30" cy="120" r="14" fill="#a7d0ff" stroke="#3a5bb0" stroke-width="2"/>
+        <text x="30" y="124" font-size="11" fill="#1c2f6b" text-anchor="middle">x₃</text>
+        <line x1="44" y1="32" x2="124" y2="66" stroke="#7c8bff" stroke-width="2"/>
+        <line x1="44" y1="75" x2="128" y2="72" stroke="#7c8bff" stroke-width="2"/>
+        <line x1="44" y1="118" x2="124" y2="78" stroke="#7c8bff" stroke-width="2"/>
+        <text x="80" y="42" font-size="9" fill="#5a6b96">w₁</text>
+        <text x="84" y="92" font-size="9" fill="#5a6b96">w₂</text>
+        <text x="80" y="106" font-size="9" fill="#5a6b96">w₃</text>
+        <circle cx="140" cy="72" r="25" fill="#ffe9f5" stroke="#ec4899" stroke-width="3"/>
+        <text x="140" y="77" font-size="13" fill="#c44a8f" text-anchor="middle">Σ</text>
+        <line x1="165" y1="72" x2="190" y2="72" stroke="#ec4899" stroke-width="3"/>
+        <circle cx="200" cy="72" r="13" fill="#ffd76a" stroke="#f59e0b" stroke-width="2"/>
+        <text x="200" y="76" font-size="10" fill="#8a4a12" text-anchor="middle">y</text>
+        <text x="30" y="146" font-size="8" fill="#8a93b8" text-anchor="middle">输入</text>
+        <text x="140" y="114" font-size="8" fill="#8a93b8" text-anchor="middle">求和+激活</text>
+        <text x="200" y="98" font-size="8" fill="#8a93b8" text-anchor="middle">输出</text>
+      </svg>
+    </div>
+  </div>
+  <p style="text-align:center;font-size:11px;color:#8a93b8;margin:4px 0 0;">对照着看：感知机就是照着小神经元做出来的「小机器」</p>
+  <table class="cmp-tbl">
+    <tr><th>🧫 生物神经元</th><th>🤖 感知机</th><th>作用</th></tr>
+    <tr><td>🌿 树突</td><td>📥 输入 x</td><td>接收信号</td></tr>
+    <tr><td>🔗 突触</td><td>⚖️ 权重 w</td><td>决定信号重要程度</td></tr>
+    <tr><td>🧠 细胞体</td><td>➕ 求和 + 激活</td><td>汇总并决定是否激活</td></tr>
+    <tr><td>📤 轴突</td><td>📤 输出 y</td><td>把信号传给下一个</td></tr>
+  </table>
+
+  <div class="sd">
+    <a class="sd-lab" href="/artificial-intelligence/lab.html">🔬 进入实验室</a>
+    <div class="sd-title">单层感知机（最原始的感知机）</div>
+    <svg viewBox="0 0 320 160">
+      <circle cx="55" cy="35" r="16" fill="#a7d0ff" stroke="#3a5bb0" stroke-width="2"/>
+      <text x="55" y="40" font-size="12" fill="#1c2f6b" text-anchor="middle">x₁</text>
+      <circle cx="55" cy="80" r="16" fill="#a7d0ff" stroke="#3a5bb0" stroke-width="2"/>
+      <text x="55" y="85" font-size="12" fill="#1c2f6b" text-anchor="middle">x₂</text>
+      <circle cx="55" cy="125" r="16" fill="#a7d0ff" stroke="#3a5bb0" stroke-width="2"/>
+      <text x="55" y="130" font-size="12" fill="#1c2f6b" text-anchor="middle">x₃</text>
+      <line x1="71" y1="35" x2="242" y2="80" stroke="#7c8bff" stroke-width="2"/>
+      <line x1="71" y1="80" x2="242" y2="80" stroke="#7c8bff" stroke-width="2"/>
+      <line x1="71" y1="125" x2="242" y2="80" stroke="#7c8bff" stroke-width="2"/>
+      <text x="150" y="52" font-size="10" fill="#5a6b96" text-anchor="middle">w</text>
+      <circle cx="260" cy="80" r="24" fill="#ffe9f5" stroke="#ec4899" stroke-width="3"/>
+      <text x="260" y="85" font-size="13" fill="#c44a8f" text-anchor="middle">Σ</text>
+      <line x1="284" y1="80" x2="306" y2="80" stroke="#ec4899" stroke-width="3"/>
+      <circle cx="312" cy="80" r="11" fill="#ffd76a" stroke="#f59e0b" stroke-width="2"/>
+      <text x="312" y="84" font-size="9" fill="#8a4a12" text-anchor="middle">y</text>
+      <text x="55" y="152" font-size="10" fill="#8a93b8" text-anchor="middle">输入层</text>
+      <text x="284" y="122" font-size="10" fill="#8a93b8" text-anchor="middle">输出层</text>
+    </svg>
+    <div class="sd-note-wrap"><span class="sd-note">⚡ 只能解决「线性可分」问题</span></div>
+  </div>
+
+  <div class="sd">
+    <a class="sd-lab" href="/artificial-intelligence/lab.html">🔬 进入实验室</a>
+    <div class="sd-title">多层感知机（MLP · 现代深度学习的基础）</div>
+    <svg viewBox="0 0 360 190">
+      <circle cx="55" cy="45" r="16" fill="#a7d0ff" stroke="#3a5bb0" stroke-width="2"/>
+      <text x="55" y="50" font-size="12" fill="#1c2f6b" text-anchor="middle">x₁</text>
+      <circle cx="55" cy="95" r="16" fill="#a7d0ff" stroke="#3a5bb0" stroke-width="2"/>
+      <text x="55" y="100" font-size="12" fill="#1c2f6b" text-anchor="middle">x₂</text>
+      <circle cx="55" cy="145" r="16" fill="#a7d0ff" stroke="#3a5bb0" stroke-width="2"/>
+      <text x="55" y="150" font-size="12" fill="#1c2f6b" text-anchor="middle">x₃</text>
+      <g stroke="#a8c4f0" stroke-width="1.5">
+        <line x1="71" y1="45" x2="170" y2="30"/><line x1="71" y1="45" x2="170" y2="75"/>
+        <line x1="71" y1="45" x2="170" y2="120"/><line x1="71" y1="45" x2="170" y2="165"/>
+        <line x1="71" y1="95" x2="170" y2="30"/><line x1="71" y1="95" x2="170" y2="75"/>
+        <line x1="71" y1="95" x2="170" y2="120"/><line x1="71" y1="95" x2="170" y2="165"/>
+        <line x1="71" y1="145" x2="170" y2="30"/><line x1="71" y1="145" x2="170" y2="75"/>
+        <line x1="71" y1="145" x2="170" y2="120"/><line x1="71" y1="145" x2="170" y2="165"/>
+        <line x1="200" y1="30" x2="286" y2="55"/><line x1="200" y1="30" x2="286" y2="135"/>
+        <line x1="200" y1="75" x2="286" y2="55"/><line x1="200" y1="75" x2="286" y2="135"/>
+        <line x1="200" y1="120" x2="286" y2="55"/><line x1="200" y1="120" x2="286" y2="135"/>
+        <line x1="200" y1="165" x2="286" y2="55"/><line x1="200" y1="165" x2="286" y2="135"/>
+      </g>
+      <circle cx="185" cy="30" r="15" fill="#d8f0dd" stroke="#1d9e5c" stroke-width="2"/>
+      <circle cx="185" cy="75" r="15" fill="#d8f0dd" stroke="#1d9e5c" stroke-width="2"/>
+      <circle cx="185" cy="120" r="15" fill="#d8f0dd" stroke="#1d9e5c" stroke-width="2"/>
+      <circle cx="185" cy="165" r="15" fill="#d8f0dd" stroke="#1d9e5c" stroke-width="2"/>
+      <circle cx="305" cy="55" r="19" fill="#ffe9f5" stroke="#ec4899" stroke-width="3"/>
+      <text x="305" y="60" font-size="10" fill="#c44a8f" text-anchor="middle">y₁</text>
+      <circle cx="305" cy="135" r="19" fill="#ffe9f5" stroke="#ec4899" stroke-width="3"/>
+      <text x="305" y="140" font-size="10" fill="#c44a8f" text-anchor="middle">y₂</text>
+      <text x="55" y="180" font-size="10" fill="#8a93b8" text-anchor="middle">输入层</text>
+      <text x="185" y="186" font-size="10" fill="#8a93b8" text-anchor="middle">隐藏层</text>
+      <text x="305" y="172" font-size="10" fill="#8a93b8" text-anchor="middle">输出层</text>
+    </svg>
+    <div class="sd-note-wrap"><span class="sd-note">🌟 多了一层「隐藏层」，能解决 XOR 等难题</span></div>
+  </div>
+
+  <p class="struct-hist">📜 历史小知识：1957 年罗森布拉特发明感知机时引起轰动；1969 年明斯基指出它学不会「异或 XOR」等难题，引发第一次 AI 寒冬。但也正是它，催生了更厉害的「多层感知机（MLP）」——现代深度学习的爷爷！</p>
+</div>`;
+
 function renderLesson(){
   const c = COURSES[current];
   const doneNow = doneSet.has(c.year);
   const isLast = current === COURSES.length-1;
   const isFirst = current === 0;
-  lessonEl.innerHTML = `
-    <div class="l-head">
-      <span class="lyear">${c.year} 年</span>
-      <span class="lemo">${c.emoji}</span>
-      <h2>${current+1}. ${c.title}</h2>
-      <span class="ltag">${c.tag} · 人工智能时间轴第 ${current+1} 站</span>
-    </div>
-    <div class="sec story"><h4>🕰️ 故事时间 · 那时候发生了什么？</h4><p>${c.story}</p></div>
-    <div class="sec teach"><h4>📖 知识小课堂 · 记住这个魔法！</h4><p>${c.teach}</p></div>
-    <div class="sec act"><h4>🖐️ 动手小任务 · 亲自试一试</h4><ol>${c.activity.steps.map(s=>`<li>${s}</li>`).join('')}</ol></div>
-    <div class="sec quiz" id="quizBox">
+  /* 绘本封面插图：天空渐变 + 山丘 + 漂浮场景 emoji + 主角 */
+  const PAL = PALETTES[current % PALETTES.length];
+  const scene = c.scene || [];
+  const decoHtml = scene.map((e,i)=>{
+    const p = DECO_POS[i % DECO_POS.length];
+    return `<span class="pb-deco" style="left:${p.l};top:${p.t};animation-delay:${(i%4)*0.6}s">${e}</span>`;
+  }).join('');
+  const cover = `
+    <div class="pb-cover">
+      <div class="pb-scene" style="background:${PAL[0]}">
+        <span class="pb-spark s1">✦</span><span class="pb-spark s2">✦</span><span class="pb-spark s3">✧</span>
+        <div class="pb-cloud pbc1">☁️</div>
+        <div class="pb-cloud pbc2">☁️</div>
+        ${decoHtml}
+        <div class="pb-hill" style="background:${PAL[1]}"></div>
+        <div class="pb-year">${c.year} 年</div>
+        <div class="pb-char">${c.emoji}</div>
+      </div>
+      <div class="pb-title">
+        <h2>${current+1}. ${c.title}</h2>
+        <span class="pb-tag">${c.tag} · 人工智能时间轴第 ${current+1} 站</span>
+      </div>
+    </div>`;
+  const personCard = c.person ? `
+    <div class="sec person" data-e="🧑">
+      <h4>🧑 本课重要人物</h4>
+      <div class="pp">
+        <img class="pp-img" src="${c.person.img}" alt="${c.person.name}" loading="lazy"
+          title="照片来源：维基共享资源" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="pp-fb">🧑</div>
+        <div class="pp-info">
+          <div class="pp-name">${c.person.name}</div>
+          <div class="pp-role">${c.person.role}</div>
+          <div class="pp-credit">📷 照片来源：维基共享资源（公有领域 / CC）</div>
+        </div>
+      </div>
+    </div>` : '';
+  lessonEl.innerHTML = cover + personCard + `
+    <div class="sec story" data-e="📖"><h4>🕰️ 故事时间 · 那时候发生了什么？</h4><p>${c.story}</p></div>
+    <div class="sec teach" data-e="💡"><h4>📖 知识小课堂 · 记住这个魔法！</h4><p>${c.teach}</p></div>
+    ${c.struct==='perceptron'?PERCEPTRON_STRUCT_HTML:''}
+    <div class="sec act" data-e="🛠️"><h4>🖐️ 动手小任务 · 亲自试一试</h4><ol>${c.activity.steps.map(s=>`<li>${s}</li>`).join('')}</ol></div>
+    <div class="sec quiz" data-e="🎯" id="quizBox">
       <h4>❓ 小测试 · 你学会了吗？</h4>
       <p class="quiz-q">${c.quiz.q}</p>
       ${c.quiz.options.map((o,i)=>`<button class="opt" data-i="${i}">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}
       <div class="quiz-fb" id="fb"></div>
     </div>
-    <div class="sec think"><h4>💭 思考时间 · 和爸爸妈妈聊一聊</h4><p>${c.think}</p></div>
+    <div class="sec think" data-e="💭"><h4>💭 思考时间 · 和爸爸妈妈聊一聊</h4><p>${c.think}</p></div>
     <div class="l-nav">
       <button class="btn-prev" id="prevBtn" ${isFirst?'disabled style="opacity:.4"':''}>← 上一课</button>
       <button class="btn-next ${doneNow?'done':''}" id="nextBtn">${isLast?'🏁 完成全部课程':(doneNow?'✅ 已完成 · 下一课 →':'🎯 完成本课 · 下一课 →')}</button>
