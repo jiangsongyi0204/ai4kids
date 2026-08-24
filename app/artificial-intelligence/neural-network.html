@@ -31,8 +31,9 @@
   .trainer-side { display:none; flex-direction:column; gap:10px; min-width:0; }
   @media (max-width:860px){ .trainer-grid { grid-template-columns:1fr; } }
   .trainer-main { min-width:0; }
+  .left-col { display:flex; flex-direction:column; gap:12px; align-self:start; min-width:0; }
   .data-list-panel { background:#fff; border:2px solid #eaf3ff; border-radius:18px; padding:12px 10px;
-    max-height:620px; overflow-y:auto; align-self:start; }
+    max-height:360px; overflow-y:auto; align-self:stretch; }
   .data-list-panel .panel-title { font-size:13px; font-weight:800; color:#2f4a8a; margin-bottom:8px;
     display:flex; align-items:center; gap:6px; }
   .data-list-panel .badge { font-size:11px; background:#eef3ff; color:#5a6b96; padding:0 10px; border-radius:30px; font-weight:700; }
@@ -59,7 +60,7 @@
   @media (max-width:820px){ .debug-grid { grid-template-columns:1fr; } }
 
   /* 网络结构图 */
-  .net-panel { display:flex; align-items:flex-start; gap:16px; }
+  .net-panel { display:flex; align-items:center; gap:16px; }
   .mini9-wrap { flex-shrink:0; width:176px; }
   .mini9-wrap .panel-title { font-size:12px; font-weight:800; color:#2f4a8a; margin-bottom:6px; text-align:center; }
   .net-side { flex:1; min-width:0; }
@@ -146,6 +147,7 @@
     <ul>
       <li>在一个 <b>10×10</b> 的点阵地图里，随机分布着一些<b>食物</b>。</li>
       <li>地图里有一只<b>细菌</b>：它能看到周围 <b>8 个方向</b>（上下左右 + 4 个斜角），只能往 <b>上、下、左、右</b> 4 个方向移动。</li>
+      <li>有时候<b>好几个方向都有食物</b>，有时候<b>一个都没有</b>——细菌要自己判断该往哪儿走。</li>
       <li>我们训练一个神经网络，让细菌根据"看到的 8 个方向"决定"往哪走"，一步步找到食物。</li>
     </ul>
   </div>
@@ -155,11 +157,12 @@
     <div class="fmt">
       <b>输入</b>（8 个数，1=这个方向有食物）：[ 左上, 上, 右上, 左, 右, 左下, 下, 右下 ]<br>
       <b>输出</b>（4 个数，one-hot 移动方向）：[ 上, 左, 下, 右 ]<br>
-      <b>规则</b>：朝食物所在方向走；对角线方向<b>优先水平</b>（先左/右，再上/下）<br>
-      <b>例子①</b>：食物在上方 <b>[0,1,0,0,0,0,0,0]</b> → 输出 <b>[1,0,0,0]</b>（往上走）<br>
-      <b>例子②</b>：食物在左上 <b>[1,0,0,0,0,0,0,0]</b> → 输出 <b>[0,1,0,0]</b>（往左走，对角线优先水平）
+      <b>规则</b>：先数「上 / 左 / 下 / 右」四个方向各有几个食物（斜角算给相邻两个方向），<b>哪边多就往哪边走</b>；一样多时<b>优先水平</b>（左/右）；<b>一个食物都没有</b>就往上走继续找<br>
+      <b>例子①</b>：上方和右上都有食物 <b>[0,1,1,0,0,0,0,0]</b> → 上面有 2 个 → 输出 <b>[1,0,0,0]</b>（往上）<br>
+      <b>例子②</b>：上方和右方各 1 个 <b>[0,1,0,0,1,0,0,0]</b> → 一样多，优先水平 → 输出 <b>[0,0,0,1]</b>（往右）<br>
+      <b>例子③</b>：一个食物都没有 <b>[0,0,0,0,0,0,0,0]</b> → 输出 <b>[1,0,0,0]</b>（往上搜索）
     </div>
-    <p class="muted">数据自动生成 100 组：随机放一个食物到 8 个方向之一，目标 = 朝向食物的移动方向。</p>
+    <p class="muted">数据自动生成 100 组：有时 1 个食物、有时 2~3 个食物、有时没有食物；目标 = 按上面的规则算出该往哪个方向走。<br>测试集用另一套种子和分布，保证都是网络没见过的新样本。</p>
   </div>
 
   <div class="card ann-card" id="annCard">
@@ -168,15 +171,21 @@
     <p class="muted" style="margin-bottom:10px;">先点「🎬 开始可视化训练」看完整训练过程（损失曲线 + 神经元点亮）；再用下面的按钮一步一步调试（前向→反向→更新）。</p>
 
     <div class="trainer-grid">
-      <div class="data-list-panel">
-        <div class="panel-title">📚 训练数据集 <span class="badge">100 组 · 点击加载</span></div>
-        <div id="dataList"></div>
+      <div class="left-col">
+        <div class="data-list-panel">
+          <div class="panel-title">📚 训练数据集 <span class="badge">100 组 · 点击加载</span></div>
+          <div id="dataList"></div>
+        </div>
+        <div class="data-list-panel">
+          <div class="panel-title">📊 测试数据集 <span class="badge">100 组 · 点击加载</span></div>
+          <div id="testList"></div>
+        </div>
       </div>
       <div class="trainer-main">
 
     <div class="panel net-panel">
       <div class="mini9-wrap">
-        <div class="panel-title">🧭 8 方向感知</div>
+        <div class="panel-title">🧭 视野</div>
         <div class="mini9" id="mini9"></div>
       </div>
       <div class="net-side">
@@ -315,39 +324,59 @@ class NeuralNetwork {
 }
 
 /* ============================================================
-   2. 数据生成 (100 组)  —— 来自 ANN 调试器
+   2. 数据生成 (100 组)
+      一个样本 = 细菌看到的 8 个方向，每个方向有食物(1)或没有(0)
+      三种情况都会出现：① 一个方向有食物  ② 多个方向有食物  ③ 没有食物
 ============================================================ */
-function generateData(n = 100) {
-  const inputDirs = [[-1,-1],[0,-1],[1,-1],[-1,0],[1,0],[-1,1],[0,1],[1,1]]; // 左上,上,右上,左,右,左下,下,右下
-  const actionMap = { '上':[1,0,0,0], '左':[0,1,0,0], '下':[0,0,1,0], '右':[0,0,0,1] };
-  function getAction(dx, dy){
-    if(dx===0 && dy===-1) return '上';
-    if(dx===0 && dy===1)  return '下';
-    if(dx===-1 && dy===0) return '左';
-    if(dx===1 && dy===0)  return '右';
-    if(dx<0) return '左';       // 对角线 → 优先水平
-    if(dx>0) return '右';
-    return '上';
+const ACTION_MAP = { '上':[1,0,0,0], '左':[0,1,0,0], '下':[0,0,1,0], '右':[0,0,0,1] };
+// 8 个方向 → 归属的 4 个移动方向（斜角同时算给相邻两个方向）
+const DIR_GROUPS = { '上':[0,1,2], '左':[0,3,5], '下':[5,6,7], '右':[2,4,7] };
+// 平手优先级：先水平（左/右）再垂直（上/下）——和「对角线优先水平」一致
+const PRIORITY = ['左','右','上','下'];
+
+// 根据 8 方向输入算出该往哪走（上/左/下/右）
+function buildTarget(inp){
+  let best = '上', bestScore = -1;
+  for(const g of PRIORITY){
+    let sc = 0; for(const i of DIR_GROUPS[g]) sc += inp[i];
+    if(sc > bestScore){ bestScore = sc; best = g; }
   }
+  if(bestScore === 0) return '上';   // 8 个方向都没有食物 → 往上走继续找
+  return best;
+}
+
+// 核心生成器：mix 控制「没有食物 / 一个食物 / 多个食物」的比例
+function generateDataSet(n = 100, mix = {}){
+  const p0 = mix.noFoodP !== undefined ? mix.noFoodP : 0.20;   // 没有食物
+  const p1 = mix.oneFoodP !== undefined ? mix.oneFoodP : 0.35; // 只有一个食物
   const data = []; let attempts = 0;
   while(data.length < n && attempts < 10000){
     attempts++;
-    const bx = Math.floor(Math.random()*10), by = Math.floor(Math.random()*10);
-    const dirIdx = Math.floor(Math.random()*inputDirs.length);
-    const [dx,dy] = inputDirs[dirIdx];
-    const fx = bx+dx, fy = by+dy;
-    if(fx<0||fx>=10||fy<0||fy>=10) continue;
-    const inp = Array(8).fill(0); inp[dirIdx] = 1;
-    const action = getAction(dx,dy);
-    data.push({ input:inp, target:actionMap[action], action });
+    const r = Math.random();
+    let nFood;
+    if(r < p0) nFood = 0;
+    else if(r < p0 + p1) nFood = 1;
+    else nFood = 2 + Math.floor(Math.random()*2);   // 2~3 个食物
+    const inp = Array(8).fill(0);
+    const dirs = []; let guard = 0;
+    while(dirs.length < nFood && guard++ < 20){
+      const d = Math.floor(Math.random()*8);
+      if(!dirs.includes(d)) dirs.push(d);
+    }
+    for(const d of dirs) inp[d] = 1;
+    const action = buildTarget(inp);
+    data.push({ input:inp, target:ACTION_MAP[action], action, nFood });
   }
   return data;
 }
 
+function generateData(n = 100){ return generateDataSet(n, { noFoodP:0.20, oneFoodP:0.35 }); }
+function generateTestData(n = 100){ return generateDataSet(n, { noFoodP:0.30, oneFoodP:0.30 }); }
+
 /* ============================================================
    3. 应用状态
 ============================================================ */
-const app = { nn: new NeuralNetwork(8,8,4), data: [], currentIdx: 0 };
+const app = { nn: new NeuralNetwork(8,8,4), data: [], testData: [], currentIdx: 0 };
 Object.defineProperty(app, 'currentSample', { get(){ return this.data[this.currentIdx] || null; } });
 Object.defineProperty(app, 'currentInput', { get(){ return this.currentSample ? this.currentSample.input : null; } });
 Object.defineProperty(app, 'currentTarget', { get(){ return this.currentSample ? this.currentSample.target : null; } });
@@ -358,6 +387,14 @@ Object.defineProperty(app, 'currentTarget', { get(){ return this.currentSample ?
   const orig = Math.random;
   Math.random = function(){ s=(s*9301+49297)%233280; return s/233280; };
   app.data = generateData(100);
+  Math.random = orig;
+})();
+// 测试集：不同种子 + 不同抽样分布，保证与训练集明显不同（网络没见过的新样本）
+(function seedTestRandom(){
+  let s = 2024;
+  const orig = Math.random;
+  Math.random = function(){ s=(s*9301+49297)%233280; return s/233280; };
+  app.testData = generateTestData(100);
   Math.random = orig;
 })();
 
@@ -473,14 +510,34 @@ function updateStatus(msg, loss, step){
   if(step!==undefined) document.getElementById('stepDisplay').textContent = step;
 }
 // 8 方向九宫格（左侧顶部：8 个方向放食物，中间放细菌）
-function renderMini9(){
+function renderMini9(inpOverride){
   const el = document.getElementById('mini9');
   if(!el) return;
-  const inp = app.currentSample ? app.currentSample.input : [0,0,0,0,0,0,0,0];
-  const labels = ['左上','上','右上','左','','右','左下','下','右下'];
+  const inp = inpOverride || (app.currentSample ? app.currentSample.input : [0,0,0,0,0,0,0,0]);
+  // 标题动态显示当前看到了几个食物
+  const title = document.querySelector('.mini9-wrap .panel-title');
+  if(title){
+    const cnt = inp.filter(Boolean).length;
+    title.textContent = cnt===0 ? '🧭 视野 · 没有食物' : `🧭 视野 · 看到 ${cnt} 个食物 🍎`;
+  }
+  // 网络输出：argmax → 预测方向（上0/左1/下2/右3）
+  let pred = null;
+  try{
+    const a2 = app.nn.predict(inp);
+    let mi = 0; for(let k=1;k<a2.length;k++) if(a2[k]>a2[mi]) mi=k;
+    pred = mi;
+  }catch(e){}
+  const ARROWS = ['↑','←','↓','→'];
+  const labels = ['左上','上','右上','左','','右','左下','下','右下']; // 8 方向标签 → 文字
   const map = [0,1,2,3,-1,4,5,6,7]; // 3x3 格子位置 -> 输入索引（-1=中心）
   el.innerHTML = map.map((idx,pos)=>{
-    if(idx===-1) return `<div class="m9 center">🦠</div>`;
+    if(idx===-1){
+      const arrow = pred!==null ? ARROWS[pred] : '·';
+      return `<div class="m9 center" style="flex-direction:column;gap:1px;">
+        <span style="font-size:14px;line-height:1;">🦠</span>
+        <span style="font-size:20px;font-weight:800;color:#1d9e5c;line-height:1.15;">${arrow}</span>
+      </div>`;
+    }
     const has = inp[idx]===1;
     return `<div class="m9 ${has?'food':'empty'}">${has?'🍎':''}<span class="tag">${labels[pos]}</span></div>`;
   }).join('');
@@ -505,6 +562,31 @@ function scrollDataListToActive(){
   if(row) row.scrollIntoView({ block:'nearest' });
 }
 
+// 测试数据集列表（左侧下方，点击加载到网络里看看）
+function renderTestList(){
+  const el = document.getElementById('testList');
+  if(!el) return;
+  el.innerHTML = app.testData.map((d,i)=>{
+    return `<div class="dl-row" data-i="${i}">
+      <span class="dl-idx">#${i}</span>
+      <span class="dl-in">[${d.input.join('')}]</span>
+      <span class="dl-out">→ ${d.action}</span>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.dl-row').forEach(r=>{
+    r.onclick = ()=>{
+      const i = +r.dataset.i;
+      const s = app.testData[i];
+      app.nn.forward(s.input); app.nn.computeLoss(s.target);
+      el.querySelectorAll('.dl-row').forEach(x=>x.classList.remove('active'));
+      r.classList.add('active');
+      renderNetViz();
+      renderMini9(s.input);
+      updateStatus(`测试样本 #${i}（未参与训练）`, app.nn.loss, app.nn.stepCount);
+    };
+  });
+}
+
 function refreshUI(msg, loss, step){
   renderDataPanel(); updateStatus(msg, loss, step); renderNetViz();
 }
@@ -516,13 +598,15 @@ const trainBtn = document.getElementById('btnTrain');
 let training = false;
 const EPOCHS = 150;
 
-function drawLossCurve(losses){
+function drawLossCurve(losses, tests){
   const canvas = document.getElementById('lossCanvas');
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle = '#f8fafc'; ctx.fillRect(0,0,W,H);
-  let maxLoss = 0.6; for(const l of losses) if(l>maxLoss) maxLoss=l;
+  let maxLoss = 0.6;
+  for(const l of losses) if(l>maxLoss) maxLoss=l;
+  if(tests) for(const l of tests) if(l>maxLoss) maxLoss=l;
   maxLoss = Math.max(maxLoss, 0.01);
   const padL=34,padR=10,padT=10,padB=22, plotW=W-padL-padR, plotH=H-padT-padB;
   // 网格
@@ -531,25 +615,37 @@ function drawLossCurve(losses){
   // 轴
   ctx.strokeStyle='#d1d9e6';
   ctx.beginPath(); ctx.moveTo(padL,padT); ctx.lineTo(padL,padT+plotH); ctx.lineTo(padL+plotW,padT+plotH); ctx.stroke();
-  // 标签
-  ctx.fillStyle='#6b7f94'; ctx.font='10px sans-serif'; ctx.textAlign='right';
+  // 图例
+  ctx.font='10px sans-serif';
+  ctx.textAlign='left';
+  ctx.fillStyle='#5a6bff'; ctx.fillText('— 训练集', padL+4, 12);
+  if(tests){ ctx.fillStyle='#f59e0b'; ctx.fillText('— 测试集', padL+4, 24); }
+  ctx.fillStyle='#6b7f94'; ctx.textAlign='right';
   ctx.fillText(maxLoss.toFixed(2), padL-4, padT+4); ctx.fillText('0', padL-4, padT+plotH);
   ctx.textAlign='left'; ctx.fillText('训练 epoch →', padL+4, padT+plotH+14);
-  // 曲线
-  if(losses.length>1){
-    ctx.strokeStyle='#7c8bff'; ctx.lineWidth=2.5; ctx.beginPath();
-    for(let i=0;i<losses.length;i++){
+  const plot = (arr, color, fillColor)=>{
+    if(!arr || arr.length<=1) return;
+    ctx.beginPath();
+    ctx.moveTo(padL, padT+plotH-(arr[0]/maxLoss)*plotH);
+    for(let i=1;i<arr.length;i++) ctx.lineTo(padL+(i/(EPOCHS-1))*plotW, padT+plotH-(arr[i]/maxLoss)*plotH);
+    ctx.lineTo(padL+((arr.length-1)/(EPOCHS-1))*plotW, padT+plotH);
+    ctx.lineTo(padL, padT+plotH);
+    ctx.closePath();
+    ctx.fillStyle = fillColor; ctx.fill();
+    ctx.strokeStyle=color; ctx.lineWidth=2.5; ctx.beginPath();
+    for(let i=0;i<arr.length;i++){
       const x=padL+(i/(EPOCHS-1))*plotW;
-      const y=padT+plotH-(losses[i]/maxLoss)*plotH;
+      const y=padT+plotH-(arr[i]/maxLoss)*plotH;
       i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
     }
     ctx.stroke();
-  }
-  // 当前点
-  const last=losses[losses.length-1];
-  const lx=padL+((losses.length-1)/(EPOCHS-1))*plotW;
-  const ly=padT+plotH-(last/maxLoss)*plotH;
-  ctx.fillStyle='#5a6bff'; ctx.beginPath(); ctx.arc(lx,ly,4,0,Math.PI*2); ctx.fill();
+    const last=arr[arr.length-1];
+    const lx=padL+((arr.length-1)/(EPOCHS-1))*plotW;
+    const ly=padT+plotH-(last/maxLoss)*plotH;
+    ctx.fillStyle=color; ctx.beginPath(); ctx.arc(lx,ly,4,0,Math.PI*2); ctx.fill();
+  };
+  plot(losses, '#5a6bff', 'rgba(124,139,255,.12)');
+  if(tests) plot(tests, '#f59e0b', 'rgba(245,158,11,.10)');
 }
 function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
 function shuffleData(a){ for(let i=a.length-1;i>0;i--){ const r=Math.floor(Math.random()*(i+1)); [a[i],a[r]]=[a[r],a[i]]; } }
@@ -558,10 +654,10 @@ async function visualTrain(){
   if(training) return;
   training = true; trainBtn.disabled = true;
   const lr = parseFloat(document.getElementById('lrInput').value) || 0.5;
-  const losses = [];
+  const losses = [], tests = [];
   app.nn.reset();
   document.getElementById('epochDisplay').textContent = '0';
-  drawLossCurve([0.6]);
+  drawLossCurve([0.6], null);
   updateStatus('训练开始…', null, app.nn.stepCount);
 
   for(let e=1; e<=EPOCHS; e++){
@@ -570,6 +666,10 @@ async function visualTrain(){
     for(const s of app.data){ app.nn.step(s.input, s.target, lr); total += app.nn.loss; }
     const avg = total / app.data.length;
     losses.push(avg);
+    // 每个 epoch 在「没见过的测试集」上算一次平均损失
+    let ttotal = 0;
+    for(const ts of app.testData){ app.nn.forward(ts.input); app.nn.computeLoss(ts.target); ttotal += app.nn.loss; }
+    tests.push(ttotal / app.testData.length);
     document.getElementById('epochDisplay').textContent = e;
     // 随机挑一个样本做前向，展示神经元点亮 + 数据面板（输入/目标/输出保持一致）
     const idx = Math.floor(Math.random()*app.data.length);
@@ -577,7 +677,7 @@ async function visualTrain(){
     const s = app.data[idx];
     app.nn.forward(s.input); app.nn.computeLoss(s.target);
     renderDataPanel(); renderNetViz();
-    drawLossCurve(losses);
+    drawLossCurve(losses, tests);
     updateStatus(`训练中 epoch ${e}/${EPOCHS}`, avg, app.nn.stepCount);
     await sleep(14);
   }
@@ -615,7 +715,7 @@ document.getElementById('btnReset').onclick = ()=>{
   app.nn.reset();
   const s=app.currentSample;
   if(s){ app.nn.forward(s.input); app.nn.computeLoss(s.target); }
-  drawLossCurve([]);
+  drawLossCurve([], null);
   document.getElementById('epochDisplay').textContent='0';
   refreshUI('网络已重置', app.nn.loss, app.nn.stepCount);
 };
@@ -696,11 +796,11 @@ document.addEventListener('fullscreenchange', ()=>{
    8. 初始化
 ============================================================ */
 function init(){
-  renderNetViz(); renderDataList(); renderMini9();
+  renderNetViz(); renderDataList(); renderTestList(); renderMini9();
   app.currentIdx=0;
   const s=app.currentSample;
   if(s){ app.nn.forward(s.input); app.nn.computeLoss(s.target); }
-  drawLossCurve([]);
+  drawLossCurve([], null);
   refreshUI('就绪', app.nn.loss, app.nn.stepCount);
   resetMap();
 }
