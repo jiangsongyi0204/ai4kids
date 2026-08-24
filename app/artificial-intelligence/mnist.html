@@ -32,9 +32,10 @@
   @media (max-width:860px){ .trainer-grid { grid-template-columns:1fr; } }
   .trainer-main { min-width:0; }
 
-  /* 训练数据集列表（左侧）：10 张模板数字 */
+  /* 训练/测试数据集列表（左侧）：10 张模板数字 */
+  .left-col { display:flex; flex-direction:column; gap:12px; align-self:start; min-width:0; }
   .data-list-panel { background:#fff; border:2px solid #eaf3ff; border-radius:18px; padding:12px 10px;
-    max-height:620px; overflow-y:auto; align-self:start; }
+    max-height:340px; overflow-y:auto; align-self:stretch; }
   .data-list-panel .panel-title { font-size:13px; font-weight:800; color:#2f4a8a; margin-bottom:8px;
     display:flex; align-items:center; gap:6px; }
   .data-list-panel .badge { font-size:11px; background:#eef3ff; color:#5a6b96; padding:0 10px; border-radius:30px; font-weight:700; }
@@ -131,7 +132,7 @@
       <b>例子①</b>：数字 3 的 8×8 图 → 输出 <b>[0,0,0,1,0,0,0,0,0,0]</b>（第 3 位亮起）<br>
       <b>例子②</b>：数字 7 的 8×8 图 → 输出 <b>[0,0,0,0,0,0,0,1,0,0]</b>（第 7 位亮起）
     </div>
-    <p class="muted">训练数据 = <b>200 个样本</b>：0~9 每个数字在模板基础上生成 20 个变种（轻微平移 + 随机噪声），每个对应一个 one-hot 目标。</p>
+    <p class="muted">训练数据 = <b>200 个样本</b>：0~9 每个数字在模板基础上生成 20 个变种（轻微平移 + 随机噪声），每个对应一个 one-hot 目标。<br>测试数据 = <b>100 个样本</b>：0~9 每个数字 10 个<b>新变种</b>，训练时网络没见过，用来检验它学得怎么样（损失图上橙色曲线）。</p>
   </div>
 
   <div class="card ann-card" id="annCard">
@@ -140,9 +141,15 @@
     <p class="muted" style="margin-bottom:10px;">先点「🎬 开始可视化训练」看完整训练过程（损失曲线 + 神经元点亮）；再用下面的按钮一步一步调试（前向→反向→更新）。</p>
 
     <div class="trainer-grid">
-      <div class="data-list-panel">
-        <div class="panel-title">📚 训练数据集 <span class="badge">200 组 · 点击加载</span></div>
-        <div id="dataList"></div>
+      <div class="left-col">
+        <div class="data-list-panel">
+          <div class="panel-title">📚 训练数据集 <span class="badge">200 组 · 点击加载</span></div>
+          <div id="dataList"></div>
+        </div>
+        <div class="data-list-panel">
+          <div class="panel-title">📊 测试数据集 <span class="badge">100 组 · 点击加载</span></div>
+          <div id="testList"></div>
+        </div>
       </div>
       <div class="trainer-main">
 
@@ -325,12 +332,18 @@ const TRAIN_DATA = [];
 for(let k=0;k<10;k++) for(let v=0;v<20;v++){
   TRAIN_DATA.push({ input: perturbDigit(DIGITS[k], v), label: k });
 }
+/* 测试数据集：每个数字 10 个变种，共 100 个样本（用另一套扰动种子，网络训练时没见过） */
+const TEST_DATA = [];
+for(let k=0;k<10;k++) for(let v=0;v<10;v++){
+  TEST_DATA.push({ input: perturbDigit(DIGITS[k], v+30), label: k });
+}
 
 /* ============================================================
    3. 应用状态
 ============================================================ */
 const app = { nn: new NeuralNetwork(64,16,10), currentIdx: 0 };
 Object.defineProperty(app, 'currentSample', { get(){ return { input: TRAIN_DATA[app.currentIdx].input, target: oneHot(TRAIN_DATA[app.currentIdx].label) }; } });
+let vizOverride = null; // 非空 = 正在查看测试样本（网络图目标列显示它的标签）
 
 /* ============================================================
    4. UI 渲染
@@ -393,8 +406,8 @@ function renderNetViz(){
     s += `<text x="${xOut}" y="${yOut(k)+5}" font-size="12" font-weight="800" fill="${hot?'#fff':'#c44a8f'}" text-anchor="middle">${k}</text>`;
     s += `<text x="${xOut+RO+6}" y="${yOut(k)+4}" font-size="11" fill="#3a4470">${val}</text>`;
   }
-  // 目标列（one-hot，1 亮起）
-  const tgt = oneHot(TRAIN_DATA[app.currentIdx].label);
+  // 目标列（one-hot，1 亮起；查看测试样本时显示测试样本的目标）
+  const tgt = oneHot(vizOverride !== null ? vizOverride : TRAIN_DATA[app.currentIdx].label);
   for(let k=0;k<NOUT;k++){
     const hot = tgt[k]===1;
     s += `<circle cx="${xTgt}" cy="${yOut(k)}" r="${RO}" fill="${hot?'#f59e0b':'#fff'}" stroke="#f59e0b" stroke-width="2"/>`;
@@ -463,6 +476,31 @@ function scrollDataListToActive(){
   const row = document.querySelector('#dataList .dl-row.active');
   if(row) row.scrollIntoView({ block:'nearest' });
 }
+// 测试数据集列表（左侧下方，100 个样本，点击加载到网络里看看）
+function renderTestList(){
+  const el = document.getElementById('testList');
+  if(!el) return;
+  el.innerHTML = TEST_DATA.map((d,i)=>{
+    const mini = d.input.map(v=>`<span class="px ${v?'on':''}"></span>`).join('');
+    return `<div class="dl-row" data-i="${i}">
+      <span class="dl-idx">#${i}</span>
+      <span class="dl-mini">${mini}</span>
+      <span class="dl-out">→ ${d.label}</span>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.dl-row').forEach(r=>{
+    r.onclick = ()=>{
+      const i = +r.dataset.i;
+      const s = TEST_DATA[i];
+      vizOverride = s.label;
+      app.nn.forward(s.input); app.nn.computeLoss(oneHot(s.label));
+      el.querySelectorAll('.dl-row').forEach(x=>x.classList.remove('active'));
+      r.classList.add('active');
+      renderNetViz();
+      updateStatus(`测试样本 #${i}（未参与训练）`, app.nn.loss, app.nn.stepCount);
+    };
+  });
+}
 function refreshUI(msg, loss, step){
   renderDataPanel(); updateStatus(msg, loss, step); renderNetViz();
 }
@@ -475,35 +513,53 @@ let training = false;
 const EPOCHS = 150;
 const ORDER = TRAIN_DATA.map((_,i)=>i);
 
-function drawLossCurve(losses){
+function drawLossCurve(losses, tests){
   const canvas = document.getElementById('lossCanvas');
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle = '#f8fafc'; ctx.fillRect(0,0,W,H);
-  let maxLoss = 0.6; for(const l of losses) if(l>maxLoss) maxLoss=l;
+  let maxLoss = 0.6;
+  for(const l of losses) if(l>maxLoss) maxLoss=l;
+  if(tests) for(const l of tests) if(l>maxLoss) maxLoss=l;
   maxLoss = Math.max(maxLoss, 0.01);
   const padL=34,padR=10,padT=10,padB=22, plotW=W-padL-padR, plotH=H-padT-padB;
+  // 网格
   ctx.strokeStyle='#e6edf4'; ctx.lineWidth=1;
   for(let i=0;i<=4;i++){ const y=padT+(plotH/4)*i; ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+plotW,y); ctx.stroke(); }
+  // 轴
   ctx.strokeStyle='#d1d9e6';
   ctx.beginPath(); ctx.moveTo(padL,padT); ctx.lineTo(padL,padT+plotH); ctx.lineTo(padL+plotW,padT+plotH); ctx.stroke();
-  ctx.fillStyle='#6b7f94'; ctx.font='10px sans-serif'; ctx.textAlign='right';
+  // 图例
+  ctx.font='10px sans-serif'; ctx.textAlign='left';
+  ctx.fillStyle='#5a6bff'; ctx.fillText('— 训练集', padL+4, 12);
+  if(tests){ ctx.fillStyle='#f59e0b'; ctx.fillText('— 测试集', padL+4, 24); }
+  ctx.fillStyle='#6b7f94'; ctx.textAlign='right';
   ctx.fillText(maxLoss.toFixed(2), padL-4, padT+4); ctx.fillText('0', padL-4, padT+plotH);
   ctx.textAlign='left'; ctx.fillText('训练 epoch →', padL+4, padT+plotH+14);
-  if(losses.length>1){
-    ctx.strokeStyle='#7c8bff'; ctx.lineWidth=2.5; ctx.beginPath();
-    for(let i=0;i<losses.length;i++){
+  const plot = (arr, color, fillColor)=>{
+    if(!arr || arr.length<=1) return;
+    ctx.beginPath();
+    ctx.moveTo(padL, padT+plotH-(arr[0]/maxLoss)*plotH);
+    for(let i=1;i<arr.length;i++) ctx.lineTo(padL+(i/(EPOCHS-1))*plotW, padT+plotH-(arr[i]/maxLoss)*plotH);
+    ctx.lineTo(padL+((arr.length-1)/(EPOCHS-1))*plotW, padT+plotH);
+    ctx.lineTo(padL, padT+plotH);
+    ctx.closePath();
+    ctx.fillStyle = fillColor; ctx.fill();
+    ctx.strokeStyle=color; ctx.lineWidth=2.5; ctx.beginPath();
+    for(let i=0;i<arr.length;i++){
       const x=padL+(i/(EPOCHS-1))*plotW;
-      const y=padT+plotH-(losses[i]/maxLoss)*plotH;
+      const y=padT+plotH-(arr[i]/maxLoss)*plotH;
       i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
     }
     ctx.stroke();
-  }
-  const last=losses[losses.length-1];
-  const lx=padL+((losses.length-1)/(EPOCHS-1))*plotW;
-  const ly=padT+plotH-(last/maxLoss)*plotH;
-  ctx.fillStyle='#5a6bff'; ctx.beginPath(); ctx.arc(lx,ly,4,0,Math.PI*2); ctx.fill();
+    const last=arr[arr.length-1];
+    const lx=padL+((arr.length-1)/(EPOCHS-1))*plotW;
+    const ly=padT+plotH-(last/maxLoss)*plotH;
+    ctx.fillStyle=color; ctx.beginPath(); ctx.arc(lx,ly,4,0,Math.PI*2); ctx.fill();
+  };
+  plot(losses, '#5a6bff', 'rgba(124,139,255,.12)');
+  if(tests) plot(tests, '#f59e0b', 'rgba(245,158,11,.10)');
 }
 function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
 function shuffleData(a){ for(let i=a.length-1;i>0;i--){ const r=Math.floor(Math.random()*(i+1)); [a[i],a[r]]=[a[r],a[i]]; } }
@@ -512,10 +568,10 @@ async function visualTrain(){
   if(training) return;
   training = true; trainBtn.disabled = true;
   const lr = parseFloat(document.getElementById('lrInput').value) || 0.5;
-  const losses = [];
+  const losses = [], tests = [];
   app.nn.reset();
   document.getElementById('epochDisplay').textContent = '0';
-  drawLossCurve([0.6]);
+  drawLossCurve([0.6], null);
   updateStatus('训练开始…', null, app.nn.stepCount);
 
   for(let e=1; e<=EPOCHS; e++){
@@ -524,13 +580,18 @@ async function visualTrain(){
     for(const i of ORDER){ const s=TRAIN_DATA[i]; app.nn.step(s.input, oneHot(s.label), lr); total += app.nn.loss; }
     const avg = total / TRAIN_DATA.length;
     losses.push(avg);
+    // 每个 epoch 在「没见过的测试集」上算一次平均损失
+    let ttotal = 0;
+    for(const s of TEST_DATA){ app.nn.forward(s.input); app.nn.computeLoss(oneHot(s.label)); ttotal += app.nn.loss; }
+    tests.push(ttotal / TEST_DATA.length);
     document.getElementById('epochDisplay').textContent = e;
     const i = Math.floor(Math.random()*TRAIN_DATA.length);
     app.currentIdx = i;
+    vizOverride = null;
     const s = TRAIN_DATA[i];
     app.nn.forward(s.input); app.nn.computeLoss(oneHot(s.label));
     renderDataPanel(); renderNetViz();
-    drawLossCurve(losses);
+    drawLossCurve(losses, tests);
     updateStatus(`训练中 epoch ${e}/${EPOCHS}`, avg, app.nn.stepCount);
     await sleep(14);
   }
@@ -545,6 +606,7 @@ trainBtn.onclick = visualTrain;
 function loadSample(idx){
   idx = Math.min(Math.max(0,idx), TRAIN_DATA.length-1);
   app.currentIdx = idx;
+  vizOverride = null;
   const s = TRAIN_DATA[idx];
   app.nn.forward(s.input); app.nn.computeLoss(oneHot(s.label));
   refreshUI(`已加载样本 #${idx}`, app.nn.loss, app.nn.stepCount);
@@ -554,6 +616,7 @@ document.getElementById('btnStep').onclick = ()=>{
   // 1. 在训练数据集中随机取一条数据
   const idx = Math.floor(Math.random()*TRAIN_DATA.length);
   app.currentIdx = idx;
+  vizOverride = null;
   const s = TRAIN_DATA[idx];
   // 2. 前向计算 + 3. 反向计算（并更新权重，完成一步学习）
   app.nn.step(s.input, oneHot(s.label), lr);
@@ -566,7 +629,7 @@ document.getElementById('btnReset').onclick = ()=>{
   app.nn.reset();
   const s = TRAIN_DATA[app.currentIdx];
   app.nn.forward(s.input); app.nn.computeLoss(oneHot(s.label));
-  drawLossCurve([]);
+  drawLossCurve([], null);
   document.getElementById('epochDisplay').textContent='0';
   refreshUI('网络已重置', app.nn.loss, app.nn.stepCount);
 };
@@ -678,8 +741,8 @@ function init(){
   app.currentIdx = 60; // 默认展示一个「数字 3」的变种样本
   const s = TRAIN_DATA[app.currentIdx];
   app.nn.forward(s.input); app.nn.computeLoss(oneHot(s.label));
-  renderNetViz(); renderDataList(); renderDataPanel();
-  drawLossCurve([]);
+  renderNetViz(); renderDataList(); renderTestList(); renderDataPanel();
+  drawLossCurve([], null);
   updateStatus('就绪', app.nn.loss, app.nn.stepCount);
   renderCanvas(); renderBars(Array(10).fill(0));
 }
