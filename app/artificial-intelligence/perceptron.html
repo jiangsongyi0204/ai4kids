@@ -149,6 +149,7 @@
           <button class="btn btn-success" id="btnTrain">🎬 开始可视化训练</button>
           <button class="btn btn-primary" id="btnStep">👣 单步</button>
           <button class="btn btn-danger" id="btnReset">🔄 重置</button>
+          <button class="btn btn-primary" id="btnRule" style="margin-left:auto;">📖 学习法则</button>
         </div>
         <div class="panel-title" style="margin-top:10px;">📉 每轮错误数（学到 0 就学会啦）</div>
         <canvas id="lossCanvas" width="600" height="170"></canvas>
@@ -194,6 +195,54 @@
   </div>
 
   <div class="foot">🧠 学会了？去时间轴 1957 年看看感知机的故事，再学学更厉害的多层感知机！</div>
+</div>
+
+<!-- 学习法则弹层 -->
+<div id="modal">
+  <button class="l-close" onclick="closeRule()">✕ 关闭</button>
+  <div class="lesson">
+    <div class="l-head">
+      <span class="lemo">🤖</span>
+      <h2>感知机的学习法则</h2>
+      <span class="ltag">犯错 → 改正 · 一次只调一点点</span>
+    </div>
+
+    <div class="sec teach">
+      <h4>🎯 一句话：猜错了才更新</h4>
+      <p>感知机先用现在的权重算出「预测」，再和正确答案比一比。如果<b>猜对了</b>，什么都不用做；如果<b>猜错了</b>，就把权重往「正确答案」的方向推一点点，下次就更可能猜对。练得越多，分界线就越准。</p>
+    </div>
+
+    <div class="sec story">
+      <h4>📐 更新公式（三个权重一起改）</h4>
+      <div class="fmt" style="margin:4px 0 6px;">
+        w₁ ← w₁ + η·(答案 − 预测)·x₁<br>
+        w₂ ← w₂ + η·(答案 − 预测)·x₂<br>
+        b  ← b  + η·(答案 − 预测)·1
+      </div>
+      <ul style="margin:0;padding-left:18px;">
+        <li><b>η（学习率）</b>：每步迈多大。太大容易乱跳，太小学得慢。</li>
+        <li><b>答案 − 预测</b>：猜对是 0（所以不更新）；猜错是 +1 或 −1（所以方向正好指向正确答案）。</li>
+        <li><b>x₁、x₂</b>：每个输入的开关值（0 或 1），表示「这次是谁的锅」——输入是 1 的权重才需要背锅调整。</li>
+      </ul>
+    </div>
+
+    <div class="sec act">
+      <h4>🧮 亲手算一遍（以「与 AND」为例）</h4>
+      <p>输入 (1, 1)，正确答案 = 1，当前权重 w₁=0.5，w₂=−0.5，b=−0.2，学习率 η=0.4：</p>
+      <div class="fmt" style="margin:4px 0 6px;">
+        求和 = 0.5×1 + (−0.5)×1 + (−0.2) = <b>−0.2</b> → 预测 = 0（错了！）<br>
+        w₁ ← 0.5 + 0.4×(1−0)×1 = <b>0.9</b><br>
+        w₂ ← −0.5 + 0.4×(1−0)×1 = <b>−0.1</b><br>
+        b  ← −0.2 + 0.4×(1−0)×1 = <b>0.2</b>
+      </div>
+      <p>下次再看 (1, 1)：0.9 + (−0.1) + 0.2 = 1.0 &gt; 0 → 预测 = 1 ✅ 猜对了！</p>
+    </div>
+
+    <div class="sec story">
+      <h4>⚠️ 它能学会什么？</h4>
+      <p>这条法则只会画<b>一条直线</b>来分界，所以「与」「或」都学得会；但「异或 XOR」无论怎么调都有一条直线分不开——要学它，得等下一课的多层神经网络！</p>
+    </div>
+  </div>
 </div>
 
 <div id="toast"></div>
@@ -473,6 +522,19 @@ function singleStep(){
   if(errNow===0) toast('🎉 这步做对了！');
 }
 
+/* 学习法则弹层 */
+function openRule(){
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeRule(){
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('modal').addEventListener('click', e=>{
+  if(e.target === document.getElementById('modal')) closeRule();
+});
+
 /* 初始化 */
 document.getElementById('lrInput').addEventListener('change', e=>{
   lr = Math.max(0.05, Math.min(1, parseFloat(e.target.value)||0.4));
@@ -481,6 +543,7 @@ document.getElementById('lrInput').addEventListener('change', e=>{
 document.getElementById('btnTrain').onclick = autoLearn;
 document.getElementById('btnStep').onclick = singleStep;
 document.getElementById('btnReset').onclick = reset;
+document.getElementById('btnRule').onclick = openRule;
 renderTasks(); renderTruth(); update();
 </script>
 </body>
