@@ -195,10 +195,10 @@
 
   <div class="card">
     <h3>✍️ 互动演示：手写数字识别</h3>
-    <p class="muted">先点上方「🎬 开始可视化训练」让网络学会 0~9 数字；再在左边格子里用鼠标写一个数字，点「🔍 识别」，看它认不认识！（蓝色格子 = 网络看到的像素）</p>
+    <p class="muted">先点上方「🎬 开始可视化训练」让网络学会 0~9 数字；再在 8×8 格子里用鼠标点亮像素，画一个数字，点「🔍 识别」，看它认不认识！（蓝色格子 = 网络看到的像素）</p>
     <div class="mn-wrap">
       <div class="mn-canvas-box">
-        <div class="panel-title">🖊️ 在这里写数字（28×28）</div>
+        <div class="panel-title">🖊️ 在这里写数字（8×8）</div>
         <canvas id="mnCanvas" width="364" height="364"></canvas>
         <div class="mn-btns">
           <button class="btn btn-primary" id="mnRecognize">🔍 识别</button>
@@ -639,7 +639,7 @@ document.getElementById('btnReset').onclick = ()=>{
 ============================================================ */
 const canvas = document.getElementById('mnCanvas');
 const ctx = canvas.getContext('2d');
-const SIZE = 28, CELL = canvas.width / SIZE;
+const SIZE = 8, CELL = canvas.width / SIZE;   // 8×8 输入格子，与网络输入直接对应
 let grid = Array.from({length:SIZE}, ()=>Array(SIZE).fill(0));
 let drawing = false;
 
@@ -664,10 +664,7 @@ function pos(e){
 }
 function paint(e){
   const {x,y} = pos(e);
-  for(let dy=-1;dy<=1;dy++) for(let dx=-1;dx<=1;dx++){
-    const nx=x+dx, ny=y+dy;
-    if(nx>=0&&nx<SIZE&&ny>=0&&ny<SIZE) grid[ny][nx] = 1;
-  }
+  grid[y][x] = 1;   // 8×8 像素格：每次画满一格
   renderCanvas();
 }
 canvas.addEventListener('mousedown', e=>{ drawing=true; paint(e); });
@@ -678,14 +675,9 @@ canvas.addEventListener('touchmove', e=>{ e.preventDefault(); const t=e.touches[
 canvas.addEventListener('touchend', ()=> drawing=false);
 
 function downsample(){
+  // 8×8 已经是网络输入格式，直接逐格展开
   const out = [];
-  for(let by=0;by<8;by++) for(let bx=0;bx<8;bx++){
-    let sum=0, n=0;
-    for(let y=by*3;y<by*3+3 && y<SIZE;y++) for(let x=bx*3;x<bx*3+3 && x<SIZE;x++){
-      sum += grid[y][x]; n++;
-    }
-    out.push(sum/n > 0.25 ? 1 : 0);
-  }
+  for(let y=0;y<SIZE;y++) for(let x=0;x<SIZE;x++) out.push(grid[y][x] ? 1 : 0);
   return out;
 }
 function renderBars(p){
