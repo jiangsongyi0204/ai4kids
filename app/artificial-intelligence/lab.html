@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>人工智能实验室 · AI 实验台</title>
+<link rel="stylesheet" href="/css/common.css">
+<style>
+  #app { max-width:1100px; }
+  .lab-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px; margin-top:8px; }
+  .lab-card { display:flex; flex-direction:column; gap:10px; padding:22px 20px; border-radius:22px;
+    text-decoration:none; color:#fff; border:3px solid #fff; box-shadow:0 10px 24px rgba(90,107,255,.25);
+    transition:.15s; }
+  .lab-card:hover { transform:translateY(-4px); box-shadow:0 14px 30px rgba(90,107,255,.4); }
+  .lab-card:active { transform:scale(.97); }
+  .lab-card .ic { font-size:44px; }
+  .lab-card .nm { font-size:18px; font-weight:800; }
+  .lab-card .ds { font-size:12px; line-height:1.6; opacity:.95; }
+  .lab-card .go { align-self:flex-end; font-size:12px; font-weight:800; background:rgba(255,255,255,.25);
+    padding:4px 12px; border-radius:30px; }
+  .lc1 { background:linear-gradient(135deg,#7c8bff,#5a6bff); }
+  .lc2 { background:linear-gradient(135deg,#ff9ad5,#ec4899); }
+  .lc3 { background:linear-gradient(135deg,#4cd07d,#1d9e5c); }
+  .lc4 { background:linear-gradient(135deg,#b07cff,#7c3aed); }
+  .lab-tip { text-align:center; color:#5a6b96; font-size:13px; margin-top:6px; }
+</style>
+</head>
+<body>
+<div class="bg">
+  <div class="sun">☀️</div>
+  <div class="stars"></div>
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+</div>
+
+<div id="app">
+  <header class="topbar">
+    <button class="back" onclick="location.href='/artificial-intelligence/'">← 返回课程</button>
+    <span class="t">🔬 人工智能实验室</span>
+    <span class="pr" id="pr"></span>
+  </header>
+
+  <section class="hero">
+    <span class="big">🔬</span>
+    <h1>人工智能实验室</h1>
+    <p class="tagline">4 个神经网络实验，动手「教」机器学本领</p>
+    <div class="meta">
+      <span class="chip">🧪 4 个实验</span>
+      <span class="chip">🖱️ 全部可点开玩</span>
+      <span class="chip">🎓 从简单到进阶</span>
+    </div>
+  </section>
+
+  <div class="lab-grid">
+    <a class="lab-card lc1" href="/artificial-intelligence/neural-network.html">
+      <span class="ic">🚀</span>
+      <span class="nm">初级神经网络</span>
+      <span class="ds">最基础的感知机：让一只「小细菌」自己学会找食物，看懂神经网络是怎么「学习」的。</span>
+      <span class="go">开始实验 →</span>
+    </a>
+    <a class="lab-card lc2" href="/artificial-intelligence/mnist.html">
+      <span class="ic">✍️</span>
+      <span class="nm">手写数字识别</span>
+      <span class="ds">在画板上写一个数字，看神经网络怎么认出它是 0~9 里的哪一个。</span>
+      <span class="go">开始实验 →</span>
+    </a>
+    <a class="lab-card lc3" href="/artificial-intelligence/cnn.html">
+      <span class="ic">🧩</span>
+      <span class="nm">卷积神经网络</span>
+      <span class="ds">用「小窗口扫描」的卷积网络，让 AI 像拼图一样一层层看懂图片。</span>
+      <span class="go">开始实验 →</span>
+    </a>
+    <a class="lab-card lc4" href="/artificial-intelligence/gpt.html">
+      <span class="ic">📜</span>
+      <span class="nm">GPT · 唐诗生成</span>
+      <span class="ds">训练一个迷你 GPT，看它从 20 首唐诗里学会「对字」，自己写出一句诗来！</span>
+      <span class="go">开始实验 →</span>
+    </a>
+  </div>
+
+  <p class="lab-tip">💡 从「初级神经网络」开始，一步步往上，越到后面越接近真正的人工智能！</p>
+
+  <div class="foot">🎉 每完成一个实验，你就离「人工智能专家」更近一步！<br>返回课程继续学习时间轴上的其他知识。</div>
+</div>
+
+<div id="toast"></div>
+
+<script src="/js/common.js"></script>
+<script>
+  const pr = document.getElementById('pr');
+  try {
+    const p = load('career101_unlocked', {});
+    const n = Object.keys(p || {}).length;
+    pr.textContent = n > 0 ? '已解锁 ' + n + ' 项' : '';
+  } catch(e){}
+</script>
+</body>
+</html>

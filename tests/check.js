@@ -67,6 +67,7 @@ async function main() {
   await checkTitle('/artificial-intelligence/mnist.html', '手写数字识别', '手写数字识别');
   await checkTitle('/artificial-intelligence/cnn.html', '卷积神经网络', '卷积神经网络');
   await checkTitle('/artificial-intelligence/gpt.html', 'GPT唐诗生成', 'GPT');
+  await checkTitle('/artificial-intelligence/lab.html', '人工智能实验室', '人工智能实验室');
   await checkTitle('/artificial-intelligence/timeline.html', '时间轴页', '人工智能 · 时间轴');
 
   // 二、关键元素
@@ -106,10 +107,12 @@ async function main() {
   const wd = await fetchHtml('/web-development/');
   log(/location\.href\s*=\s*['"]\//.test(wd.html) || /href=["']\//.test(wd.html), 'Web开发 返回首页按钮', '可返回首页');
   const aiPage = await fetchHtml('/artificial-intelligence/');
-  log(aiPage.html.includes('neural-network.html'), '人工智能 神经网络按钮', '链接到神经网络实验');
-  log(aiPage.html.includes('mnist.html'), '人工智能 手写数字按钮', '链接到手写数字识别');
-  log(aiPage.html.includes('cnn.html'), '人工智能 卷积网络按钮', '链接到卷积神经网络');
-  log(aiPage.html.includes('gpt.html'), '人工智能 GPT按钮', '链接到 GPT 唐诗生成');
+  log(aiPage.html.includes('lab.html'), '人工智能 实验室入口', '链接到实验室页');
+  const labPage = await fetchHtml('/artificial-intelligence/lab.html');
+  log(labPage.html.includes('neural-network.html'), '实验室 神经网络按钮', '链接到神经网络实验');
+  log(labPage.html.includes('mnist.html'), '实验室 手写数字按钮', '链接到手写数字识别');
+  log(labPage.html.includes('cnn.html'), '实验室 卷积网络按钮', '链接到卷积神经网络');
+  log(labPage.html.includes('gpt.html'), '实验室 GPT按钮', '链接到 GPT 唐诗生成');
   log(aiPage.html.includes("timelineUrl: '/artificial-intelligence/timeline.html'"), '人工智能 时间轴跳转', '卡片跳转 timeline.html');
 
   // 四、API 端点
