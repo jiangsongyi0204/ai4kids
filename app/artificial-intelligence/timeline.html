@@ -32,7 +32,15 @@
 
   /* 课程内容卡片（与上方 Tab 卡片同宽） */
   .lesson { box-shadow:0 12px 30px rgba(120,160,210,.18); max-width:none; width:100%; margin:6px 0 20px;
-    padding:14px 14px 22px; background:linear-gradient(180deg,#fffef9,#fff6e6); }
+    padding:14px 14px 22px; background:linear-gradient(180deg,#fffef9,#fff6e6); position:relative; }
+
+  /* 课程右上角：进入实验室按钮 */
+  .l-lab { position:absolute; top:12px; right:12px; z-index:6;
+    background:linear-gradient(135deg,#b07cff,#7c3aed); color:#fff; font-size:12px; font-weight:800;
+    padding:6px 14px; border-radius:30px; text-decoration:none; border:2px solid #fff;
+    box-shadow:0 4px 10px rgba(124,58,237,.4); transition:.15s; }
+  .l-lab:hover { transform:translateY(-2px); box-shadow:0 8px 16px rgba(124,58,237,.55); }
+  .l-lab:active { transform:scale(.95); }
 
   /* ===== 绘本化课程设计 ===== */
   .pb-cover { border-radius:24px; overflow:hidden; border:3px solid #fff;
@@ -40,7 +48,7 @@
   .pb-scene { position:relative; height:210px; overflow:hidden; }
   .pb-char { position:absolute; left:50%; bottom:24px; transform:translateX(-50%); font-size:92px; z-index:3;
     filter:drop-shadow(0 10px 14px rgba(0,0,0,.22)); animation:pbFloat 3.2s ease-in-out infinite; }
-  .pb-year { position:absolute; right:12px; top:12px; z-index:4; background:rgba(255,255,255,.88); border:2px solid #fff;
+  .pb-year { position:absolute; left:12px; top:12px; z-index:4; background:rgba(255,255,255,.88); border:2px solid #fff;
     color:#7a4a00; font-weight:800; font-size:13px; padding:4px 14px; border-radius:30px; box-shadow:0 4px 10px rgba(0,0,0,.12); }
   .pb-cloud { position:absolute; font-size:36px; opacity:.95; animation:pbDrift 6s ease-in-out infinite; z-index:2; }
   .pb-cloud.pbc1 { left:6%; top:14%; }
@@ -208,6 +216,7 @@ const COURSES = [
 },
 {
   year:'1966', emoji:'💬', title:'ELIZA', tag:'AI 学会聊天',
+  lab:'/artificial-intelligence/eliza.html',
   brief:'世界上第一个会聊天的程序，假装成心理医生',
   scene:['🗣️','💊','🛋️','💛','🤖'],
   person:{ name:'约瑟夫·魏泽鲍姆', role:'第一个聊天机器人 ELIZA 的作者', img:'https://commons.wikimedia.org/wiki/Special:FilePath/Joseph_Weizenbaum.jpg' },
@@ -572,7 +581,8 @@ function renderLesson(){
         </div>
       </div>
     </div>` : '';
-  lessonEl.innerHTML = cover + personCard + `
+  const labBtn = c.lab ? `<a class="l-lab" href="${c.lab}">🔬 进入实验室</a>` : '';
+  lessonEl.innerHTML = labBtn + cover + personCard + `
     <div class="sec story" data-e="📖"><h4>🕰️ 故事时间 · 那时候发生了什么？</h4><p>${c.story}</p></div>
     <div class="sec teach" data-e="💡"><h4>📖 知识小课堂 · 记住这个魔法！</h4><p>${c.teach}</p></div>
     ${c.struct==='perceptron'?PERCEPTRON_STRUCT_HTML:''}
