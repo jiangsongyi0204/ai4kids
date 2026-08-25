@@ -111,11 +111,11 @@
 
   /* 主栏：网络结构 */
   .net-panel { padding:12px 14px; }
-  .mlp-viz { display:flex; flex-direction:row; align-items:flex-start; gap:2px; justify-content:space-between; padding:4px 1px; }
+  .mlp-viz { display:flex; flex-direction:row; align-items:flex-start; gap:1px; justify-content:space-between; padding:4px 0; }
   .mlp-layer { flex:0 0 auto; background:#f8fafc; border:2px solid #e6edf4; border-radius:10px; padding:3px; }
   .mlp-layer .lt { font-size:9px; font-weight:800; color:#2f4a8a; text-align:center; margin-bottom:4px; }
   .mlp-layer .lt em { display:block; font-style:normal; color:#8a93b8; font-weight:600; font-size:7px; margin-top:1px; }
-  .mlp-arrow { color:#94a3b8; font-size:10px; flex-shrink:0; }
+  .mlp-arrow { color:#94a3b8; font-size:9px; flex-shrink:0; }
   .onehot-row { display:flex; gap:2px; justify-content:center; }
   .oh-cell { width:11px; height:18px; border-radius:3px; border:1px solid rgba(0,0,0,.06); }
   .hid-col { display:flex; flex-direction:column; gap:1px; }
@@ -129,11 +129,11 @@
   .w3-heat .wh { border-radius:2px; border:1px solid rgba(0,0,0,.04); }
   /* Transformer 可视化（参照 gpt.html） */
   .tf-tiles { display:flex; align-items:center; gap:3px; justify-content:center; }
-  .tf-tile { width:16px; height:16px; border-radius:5px; background:#fff; border:2px solid #7c8bff; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:#2f4a8a; }
+  .tf-tile { width:13px; height:13px; border-radius:4px; background:#fff; border:2px solid #7c8bff; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:800; color:#2f4a8a; }
   .tf-op { font-size:9px; font-weight:800; color:#8a93b8; }
   .emb-grid { display:flex; flex-direction:column; gap:2px; align-items:center; }
   .emb-row { display:flex; gap:0; justify-content:center; align-items:center; }
-  .emb-cell { width:2px; height:2px; flex:0 0 2px; border-radius:0; border:1px solid rgba(0,0,0,.04); }
+  .emb-cell { width:1px; height:2px; flex:0 0 1px; border-radius:0; border:1px solid rgba(0,0,0,.04); }
   .emb-lbl { width:10px; flex-shrink:0; text-align:center; font-size:8px; font-weight:800; color:#2f4a8a; }
   .heads-row { display:flex; gap:2px; justify-content:center; flex-wrap:wrap; }
   .head-box { display:flex; flex-direction:column; align-items:center; gap:2px; }
@@ -144,7 +144,7 @@
   .att2-row .ac { width:8px; height:8px; border-radius:2px; display:flex; align-items:center; justify-content:center; font-size:7px; color:#fff; }
   .ffn-col { display:flex; flex-direction:column; gap:2px; align-items:center; }
   .ffn-row { display:flex; gap:0; }
-  .ffn-cell { width:2px; height:2px; flex:0 0 2px; border-radius:0; border:1px solid rgba(0,0,0,.03); }
+  .ffn-cell { width:1px; height:2px; flex:0 0 1px; border-radius:0; border:1px solid rgba(0,0,0,.03); }
   .card p.net-caption { font-size:10px; line-height:1.5; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     color:#8a93b8; margin-top:8px; text-align:center; }
 
@@ -209,9 +209,9 @@
       <b>任务</b>：模加法 a + b mod P（两个数加起来，超过 P 就转圈回到 0）<br>
       <b>输入</b>：两个数字 a、b + 一个「=」符（token 序列：a b =）<br>
       <b>输出</b>：一个数字 c = (a + b) mod P（预测「=」后面的数字）<br>
-      <b>例子①</b>：a=3, b=5, P=9 → (3+5)%9 = <b>8</b><br>
-      <b>例子②</b>：a=8, b=7, P=9 → (8+7)%9 = <b>6</b><br>
-      <b>例子③</b>：a=4, b=4, P=9 → (4+4)%9 = <b>8</b>
+      <b>例子①</b>：a=3, b=5, P=13 → (3+5)%13 = <b>8</b><br>
+      <b>例子②</b>：a=10, b=7, P=13 → (10+7)%13 = <b>4</b><br>
+      <b>例子③</b>：a=8, b=8, P=13 → (8+8)%13 = <b>3</b>
     </div>
     <div class="panel add-table-panel">
       <div class="panel-title">🧮 模加法表 <span class="badge" id="addTableBadge">—</span></div>
@@ -273,8 +273,8 @@
       <div class="trainer-side">
     <div class="panel param-panel">
       <div class="panel-title">⚙️ 超参数 <span class="badge" id="paramBadge">可随时调</span></div>
-      <div class="param-row"><span class="pl">🧩 模数 P</span><input type="range" id="pInput" min="5" max="41" step="2" value="9" disabled title="模数 P 固定为 9"><span class="pv" id="pVal">9</span></div>
-      <div class="param-row"><span class="pl">🧠 嵌入维度 C</span><input type="range" id="hInput" min="16" max="96" step="8" value="48"><span class="pv" id="hVal">48</span></div>
+      <div class="param-row"><span class="pl">🧩 模数 P</span><input type="range" id="pInput" min="5" max="41" step="2" value="13"><span class="pv" id="pVal">13</span></div>
+      <div class="param-row"><span class="pl">🧠 嵌入维度 C</span><input type="range" id="hInput" min="16" max="256" step="16" value="128"><span class="pv" id="hVal">128</span></div>
       <div class="param-row"><span class="pl">📚 训练数据量</span><input type="range" id="ratioInput" min="20" max="80" step="5" value="50"><span class="pv" id="ratioVal">50%</span></div>
       <div class="param-row"><span class="pl">⚖️ 权重衰减</span><input type="range" id="wdInput" min="0" max="2" step="0.1" value="1.0"><span class="pv" id="wdVal">1.0</span></div>
       <div class="param-row"><span class="pl">🎯 学习率</span><input type="range" id="lrInput" min="-3" max="-1" step="0.1" value="-3"><span class="pv pv2" id="lrVal">1e-3</span></div>
@@ -433,7 +433,14 @@ class MiniGrokGPT {
     const z=a=>{ for(let i=0;i<a.length;i++){ if(Array.isArray(a[i])) z(a[i]); else a[i]=0; } };
     for(const k in this.grads) z(this.grads[k]);
   }
-  _accumulate(dst, src){ for(let i=0;i<dst.length;i++){ if(Array.isArray(dst[i])) this._accumulate(dst[i],src[i]); else dst[i]+=src[i]; } }
+  _accumulate(dst, src){
+    const keys = Array.isArray(dst) ? dst.map((_,i)=>i) : Object.keys(dst);
+    for(const k of keys){
+      const d=dst[k], s=src[k];
+      if(d && typeof d==='object') this._accumulate(d, s);
+      else dst[k]=d+s;
+    }
+  }
   _average(g, n){ const av=a=>{ for(let i=0;i<a.length;i++){ if(Array.isArray(a[i])) av(a[i]); else a[i]/=n; } }; for(const k in g) av(g[k]); }
   // 反向传播（返回本样本梯度；参照 gpt.html 的 MiniGPT，双向注意力同样成立）
   backward(target){
@@ -564,7 +571,7 @@ class AdamW {
    4. 应用状态
 ============================================================ */
 let P=9, C=48, nHead=2, trainRatio=50, LR=1e-3, WD=1.0;
-let MAX_STEPS=40000;
+let MAX_STEPS=200000;
 let model, opt, DATA;
 const history = { steps:[], trainLoss:[], testLoss:[], trainAcc:[], testAcc:[] };
 let grokStep=null;   // 顿悟时刻的步数
@@ -867,14 +874,22 @@ async function trainLoop(){
   while(state.running){
     if(state.paused){ await sleep(80); continue; }
     const sp=getSpeed();
-    // 1. 训练阶段：按顺序从训练数据集取数据 → 进 GPT 训练（记录当前样本，供动态高亮）
-    let lastIdx=trainCursor % DATA.train.length;
-    for(let k=0;k<sp && model.steps<MAX_STEPS;k++){
-      const idx=trainCursor % DATA.train.length;
-      lastIdx=idx;
-      const s=DATA.train[idx];
-      trainCursor++;
-      model.trainOne(s, opt);
+    const n=DATA.train.length;
+    const epochsPerFrame=Math.max(1, Math.round(sp/n));
+    let lastIdx=0;
+    // 1. 训练阶段（full-batch）：每个 epoch 累积全部训练数据梯度 → 平均 → 更新一次
+    for(let e=0;e<epochsPerFrame && model.steps<MAX_STEPS;e++){
+      model._zeroGrads();
+      for(let i=0;i<n;i++){
+        const s=DATA.train[i]; lastIdx=i;
+        model.forward(s.a,s.b);
+        model._accumulate(model.grads, model.backward(s.t));
+      }
+      model._average(model.grads, n);
+      model.grads.dCe[model.EQ].fill(0);   // 等号是提示符：stop-gradient
+      opt.step();
+      model.steps += n;
+      model.wNorm = model.weightNorm();
     }
     currentSampleIdx=lastIdx; dataView='train';
     // 2. 测试阶段：按顺序把测试数据送入 GPT（前向评估）
@@ -934,8 +949,8 @@ document.getElementById('btnReset').onclick=()=>{
    7. 参数读取 + 预设
 ============================================================ */
 function readParams(){
-  P=9;   // 模数 P 固定为 9
-  C=parseInt(document.getElementById('hInput').value)||48; nHead=2;
+  P=parseInt(document.getElementById('pInput').value)||13;
+  C=parseInt(document.getElementById('hInput').value)||128; nHead=2;
   trainRatio=parseInt(document.getElementById('ratioInput').value)||50;
   WD=parseFloat(document.getElementById('wdInput').value)||0;
   LR=Math.pow(10, parseFloat(document.getElementById('lrInput').value)||-3);
@@ -961,17 +976,17 @@ function applyParams(p,h,ratio,wd,lr){
   document.getElementById('lrInput').value=Math.round(Math.log10(lr)*10)/10;
   readParams(); syncParamUI(); applyDataDesign();
 }
-document.getElementById('pInput').oninput=syncParamUI;
+document.getElementById('pInput').oninput=()=>{ readParams(); syncParamUI(); applyDataDesign(); };
 document.getElementById('hInput').oninput=()=>{ readParams(); syncParamUI(); applyDataDesign(); };
 document.getElementById('ratioInput').oninput=()=>{ readParams(); syncParamUI(); applyDataDesign(); };
 document.getElementById('wdInput').oninput=syncParamUI;
 document.getElementById('lrInput').oninput=syncParamUI;
 document.getElementById('speedInput').oninput=syncParamUI;
 
-document.getElementById('presetStd').onclick=()=>{ applyParams(9,48,50,1.0,1e-3); toast('✨ 标准实验：权重衰减 1.0 · 数据 50% → 会顿悟！'); };
-document.getElementById('presetNoWd').onclick=()=>{ applyParams(9,48,50,0,1e-3); toast('🚫 权重衰减=0：它只会一直背题…'); };
-document.getElementById('presetFew').onclick=()=>{ applyParams(9,48,30,1.0,1e-3); toast('📉 数据只有 30%：背题期更长，顿悟更慢'); };
-document.getElementById('presetBig').onclick=()=>{ applyParams(9,96,70,1.0,1e-3); toast('⚡ 更大模型 + 更多数据：顿悟更快！'); };
+document.getElementById('presetStd').onclick=()=>{ applyParams(13,128,50,1.0,1e-3); toast('✨ 标准实验：权重衰减 1.0 · 数据 50% → 会顿悟！'); };
+document.getElementById('presetNoWd').onclick=()=>{ applyParams(13,128,50,0,1e-3); toast('🚫 权重衰减=0：它只会一直背题…'); };
+document.getElementById('presetFew').onclick=()=>{ applyParams(13,128,30,1.0,1e-3); toast('📉 数据只有 30%：背题期更长，顿悟更慢'); };
+document.getElementById('presetBig').onclick=()=>{ applyParams(13,192,70,1.0,1e-3); toast('⚡ 更大模型 + 更多数据：顿悟更快！'); };
 
 /* ============================================================
    7.5 全屏切换
