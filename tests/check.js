@@ -68,6 +68,7 @@ async function main() {
   await checkTitle('/artificial-intelligence/mnist.html', '手写数字识别', '手写数字识别');
   await checkTitle('/artificial-intelligence/cnn.html', '卷积神经网络', '卷积神经网络');
   await checkTitle('/artificial-intelligence/gpt.html', 'GPT唐诗生成', 'GPT');
+  await checkTitle('/artificial-intelligence/grokking.html', '大模型顿悟', 'Grokking');
   await checkTitle('/artificial-intelligence/eliza.html', 'ELIZA聊天机器人', 'ELIZA');
   await checkTitle('/artificial-intelligence/lab.html', '人工智能实验室', '人工智能实验室');
   await checkTitle('/artificial-intelligence/timeline.html', '时间轴页', '人工智能 · 时间轴');
@@ -98,6 +99,13 @@ async function main() {
   await checkContains('/artificial-intelligence/gpt.html', 'GPT', '📖 字典', '字典面板');
   await checkContains('/artificial-intelligence/gpt.html', 'GPT', '互动演示', '互动演示段落');
   await checkContains('/artificial-intelligence/gpt.html', 'GPT', '540 组', '训练数据540组');
+  await checkContains('/artificial-intelligence/grokking.html', 'Grokking', '实际问题', '实际问题段落');
+  await checkContains('/artificial-intelligence/grokking.html', 'Grokking', '训练数据格式', '数据格式段落');
+  await checkContains('/artificial-intelligence/grokking.html', 'Grokking', 'Grokking 可视化训练器', '可视化训练器');
+  await checkContains('/artificial-intelligence/grokking.html', 'Grokking', '权重衰减', '权重衰减关键点');
+  await checkContains('/artificial-intelligence/grokking.html', 'Grokking', '互动实验', '互动实验段落');
+  await checkContains('/artificial-intelligence/grokking.html', 'Grokking', '模加法', '模加法数据');
+  await checkContains('/artificial-intelligence/grokking.html', 'Grokking', 'AdamW', 'AdamW优化器');
   await checkContains('/artificial-intelligence/eliza.html', 'ELIZA', '假装心理医生', '假装心理医生');
   await checkContains('/artificial-intelligence/eliza.html', 'ELIZA', '发送', '聊天发送按钮');
   await checkContains('/artificial-intelligence/timeline.html', '人工智能', '1950', 'Tab 起点年份');
@@ -119,6 +127,7 @@ async function main() {
   log(labPage.html.includes('mnist.html'), '实验室 手写数字按钮', '链接到手写数字识别');
   log(labPage.html.includes('cnn.html'), '实验室 卷积网络按钮', '链接到卷积神经网络');
   log(labPage.html.includes('gpt.html'), '实验室 GPT按钮', '链接到 GPT 唐诗生成');
+  log(labPage.html.includes('grokking.html'), '实验室 大模型顿悟按钮', '链接到 Grokking 顿悟实验');
   log(labPage.html.includes('eliza.html'), '实验室 ELIZA按钮', '链接到 ELIZA 聊天机器人');
   log(tlPage.html.includes('eliza.html'), '时间轴 ELIZA实验按钮', '1966课链接到 ELIZA 实验室');
   log(aiPage.html.includes("timelineUrl: '/artificial-intelligence/timeline.html'"), '人工智能 时间轴跳转', '卡片跳转 timeline.html');
