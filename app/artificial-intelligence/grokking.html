@@ -111,7 +111,7 @@
 
   /* 主栏：网络结构 */
   .net-panel { padding:12px 14px; }
-  .mlp-viz { display:flex; flex-direction:row; align-items:flex-start; gap:1px; justify-content:space-between; padding:4px 0; }
+  .mlp-viz { display:flex; flex-direction:row; flex-wrap:wrap; align-items:flex-start; gap:1px; justify-content:space-between; padding:4px 0; }
   .mlp-layer { flex:0 0 auto; background:#f8fafc; border:2px solid #e6edf4; border-radius:10px; padding:3px; }
   .mlp-layer .lt { font-size:9px; font-weight:800; color:#2f4a8a; text-align:center; margin-bottom:4px; }
   .mlp-layer .lt em { display:block; font-style:normal; color:#8a93b8; font-weight:600; font-size:7px; margin-top:1px; }
@@ -209,9 +209,9 @@
       <b>任务</b>：模加法 a + b mod P（两个数加起来，超过 P 就转圈回到 0）<br>
       <b>输入</b>：两个数字 a、b + 一个「=」符（token 序列：a b =）<br>
       <b>输出</b>：一个数字 c = (a + b) mod P（预测「=」后面的数字）<br>
-      <b>例子①</b>：a=3, b=5, P=13 → (3+5)%13 = <b>8</b><br>
-      <b>例子②</b>：a=10, b=7, P=13 → (10+7)%13 = <b>4</b><br>
-      <b>例子③</b>：a=8, b=8, P=13 → (8+8)%13 = <b>3</b>
+      <b>例子①</b>：a=3, b=4, P=5 → (3+4)%5 = <b>2</b><br>
+      <b>例子②</b>：a=4, b=2, P=5 → (4+2)%5 = <b>1</b><br>
+      <b>例子③</b>：a=4, b=4, P=5 → (4+4)%5 = <b>3</b>
     </div>
     <div class="panel add-table-panel">
       <div class="panel-title">🧮 模加法表 <span class="badge" id="addTableBadge">—</span></div>
@@ -225,8 +225,9 @@
   </div>
 
   <div class="card ann-card" id="annCard">
+    <button class="fs-btn" id="sideToggleBtn" title="展开右侧面板">⚙️</button>
     <button class="fs-btn" id="annFsBtn" title="全屏">⛶</button>
-    <h3>🧠 Grokking 可视化训练器 <span class="badge" style="font-size:11px;background:#eef3ff;color:#5a6b96;padding:2px 10px;border-radius:30px;font-weight:700;">模加法 · 标准 Transformer · 无因果掩码 · 顺序梯度下降 · AdamW</span></h3>
+    <h3>🧠 Grokking 可视化训练器 <span class="badge" style="font-size:11px;background:#eef3ff;color:#5a6b96;padding:2px 10px;border-radius:30px;font-weight:700;">模加法 · 标准 Transformer · LayerNorm · 4 头 · 无因果掩码 · AdamW</span></h3>
     <p class="muted" style="margin-bottom:10px;">点「▶️ 开始训练」看它先「背题」（训练准确率冲上 100%，测试却卡住），再等它「顿悟」（测试准确率突然跳到 100%）！下面的曲线和网络会实时变化。</p>
 
     <div class="trainer-grid">
@@ -270,7 +271,7 @@
     </div>
       </div><!-- /trainer-main -->
 
-      <div class="trainer-side">
+      <div class="trainer-side" id="trainerSide" style="display:none;">
     <div class="panel param-panel">
       <div class="panel-title">⚙️ 超参数 <span class="badge" id="paramBadge">可随时调</span></div>
       <div class="param-row"><span class="pl">🧩 模数 P</span><input type="range" id="pInput" min="5" max="41" step="2" value="13"><span class="pv" id="pVal">13</span></div>
@@ -281,9 +282,6 @@
       <div class="param-row"><span class="pl">⏩ 训练速度</span><input type="range" id="speedInput" min="1" max="1000" step="1" value="50"><span class="pv pv2" id="speedVal">50 步/帧</span></div>
       <div class="preset-row">
         <button class="preset-btn pb1" id="presetStd">✨ <b>标准实验</b>（权重衰减 1.0 · 数据 50%）<span class="p-sub">论文里的标准设置 → 会「顿悟」</span></button>
-        <button class="preset-btn pb2" id="presetNoWd">🚫 <b>关掉权重衰减</b><span class="p-sub">论文关键发现：没有它，只会背题不顿悟</span></button>
-        <button class="preset-btn pb3" id="presetFew">📉 <b>训练数据太少</b>（30%）<span class="p-sub">背得更久，「顿悟」更慢更难</span></button>
-        <button class="preset-btn pb4" id="presetBig">⚡ <b>更大模型 + 更多数据</b><span class="p-sub">嵌入维度更大、数据 70% → 更快顿悟</span></button>
       </div>
     </div>
 
@@ -300,11 +298,6 @@
       <div class="grok-state idle" id="grokState"><span id="grokStateTxt">💤 还没开始训练</span></div>
       <div class="grok-bar"><i id="grokBar"></i></div>
       <div class="grok-note">测试准确率首次超过 90% = <b>顿悟时刻</b> ✨</div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-title">📊 当前样本 <span class="badge" id="sampleBadge">—</span></div>
-      <div class="scroll-data" id="dataPanel"></div>
     </div>
       </div><!-- /trainer-side -->
     </div><!-- /trainer-grid -->
@@ -338,6 +331,9 @@ function softmaxRow(row){ const m=Math.max(...row); const e=row.map(v=>Math.exp(
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const r=Math.floor(Math.random()*(i+1)); [a[i],a[r]]=[a[r],a[i]]; } return a; }
 function mulVec(x, W){ const out=W[0].length; const r=Array(out).fill(0); for(let o=0;o<out;o++) for(let i=0;i<x.length;i++) r[o]+=x[i]*W[i][o]; return r; }
 function mulVecT(x, W){ const out=W.length; const r=Array(out).fill(0); for(let o=0;o<out;o++) for(let i=0;i<x.length;i++) r[o]+=x[i]*W[o][i]; return r; }
+// LayerNorm（pre-norm）：对单个向量归一化，返回 {y, xhat, inv}
+function layernorm(vec, g, b, eps){ const n=vec.length; let m=0; for(let i=0;i<n;i++) m+=vec[i]; m/=n; let v=0; for(let i=0;i<n;i++){ const d=vec[i]-m; v+=d*d; } v/=n; const inv=1/Math.sqrt(v+eps); const y=Array(n), xhat=Array(n); for(let i=0;i<n;i++){ const xh=(vec[i]-m)*inv; xhat[i]=xh; y[i]=xh*g[i]+b[i]; } return {y, xhat, inv}; }
+function layernormBackward(dy, xhat, g, inv){ const n=dy.length; const dx=Array(n).fill(0), dg=Array(n).fill(0), db=Array(n).fill(0); let s1=0, s2=0; for(let i=0;i<n;i++){ db[i]=dy[i]; dg[i]=dy[i]*xhat[i]; const dxh=dy[i]*g[i]; s1+=dxh; s2+=dxh*xhat[i]; } const m1=s1/n, m2=s2/n; for(let i=0;i<n;i++){ const dxh=dy[i]*g[i]; dx[i]=inv*(dxh-m1-xhat[i]*m2); } return {dx, dg, db}; }
 
 /* ============================================================
    2. 训练数据：模加法 a + b mod P
@@ -362,32 +358,38 @@ function randMat(r,c,s){ return Array.from({length:r},()=>Array.from({length:c},
 function randVec(n,s){ return Array.from({length:n},()=>(Math.random()*2-1)*s); }
 
 class MiniGrokGPT {
-  constructor(P, C=48, nHead=2, scale=0.5){
+  constructor(P, C=48, nHead=4, scale=0.5){
     this.P=P; this.V=P; this.Vocab=P+1; this.T=3; this.EQ=P;  // 词表=数字0~P-1 + 等号(=P)；序列：a b =
-    this.C=C; this.nHead=nHead; this.H=Math.floor(C/nHead);
+    this.C=C; this.nHead=nHead; this.H=Math.floor(C/nHead); this.F=C*4; this.eps=1e-5;
     this.Ce=randMat(this.Vocab,C,scale);  // 数字 + 等号 字向量表
     this.Pe=randMat(this.T,C,scale);      // 位置向量表（3 个位置）
     this.Wq=Array.from({length:nHead},()=>randMat(this.H,this.H,scale));
     this.Wk=Array.from({length:nHead},()=>randMat(this.H,this.H,scale));
     this.Wv=Array.from({length:nHead},()=>randMat(this.H,this.H,scale));
     this.Wproj=randMat(C,C,scale);    // 注意力输出投影
-    this.W1=randMat(C,C,scale); this.b1=randVec(C,scale);
-    this.W2=randMat(C,C,scale); this.b2=randVec(C,scale);
+    this.W1=randMat(C,this.F,scale); this.b1=randVec(this.F,scale);   // FFN 扩展到 4×C
+    this.W2=randMat(this.F,C,scale); this.b2=randVec(C,scale);
     this.Wl=randMat(P,C,scale); this.bl=randVec(P,scale);
+    // LayerNorm（pre-norm 两处）
+    this.ln1g=Array(C).fill(1); this.ln1b=Array(C).fill(0);
+    this.ln2g=Array(C).fill(1); this.ln2b=Array(C).fill(0);
     this.cache={}; this.grads=null; this.steps=0; this.wNorm=0; this.loss=null;
   }
   // 前向：输入数字 a、b → P 类概率（只在序列末尾输出）
   forward(a,b){
-    const T=this.T, C=this.C, H=this.H, nHead=this.nHead;
+    const T=this.T, C=this.C, H=this.H, nHead=this.nHead, F=this.F;
     const idx=[a, b, this.EQ];   // 输入序列：a b =（= 后预测答案）
     const x = idx.map((i,p)=>{ const row=Array(C); for(let c=0;c<C;c++) row[c]=this.Ce[i][c]+this.Pe[p][c]; return row; });
     const tokenEmb = idx.map(i=>this.Ce[i].slice());
     const posEmb = Array.from({length:T},(_,p)=>this.Pe[p].slice());
+    // LayerNorm 1（注意力前）
+    const ln1 = x.map(r=>layernorm(r, this.ln1g, this.ln1b, this.eps));
+    const xln1 = ln1.map(o=>o.y);
     const scale = 1/Math.sqrt(H);
     const heads = [];
     for(let h=0;h<nHead;h++){
       const off=h*H;
-      const xh = x.map(r=>r.slice(off,off+H));
+      const xh = xln1.map(r=>r.slice(off,off+H));
       const q=xh.map(r=>mulVec(r,this.Wq[h]));
       const k=xh.map(r=>mulVec(r,this.Wk[h]));
       const v=xh.map(r=>mulVec(r,this.Wv[h]));
@@ -404,28 +406,33 @@ class MiniGrokGPT {
     const attConcat = Array.from({length:T},(_,t)=>{ const r=Array(C); for(let h=0;h<nHead;h++){ const off=h*H; for(let i=0;i<H;i++) r[off+i]=heads[h].att[t][i]; } return r; });
     const proj = attConcat.map(r=>mulVec(r,this.Wproj));
     const x2 = x.map((r,t)=>r.map((vv,i)=>vv+proj[t][i]));
-    const z1 = x2.map(r=>mulVec(r,this.W1).map((vv,i)=>vv+this.b1[i]));
+    // LayerNorm 2（FFN 前）
+    const ln2 = x2.map(r=>layernorm(r, this.ln2g, this.ln2b, this.eps));
+    const xln2 = ln2.map(o=>o.y);
+    const z1 = xln2.map(r=>mulVec(r,this.W1).map((vv,i)=>vv+this.b1[i]));
     const h1 = z1.map(r=>r.map(vv=>Math.max(0,vv)));
     const z2 = h1.map(r=>mulVec(r,this.W2).map((vv,i)=>vv+this.b2[i]));
     const out = x2.map((r,t)=>r.map((vv,i)=>vv+z2[t][i]));
     const logits = out.map(r=>mulVecT(r,this.Wl).map((vv,i)=>vv+this.bl[i]));
     const last = logits[T-1]; const probs = softmaxRow(last);
-    this.cache={ idx, x, tokenEmb, posEmb, heads, attConcat, proj, x2, z1, h1, z2, out, logits, last, probs, scale, H, nHead };
+    this.cache={ idx, x, tokenEmb, posEmb, ln1, xln1, heads, attConcat, proj, x2, ln2, xln2, z1, h1, z2, out, logits, last, probs, scale, H, nHead, F };
     return probs;
   }
   computeLoss(target){ const p=this.cache.probs[target]||0; this.loss=-Math.log(p+1e-12); return this.loss; }
   accNow(){ const p=this.cache.probs; return p.indexOf(Math.max(...p))===this._tgt; }
   _makeGrads(){
-    const T=this.T, C=this.C, V=this.V, Vb=this.Vocab, H=this.H, nHead=this.nHead;
+    const T=this.T, C=this.C, V=this.V, Vb=this.Vocab, H=this.H, nHead=this.nHead, F=this.F;
     return {
       dCe:Array.from({length:Vb},()=>Array(C).fill(0)), dPe:Array.from({length:T},()=>Array(C).fill(0)),
       dWk:Array.from({length:nHead},()=>Array.from({length:H},()=>Array(H).fill(0))),
       dWq:Array.from({length:nHead},()=>Array.from({length:H},()=>Array(H).fill(0))),
       dWv:Array.from({length:nHead},()=>Array.from({length:H},()=>Array(H).fill(0))),
       dWproj:Array.from({length:C},()=>Array(C).fill(0)),
-      dW1:Array.from({length:C},()=>Array(C).fill(0)), db1:Array(C).fill(0),
-      dW2:Array.from({length:C},()=>Array(C).fill(0)), db2:Array(C).fill(0),
+      dW1:Array.from({length:C},()=>Array(F).fill(0)), db1:Array(F).fill(0),
+      dW2:Array.from({length:F},()=>Array(C).fill(0)), db2:Array(C).fill(0),
       dWl:Array.from({length:V},()=>Array(C).fill(0)), dbl:Array(V).fill(0),
+      dln1g:Array(C).fill(0), dln1b:Array(C).fill(0),
+      dln2g:Array(C).fill(0), dln2b:Array(C).fill(0),
     };
   }
   _zeroGrads(){
@@ -442,18 +449,20 @@ class MiniGrokGPT {
     }
   }
   _average(g, n){ const av=a=>{ for(let i=0;i<a.length;i++){ if(Array.isArray(a[i])) av(a[i]); else a[i]/=n; } }; for(const k in g) av(g[k]); }
-  // 反向传播（返回本样本梯度；参照 gpt.html 的 MiniGPT，双向注意力同样成立）
+  // 反向传播（返回本样本梯度；与已验证的扫描脚本逻辑一致，含 LayerNorm 反向）
   backward(target){
-    const T=this.T, C=this.C, V=this.V, Vb=this.Vocab, H=this.H, nHead=this.nHead, c=this.cache;
+    const T=this.T, C=this.C, V=this.V, Vb=this.Vocab, H=this.H, nHead=this.nHead, F=this.F, c=this.cache;
     const g = {
       dCe:Array.from({length:Vb},()=>Array(C).fill(0)), dPe:Array.from({length:T},()=>Array(C).fill(0)),
       dWk:Array.from({length:nHead},()=>Array.from({length:H},()=>Array(H).fill(0))),
       dWq:Array.from({length:nHead},()=>Array.from({length:H},()=>Array(H).fill(0))),
       dWv:Array.from({length:nHead},()=>Array.from({length:H},()=>Array(H).fill(0))),
       dWproj:Array.from({length:C},()=>Array(C).fill(0)),
-      dW1:Array.from({length:C},()=>Array(C).fill(0)), db1:Array(C).fill(0),
-      dW2:Array.from({length:C},()=>Array(C).fill(0)), db2:Array(C).fill(0),
+      dW1:Array.from({length:C},()=>Array(F).fill(0)), db1:Array(F).fill(0),
+      dW2:Array.from({length:F},()=>Array(C).fill(0)), db2:Array(C).fill(0),
       dWl:Array.from({length:V},()=>Array(C).fill(0)), dbl:Array(V).fill(0),
+      dln1g:Array(C).fill(0), dln1b:Array(C).fill(0),
+      dln2g:Array(C).fill(0), dln2b:Array(C).fill(0),
     };
     // 输出层（仅最后位置 T-1）
     const dlast = c.probs.map((p,i)=> i===target ? p-1 : p);
@@ -463,15 +472,18 @@ class MiniGrokGPT {
     const dx2=Array.from({length:T},()=>Array(C).fill(0));
     const dz2=Array.from({length:T},()=>Array(C).fill(0));
     for(let i=0;i<C;i++){ dx2[T-1][i]+=dout[T-1][i]; dz2[T-1][i]+=dout[T-1][i]; }
-    // FFN 反向
-    const dh1=Array.from({length:T},()=>Array(C).fill(0));
-    for(let j=0;j<C;j++){ let s=0; for(let i=0;i<C;i++) s+=dz2[T-1][i]*this.W2[j][i]; dh1[T-1][j]=s; }
-    for(let j=0;j<C;j++){ for(let i=0;i<C;i++) g.dW2[j][i]+=dz2[T-1][i]*c.h1[T-1][j]; g.db2[j]+=dz2[T-1][j]; }
-    const dz1=Array.from({length:T},()=>Array(C).fill(0));
-    for(let j=0;j<C;j++) dz1[T-1][j]= dh1[T-1][j]*(c.z1[T-1][j]>0?1:0);
-    for(let i=0;i<C;i++){ let s=0; for(let j=0;j<C;j++) s+=dz1[T-1][j]*this.W1[i][j]; dx2[T-1][i]+=s; }
-    for(let j=0;j<C;j++){ for(let i=0;i<C;i++) g.dW1[i][j]+=dz1[T-1][j]*c.x2[T-1][i]; g.db1[j]+=dz1[T-1][j]; }
-    // 残差
+    // FFN 反向（输入是 xln2，隐藏维度 F）
+    const dh1=Array.from({length:T},()=>Array(F).fill(0));
+    for(let j=0;j<F;j++){ let s=0; for(let i=0;i<C;i++) s+=dz2[T-1][i]*this.W2[j][i]; dh1[T-1][j]=s; }
+    for(let j=0;j<F;j++){ for(let i=0;i<C;i++) g.dW2[j][i]+=dz2[T-1][i]*c.h1[T-1][j]; g.db2[j]+=dz2[T-1][j]; }
+    const dz1=Array.from({length:T},()=>Array(F).fill(0));
+    for(let j=0;j<F;j++) dz1[T-1][j]= dh1[T-1][j]*(c.z1[T-1][j]>0?1:0);
+    const dxln2=Array.from({length:T},()=>Array(C).fill(0));
+    for(let i=0;i<C;i++){ let s=0; for(let j=0;j<F;j++) s+=dz1[T-1][j]*this.W1[i][j]; dxln2[T-1][i]+=s; }
+    for(let j=0;j<F;j++){ for(let i=0;i<C;i++) g.dW1[i][j]+=dz1[T-1][j]*c.xln2[T-1][i]; g.db1[j]+=dz1[T-1][j]; }
+    // LayerNorm 2 反向：dxln2 → dx2
+    for(let t=0;t<T;t++){ const l=layernormBackward(dxln2[t], c.ln2[t].xhat, this.ln2g, c.ln2[t].inv); for(let i=0;i<C;i++) dx2[t][i]+=l.dx[i]; for(let i=0;i<C;i++){ g.dln2g[i]+=l.dg[i]; g.dln2b[i]+=l.db[i]; } }
+    // 残差 x2 = x + proj
     const dx=Array.from({length:T},()=>Array(C).fill(0));
     const dproj=Array.from({length:T},()=>Array(C).fill(0));
     for(let t=0;t<T;t++) for(let i=0;i<C;i++){ dx[t][i]+=dx2[t][i]; dproj[t][i]+=dx2[t][i]; }
@@ -480,8 +492,9 @@ class MiniGrokGPT {
       for(let i=0;i<C;i++){ let s=0; for(let j=0;j<C;j++) s+=dproj[t][j]*this.Wproj[i][j]; datt[t][i]=s; }
       for(let i=0;i<C;i++) for(let j=0;j<C;j++) g.dWproj[i][j]+=c.attConcat[t][i]*dproj[t][j];
     }
-    // 多头注意力反向（输出只在最后位置 t=T-1，双向注意力）
+    // 多头注意力反向（Q/K/V 来自 xln1，输出只在最后位置 t=T-1，双向注意力）
     const t=T-1;
+    const dxln1=Array.from({length:T},()=>Array(C).fill(0));
     for(let h=0;h<nHead;h++){
       const head=c.heads[h], off=h*H;
       const dwei=Array.from({length:T},()=>Array(T).fill(0));
@@ -496,10 +509,12 @@ class MiniGrokGPT {
         for(let s=0;s<T;s++) for(let i=0;i<H;i++){ dq[t][i]+=dlogit[s]*head.k[s][i]*c.scale; dk[s][i]+=dlogit[s]*head.q[t][i]*c.scale; }
       }
       for(let t2=0;t2<T;t2++){
-        for(let o=0;o<H;o++){ for(let i=0;i<H;i++){ g.dWk[h][i][o]+=dk[t2][o]*c.x[t2][off+i]; g.dWq[h][i][o]+=dq[t2][o]*c.x[t2][off+i]; g.dWv[h][i][o]+=dv[t2][o]*c.x[t2][off+i]; } }
-        for(let i=0;i<H;i++){ let s=0; for(let o=0;o<H;o++){ s+=dk[t2][o]*this.Wk[h][i][o]; s+=dq[t2][o]*this.Wq[h][i][o]; s+=dv[t2][o]*this.Wv[h][i][o]; } dx[t2][off+i]+=s; }
+        for(let o=0;o<H;o++){ for(let i=0;i<H;i++){ g.dWk[h][i][o]+=dk[t2][o]*c.xln1[t2][off+i]; g.dWq[h][i][o]+=dq[t2][o]*c.xln1[t2][off+i]; g.dWv[h][i][o]+=dv[t2][o]*c.xln1[t2][off+i]; } }
+        for(let i=0;i<H;i++){ let s=0; for(let o=0;o<H;o++){ s+=dk[t2][o]*this.Wk[h][i][o]; s+=dq[t2][o]*this.Wq[h][i][o]; s+=dv[t2][o]*this.Wv[h][i][o]; } dxln1[t2][off+i]+=s; }
       }
     }
+    // LayerNorm 1 反向：dxln1 → dx
+    for(let t2=0;t2<T;t2++){ const l=layernormBackward(dxln1[t2], c.ln1[t2].xhat, this.ln1g, c.ln1[t2].inv); for(let i=0;i<C;i++) dx[t2][i]+=l.dx[i]; for(let i=0;i<C;i++){ g.dln1g[i]+=l.dg[i]; g.dln1b[i]+=l.db[i]; } }
     // 词向量 / 位置向量
     for(let t3=0;t3<T;t3++){ const ch=c.idx[t3]; for(let i=0;i<C;i++){ g.dCe[ch][i]+=dx[t3][i]; g.dPe[t3][i]+=dx[t3][i]; } }
     return g;
@@ -520,7 +535,7 @@ class MiniGrokGPT {
   }
   weightNorm(){
     let s=0;
-    const all=[this.Ce,this.Pe,this.Wq,this.Wk,this.Wv,this.Wproj,this.W1,this.W2,this.Wl,this.b1,this.b2,this.bl];
+    const all=[this.Ce,this.Pe,this.Wq,this.Wk,this.Wv,this.Wproj,this.W1,this.W2,this.Wl,this.b1,this.b2,this.bl,this.ln1g,this.ln1b,this.ln2g,this.ln2b];
     const acc=a=>{ for(const v of a){ if(Array.isArray(v)) acc(v); else s+=v*v; } };
     for(const w of all) acc(w);
     return Math.sqrt(s);
@@ -536,7 +551,7 @@ class MiniGrokGPT {
   }
   pairs(){ // 供 AdamW：权重 + 梯度 引用对
     const g=this.grads;
-    const W={ Ce:this.Ce, Pe:this.Pe, Wq:this.Wq, Wk:this.Wk, Wv:this.Wv, Wproj:this.Wproj, W1:this.W1, b1:this.b1, W2:this.W2, b2:this.b2, Wl:this.Wl, bl:this.bl };
+    const W={ Ce:this.Ce, Pe:this.Pe, Wq:this.Wq, Wk:this.Wk, Wv:this.Wv, Wproj:this.Wproj, W1:this.W1, b1:this.b1, W2:this.W2, b2:this.b2, Wl:this.Wl, bl:this.bl, ln1g:this.ln1g, ln1b:this.ln1b, ln2g:this.ln2g, ln2b:this.ln2b };
     return Object.keys(W).map(k=>({ p:W[k], g:g['d'+k] }));
   }
 }
@@ -570,7 +585,7 @@ class AdamW {
 /* ============================================================
    4. 应用状态
 ============================================================ */
-let P=9, C=48, nHead=2, trainRatio=50, LR=1e-3, WD=1.0;
+let P=9, C=48, nHead=4, trainRatio=50, LR=1e-3, WD=1.0;
 let MAX_STEPS=200000;
 let model, opt, DATA;
 const history = { steps:[], trainLoss:[], testLoss:[], trainAcc:[], testAcc:[] };
@@ -686,6 +701,7 @@ function renderCurveLegend(){
 }
 
 function cellColor(v,m){ const a=(0.08+0.85*Math.abs(v)/(m||1e-6)).toFixed(2); return v>=0?`rgba(251,191,36,${a})`:`rgba(59,130,246,${a})`; }
+function sampleRow(r, maxCells){ const n=r.length; if(n<=maxCells) return r; const step=n/maxCells; const out=Array(maxCells); for(let i=0;i<maxCells;i++) out[i]=r[Math.floor(i*step)]; return out; }
 
 function renderNetViz(){
   const el=document.getElementById('netViz');
@@ -696,7 +712,7 @@ function renderNetViz(){
   // 词向量+位置向量热力图（x[t] = Ce[idx] + Pe[t]）
   function embGrid(rows, labels){
     let m=1e-6; for(const r of rows) for(const v of r) if(Math.abs(v)>m) m=Math.abs(v);
-    return '<div class="emb-grid">'+rows.map((r,ri)=>'<div class="emb-row"><span class="emb-lbl">'+(labels?labels[ri]:'')+'</span>'+r.map(v=>`<span class="emb-cell" style="background:${cellColor(v,m)}"></span>`).join('')+'</div>').join('')+'</div>';
+    return '<div class="emb-grid">'+rows.map((r,ri)=>'<div class="emb-row"><span class="emb-lbl">'+(labels?labels[ri]:'')+'</span>'+sampleRow(r,96).map(v=>`<span class="emb-cell" style="background:${cellColor(v,m)}"></span>`).join('')+'</div>').join('')+'</div>';
   }
   // 输入：两个数字 + 等号（token 序列 a b =）
   const inTiles = '<div class="tf-tiles">'+[s.a,s.b,'='].map(v=>`<span class="tf-tile">${v}</span>`).join('<span class="tf-op"> </span>')+'</div>';
@@ -713,31 +729,31 @@ function renderNetViz(){
     const top='<div class="att2-row"><span class="att-lbl2"> </span>'+tok.map(v=>`<span class="att-lbl2">${v}</span>`).join('')+'</div>';
     return `<div class="head-box"><div class="head-lbl">头 ${hi+1}</div><div class="att2">${top}${rows}</div></div>`;
   }).join('');
-  // FFN 激活（每行 = 一个数字的 C 维激活）
+  // FFN 激活（每行 = 一个数字的 F 维激活，展示时抽样到 96 格避免溢出）
   let mh=1e-6; for(const r of c.h1) for(const v of r) if(Math.abs(v)>mh) mh=Math.abs(v);
-  const ffnRows = c.h1.map((r,t)=>'<div class="ffn-row">'+r.map(v=>`<span class="ffn-cell" style="background:${cellColor(v,mh)}"></span>`).join('')+'</div>').join('');
+  const ffnRows = c.h1.map((r,t)=>'<div class="ffn-row">'+sampleRow(r,96).map(v=>`<span class="ffn-cell" style="background:${cellColor(v,mh)}"></span>`).join('')+'</div>').join('');
   // 输出概率
   const outRows=probs.map((p,k)=>`
     <div class="out-row"><span class="vl">${k}</span>
       <span class="bar" style="width:${Math.round(p*55)}px"></span>
       ${k===s.t?'<span class="ok">✓</span>':''}</div>`).join('');
-  // 输出层权重 Wl 热力图（P×C，顿悟后呈条纹）
+  // 输出层权重 Wl 热力图（P×C，顿悟后呈条纹；展示时每行抽样到 80 格避免溢出）
   let ml=1e-6; for(const r of model.Wl) for(const v of r) if(Math.abs(v)>ml) ml=Math.abs(v);
-  const wl = model.Wl.map(r=>r.map(v=>`<span class="wh" style="width:7px;height:7px;background:${cellColor(v,ml)}"></span>`).join('')).join('');
+  const wlC = Math.min(C, 80);
+  const wl = model.Wl.map(r=>sampleRow(r,wlC).map(v=>`<span class="wh" style="width:7px;height:7px;background:${cellColor(v,ml)}"></span>`).join('')).join('');
   el.innerHTML=`
     <div class="mlp-viz">
       <div class="mlp-layer"><div class="lt">输入层<em>数字 a 与 b</em></div>${inTiles}</div>
       <div class="mlp-arrow">→</div>
-      <div class="mlp-layer"><div class="lt">词向量+位置向量<em>嵌入维度 ${C} · 2 头 × ${model.H} 维</em></div>${embGrid(c.x,['a','b','='])}</div>
+      <div class="mlp-layer"><div class="lt">词向量+位置向量<em>嵌入维度 ${C} · ${model.nHead} 头 × ${model.H} 维</em></div>${embGrid(c.x,['a','b','='])}</div>
       <div class="mlp-arrow">→</div>
-      <div class="mlp-layer"><div class="lt">自注意力<em>双向 · 无因果掩码</em></div><div class="heads-row">${headsHtml}</div></div>
+      <div class="mlp-layer"><div class="lt">自注意力<em>LayerNorm 后 · 双向 · 无因果掩码</em></div><div class="heads-row">${headsHtml}</div></div>
       <div class="mlp-arrow">→</div>
-      <div class="mlp-layer"><div class="lt">全连接层<em>ReLU</em></div><div class="ffn-col">${ffnRows}</div></div>
+      <div class="mlp-layer"><div class="lt">全连接层<em>LayerNorm 后 · ReLU · 宽度 4×C=${model.F}</em></div><div class="ffn-col">${ffnRows}</div></div>
       <div class="mlp-arrow">→</div>
       <div class="mlp-layer"><div class="lt">输出层<em>预测 ${s.a} ${s.b} = → ${s.t} ✓</em></div><div class="out-col">${outRows}</div></div>
     </div>
-    <div class="w3-heat" style="grid-template-columns:repeat(${C},7px);justify-content:center;">${wl}</div>`;
-  document.getElementById('sampleBadge').textContent=`${dataView==='test'?'🧪 测试':'📚 训练'} #${dataView==='test'?currentTestIdx:currentSampleIdx} · ${s.a} ${s.b} = → ${s.t}`;
+    <div class="w3-heat" style="grid-template-columns:repeat(${wlC},7px);justify-content:center;">${wl}</div>`;
 }
 
 function renderDataList(){
@@ -748,7 +764,7 @@ function renderDataList(){
       <span class="dl-expr">${s.a} + ${s.b} = ${s.t}</span>
     </div>`;
   }).join('');
-  el.querySelectorAll('.dl-row').forEach(r=>{ r.onclick=()=>{ currentSampleIdx=+r.dataset.i; dataView='train'; renderDataList(); renderTestList(); renderAddTable(); renderNetViz(); renderDataPanel(); }; });
+  el.querySelectorAll('.dl-row').forEach(r=>{ r.onclick=()=>{ currentSampleIdx=+r.dataset.i; dataView='train'; renderDataList(); renderTestList(); renderNetViz(); }; });
   document.getElementById('dsBadge').textContent=`${DATA.train.length} 组 · 顺序训练`;  // 让当前选中的训练样本始终可见（训练中自动跟随滚动，不被隐藏）
   const act=el.querySelector('.dl-row.active');
   if(act && act.scrollIntoView) act.scrollIntoView({ block:'nearest', behavior:'auto' });}
@@ -762,21 +778,26 @@ function renderTestList(){
       <span class="dl-tag new">新题</span>
     </div>`;
   }).join('');
-  el.querySelectorAll('.dl-row').forEach(r=>{ r.onclick=()=>{ currentTestIdx=+r.dataset.i; dataView='test'; renderDataList(); renderTestList(); renderAddTable(); renderNetViz(); renderDataPanel(); }; });
+  el.querySelectorAll('.dl-row').forEach(r=>{ r.onclick=()=>{ currentTestIdx=+r.dataset.i; dataView='test'; renderDataList(); renderTestList(); renderNetViz(); }; });
   document.getElementById('tsBadge').textContent=`${DATA.test.length} 组 · 全部是没做过的题`;
   // 让当前选中的测试样本始终可见（点击后不被隐藏）
   const act=el.querySelector('.dl-row.active');
   if(act && act.scrollIntoView) act.scrollIntoView({ block:'nearest', behavior:'auto' });
 }
 
+// 训练数据格式卡片：固定 P=5 的模加法表示意（与下方训练器解耦）
+const CARD_P = 5;
+let cardData = null;    // 卡片固定数据集（5×5，随机 50% 训练/测试）
+let cardCurKey = '';    // 卡片当前点亮的格子
+
 function renderAddTable(){
   const el=document.getElementById('addTable');
   if(!el) return;
+  if(!cardData) cardData = makeData(CARD_P, 50);
+  const P=CARD_P;
   const map={};
-  for(const s of DATA.train) map[s.a+','+s.b]='train';
-  for(const s of DATA.test) map[s.a+','+s.b]='test';
-  const curS = dataView==='test' ? (DATA.test[currentTestIdx]||DATA.test[0]) : (DATA.train[currentSampleIdx]||DATA.train[0]);
-  const curKey = curS ? (curS.a+','+curS.b) : '';
+  for(const s of cardData.train) map[s.a+','+s.b]='train';
+  for(const s of cardData.test) map[s.a+','+s.b]='test';
   let h=`<div class="at-grid" style="grid-template-columns:repeat(${P+1},1fr);">`;
   h+='<div class="at-head"></div>';
   for(let b=0;b<P;b++) h+=`<div class="at-head">${b}</div>`;
@@ -784,7 +805,7 @@ function renderAddTable(){
     h+=`<div class="at-head">${a}</div>`;
     for(let b=0;b<P;b++){
       const kind=map[a+','+b]==='train'?'train':'test';
-      const cur=(a+','+b)===curKey?' cur':'';
+      const cur=(a+','+b)===cardCurKey?' cur':'';
       h+=`<div class="at-cell ${kind}${cur}" data-a="${a}" data-b="${b}" title="${a} + ${b} = ${(a+b)%P}">${(a+b)%P}</div>`;
     }
   }
@@ -792,34 +813,11 @@ function renderAddTable(){
   el.innerHTML=h;
   el.querySelectorAll('.at-cell').forEach(c=>{
     c.onclick=()=>{
-      const a=+c.dataset.a, b=+c.dataset.b;
-      if(map[a+','+b]==='train'){
-        currentSampleIdx=DATA.train.findIndex(s=>s.a===a&&s.b===b);
-        dataView='train';
-      } else {
-        currentTestIdx=DATA.test.findIndex(s=>s.a===a&&s.b===b);
-        dataView='test';
-      }
-      renderDataList(); renderTestList(); renderAddTable(); renderNetViz(); renderDataPanel();
+      cardCurKey = c.dataset.a+','+c.dataset.b;
+      renderAddTable();
     };
   });
-  document.getElementById('addTableBadge').textContent=`${P}×${P} · 训练 ${DATA.train.length} / 测试 ${DATA.test.length}`;
-}
-
-function renderDataPanel(){
-  const panel=document.getElementById('dataPanel');
-  const s = dataView==='test' ? (DATA.test[currentTestIdx]||DATA.test[0]) : (DATA.train[currentSampleIdx]||DATA.train[0]);
-  let h='';
-  h+=`<div class="data-row"><span class="label">🔤 输入</span><span class="value">${s.a} ${s.b} =</span></div>`;
-  h+=`<div class="data-row"><span class="label">🎯 答案</span><span class="value fw">${s.t}</span></div>`;
-  h+=`<div class="data-row" style="border-top:2px solid #e6edf4;padding-top:6px;margin-top:4px;"><span class="label fw">🧠 当前预测</span><span></span></div>`;
-  const probs=model.cache.probs;
-  const top=[...probs.keys()].sort((a,b)=>probs[b]-probs[a]).slice(0,3);
-  h+=`<div class="data-row"><span class="label">Top 1</span><span class="value">${top[0]} (${(probs[top[0]]*100).toFixed(1)}%)${top[0]===s.t?' ✓':' ✗'}</span></div>`;
-  h+=`<div class="data-row"><span class="label">Top 2</span><span class="value">${top[1]} (${(probs[top[1]]*100).toFixed(1)}%)</span></div>`;
-  h+=`<div class="data-row"><span class="label">Top 3</span><span class="value">${top[2]} (${(probs[top[2]]*100).toFixed(1)}%)</span></div>`;
-  h+=`<div class="data-row"><span class="label">⚖️ ‖W‖</span><span class="value">${model.wNorm.toFixed(3)}</span></div>`;
-  panel.innerHTML=h;
+  document.getElementById('addTableBadge').textContent=`${P}×${P} · 训练 ${cardData.train.length} / 测试 ${cardData.test.length}`;
 }
 
 function updateStatus(msg){
@@ -848,7 +846,7 @@ function updateStatus(msg){
 }
 
 function renderAll(){
-  drawCurves(); renderNetViz(); renderDataPanel(); updateStatus();
+  drawCurves(); renderNetViz(); updateStatus();
 }
 
 /* ============================================================
@@ -876,6 +874,7 @@ async function trainLoop(){
     const sp=getSpeed();
     const n=DATA.train.length;
     const epochsPerFrame=Math.max(1, Math.round(sp/n));
+    const visEvery=Math.max(1, Math.round(n/8));   // 可视化时每帧动态展示约 8 个训练样本
     let lastIdx=0;
     // 1. 训练阶段（full-batch）：每个 epoch 累积全部训练数据梯度 → 平均 → 更新一次
     for(let e=0;e<epochsPerFrame && model.steps<MAX_STEPS;e++){
@@ -884,6 +883,12 @@ async function trainLoop(){
         const s=DATA.train[i]; lastIdx=i;
         model.forward(s.a,s.b);
         model._accumulate(model.grads, model.backward(s.t));
+        // 可视化训练：动态「选择」当前样本（高亮列表 + 刷新网络结构）
+        if(trainMode==='visual' && (i % visEvery === 0 || i===n-1)){
+          currentSampleIdx=i; dataView='train';
+          renderDataList(); renderNetViz();
+          await sleep(8);
+        }
       }
       model._average(model.grads, n);
       model.grads.dCe[model.EQ].fill(0);   // 等号是提示符：stop-gradient
@@ -901,7 +906,7 @@ async function trainLoop(){
     if(grokStep===null && te.acc>0.9){ grokStep=model.steps; toast('✨ 顿悟时刻！它突然全懂了！'); }
     // 渲染：可视化训练 → 动态高亮列表 + 模加法表 + 网络结构；后台训练 → 只更新曲线
     if(trainMode==='visual'){
-      renderDataList(); renderAddTable(); renderAll();
+      renderDataList(); renderAll();
     } else {
       drawCurves();
     }
@@ -950,7 +955,7 @@ document.getElementById('btnReset').onclick=()=>{
 ============================================================ */
 function readParams(){
   P=parseInt(document.getElementById('pInput').value)||13;
-  C=parseInt(document.getElementById('hInput').value)||128; nHead=2;
+  C=parseInt(document.getElementById('hInput').value)||128; nHead=4;
   trainRatio=parseInt(document.getElementById('ratioInput').value)||50;
   WD=parseFloat(document.getElementById('wdInput').value)||0;
   LR=Math.pow(10, parseFloat(document.getElementById('lrInput').value)||-3);
@@ -959,7 +964,7 @@ function readParams(){
 function applyDataDesign(){
   if(state.running) return;   // 训练中不实时重建，避免打断
   build();
-  renderDataList(); renderTestList(); renderAddTable(); renderNetViz(); renderDataPanel(); drawCurves();
+  renderDataList(); renderTestList(); renderAddTable(); renderNetViz(); drawCurves();
   updateStatus('就绪');
 }
 function syncParamUI(){
@@ -984,9 +989,6 @@ document.getElementById('lrInput').oninput=syncParamUI;
 document.getElementById('speedInput').oninput=syncParamUI;
 
 document.getElementById('presetStd').onclick=()=>{ applyParams(13,128,50,1.0,1e-3); toast('✨ 标准实验：权重衰减 1.0 · 数据 50% → 会顿悟！'); };
-document.getElementById('presetNoWd').onclick=()=>{ applyParams(13,128,50,0,1e-3); toast('🚫 权重衰减=0：它只会一直背题…'); };
-document.getElementById('presetFew').onclick=()=>{ applyParams(13,128,30,1.0,1e-3); toast('📉 数据只有 30%：背题期更长，顿悟更慢'); };
-document.getElementById('presetBig').onclick=()=>{ applyParams(13,192,70,1.0,1e-3); toast('⚡ 更大模型 + 更多数据：顿悟更快！'); };
 
 /* ============================================================
    7.5 全屏切换
@@ -1002,6 +1004,19 @@ document.addEventListener('fullscreenchange', ()=>{
   annFsBtn.textContent=on?'✕':'⛶';
   annFsBtn.title=on?'退出全屏':'全屏';
 });
+
+/* 右侧面板（超参数 + 状态）默认收起，点 ⚙️ 展开/收起 */
+const trainerSide=document.getElementById('trainerSide');
+const sideToggleBtn=document.getElementById('sideToggleBtn');
+const trainerGrid=document.querySelector('.trainer-grid');
+trainerGrid.style.gridTemplateColumns='230px 1fr';   // 默认收起右侧 → 主区占满两列
+sideToggleBtn.onclick=()=>{
+  const showing = trainerSide.style.display!=='none';
+  trainerSide.style.display = showing ? 'none' : 'flex';
+  trainerGrid.style.gridTemplateColumns = showing ? '230px 1fr' : '230px 1fr 230px';
+  sideToggleBtn.textContent = showing ? '⚙️' : '✕';
+  sideToggleBtn.title = showing ? '展开右侧面板' : '收起右侧面板';
+};
 
 /* ============================================================
    8. 初始化
@@ -1022,7 +1037,6 @@ renderDataList();
 renderTestList();
 renderAddTable();
 renderNetViz();
-renderDataPanel();
 drawCurves();
 updateStatus('就绪');
 </script>
