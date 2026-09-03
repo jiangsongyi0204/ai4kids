@@ -1,31 +1,21 @@
 /* ============================================================
-   ai4kids · 时间轴课程引擎 (timeline.js)
-   Web 开发 & 人工智能 两个课程页共用
+   ai4kids · 演化时间轴渲染 (timeline.js)
+   首页「人工智能的未来」使用
 
-   用法（在课程页的 <script> 中）：
-     const COURSES = [ ...课程数据... ];
-     initTimeline({ courses: COURSES, careerKey: 'web-development', name: 'Web 开发' });
+   用法（在页面 <script> 中）：
+     initTimeline({ courses: window.AI_EVOLUTION, name: '人工智能' });
+   （不再有解锁/进度逻辑；节点点击即在弹层展开该站详情）
    ============================================================ */
-function initTimeline({ courses, careerKey, name, timelineUrl }){
-  const KEY = 'career101_done';
-  let done = load(KEY, {});
-  let doneSet = new Set(done[careerKey] || []);
-
-  function persist(){
-    done[careerKey] = [...doneSet];
-    save(KEY, done);
-  }
-
+function initTimeline({ courses, name, timelineUrl }){
   const tl = document.getElementById('tl');
   const modal = document.getElementById('modal');
   const lesson = document.getElementById('lesson');
   let current = 0;
 
+  /* 渲染时间轴节点（无解锁图标） */
   function renderTimeline(){
     tl.innerHTML = courses.map((c,i)=>{
-      const isDone = doneSet.has(c.year);
-      const cls = isDone ? 'done' : (i===0 ? 'cur' : '');
-      const state = isDone ? '✅' : (i===0 ? '▶️' : '🔓');
+      const cls = (i===0) ? 'cur' : '';   // 第一站高亮，作为起点标记
       return `<div class="node">
         <div class="dot">${c.emoji}</div>
         <div class="ncard ${cls}" data-i="${i}">
@@ -33,7 +23,6 @@ function initTimeline({ courses, careerKey, name, timelineUrl }){
           <div class="row">
             <span class="em">${c.emoji}</span>
             <span class="tt"><b>${i+1}. ${c.title}</b><span>${c.brief}</span></span>
-            <span class="state">${state}</span>
           </div>
         </div>
       </div>`;
@@ -46,13 +35,8 @@ function initTimeline({ courses, careerKey, name, timelineUrl }){
     });
   }
 
-  function updateProgress(){
-    document.getElementById('pr').textContent = `已学 ${doneSet.size}/${courses.length}`;
-  }
-
   function renderLesson(){
     const c = courses[current];
-    const doneNow = doneSet.has(c.year);
     const isLast = current === courses.length-1;
     const isFirst = current === 0;
     lesson.innerHTML = `
@@ -65,7 +49,7 @@ function initTimeline({ courses, careerKey, name, timelineUrl }){
       <div class="sec story"><h4>🕰️ 故事时间 · 那时候发生了什么？</h4><p>${c.story}</p></div>
       <div class="sec teach"><h4>📖 知识小课堂 · 记住这个魔法！</h4><p>${c.teach}</p></div>
       <div class="sec act"><h4>🖐️ 动手小任务 · 亲自试一试</h4><ol>${c.activity.steps.map(s=>`<li>${s}</li>`).join('')}</ol></div>
-      <div class="sec quiz" id="quizBox">
+      <div class="sec quiz">
         <h4>❓ 小测试 · 你学会了吗？</h4>
         <p class="quiz-q">${c.quiz.q}</p>
         ${c.quiz.options.map((o,i)=>`<button class="opt" data-i="${i}">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}
@@ -73,8 +57,8 @@ function initTimeline({ courses, careerKey, name, timelineUrl }){
       </div>
       <div class="sec think"><h4>💭 思考时间 · 和爸爸妈妈聊一聊</h4><p>${c.think}</p></div>
       <div class="l-nav">
-        <button class="btn-prev" id="prevBtn" ${isFirst?'disabled style="opacity:.4"':''}>← 上一课</button>
-        <button class="btn-next ${doneNow?'done':''}" id="nextBtn">${isLast?'🏁 完成全部课程':(doneNow?'✅ 已完成 · 下一课 →':'🎯 完成本课 · 下一课 →')}</button>
+        <button class="btn-prev" id="prevBtn" ${isFirst?'disabled style="opacity:.4"':''}>← 上一站</button>
+        <button class="btn-next" id="nextBtn">${isLast?'🏁 浏览完毕，回到时间轴':'下一站 →'}</button>
       </div>`;
 
     /* 小测试交互 */
@@ -101,11 +85,7 @@ function initTimeline({ courses, careerKey, name, timelineUrl }){
 
     lesson.querySelector('#prevBtn').onclick = ()=>{ if(!isFirst){ current--; renderLesson(); } };
     lesson.querySelector('#nextBtn').onclick = ()=>{
-      if(!doneSet.has(c.year)){
-        doneSet.add(c.year); persist(); updateProgress(); renderTimeline();
-        toast(`✅ 完成 ${c.year} 年 · ${c.title}！`);
-      }
-      if(isLast){ closeLesson(); renderTimeline(); }
+      if(isLast){ closeLesson(); }
       else { current++; renderLesson(); }
     };
   }
@@ -116,5 +96,4 @@ function initTimeline({ courses, careerKey, name, timelineUrl }){
   modal.addEventListener('click', e=>{ if(e.target === modal) closeLesson(); });
 
   renderTimeline();
-  updateProgress();
 }

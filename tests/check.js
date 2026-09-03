@@ -53,15 +53,14 @@ async function checkContains(path, name, text, desc) {
 // ========== 主测试 ==========
 async function main() {
   console.log('\n========================================');
-  console.log('   ai4kids · 儿童职业启蒙101 自动化测试');
+  console.log('   ai4kids · 人工智能的未来 自动化测试');
   console.log('   BASE = ' + BASE);
   console.log('========================================\n');
 
   // 一、页面加载
   console.log('-- 1. 页面加载 --');
-  await checkTitle('/', '首页', '儿童职业启蒙101');
+  await checkTitle('/', '首页', '人工智能的未来');
   await checkTitle('/guide.html', '教育全景导航', 'AI时代教育全景导航');
-  await checkTitle('/web-development/', 'Web开发课程', 'Web 开发');
   await checkTitle('/artificial-intelligence/', '人工智能课程', '人工智能');
   await checkTitle('/artificial-intelligence/neural-network.html', '神经网络实验', '神经网络');
   await checkTitle('/artificial-intelligence/perceptron.html', '单层感知机', '单层感知机');
@@ -75,11 +74,10 @@ async function main() {
 
   // 二、关键元素
   console.log('\n-- 2. 关键元素 --');
-  await checkContains('/', '首页', '儿童职业启蒙', '顶栏文案');
-  await checkContains('/', '首页', 'Web 开发', 'Web开发卡片');
-  await checkContains('/', '首页', 'career101_unlocked', '解锁进度存储');
-  await checkContains('/web-development/', 'Web开发', '时间轴', '时间轴组件');
-  await checkContains('/web-development/', 'Web开发', '1989', '起点年份');
+  await checkContains('/', '首页', '人工智能的未来', '站名文案');
+  await checkContains('/', '首页', '演化时间轴', '演化时间轴标题');
+  await checkContains('/', '首页', 'ai-evolution.js', '演化共享数据');
+  await checkContains('/js/ai-evolution.js', '演化数据', '1950', '数据起点年份');
   await checkContains('/artificial-intelligence/', '人工智能', '时间轴', '时间轴组件');
   await checkContains('/artificial-intelligence/', '人工智能', '1950', '起点年份');
   await checkContains('/artificial-intelligence/neural-network.html', '神经网络', '10×10', '10x10地图');
@@ -114,10 +112,9 @@ async function main() {
   // 三、导航跳转
   console.log('\n-- 3. 导航跳转 --');
   const home = await fetchHtml('/');
-  log(home.html.includes("'/'") || home.html.includes('"/"'), '首页 职业卡片跳转', '职业卡片链接到 /web-development/');
+  log(home.html.includes('/artificial-intelligence/lab.html'), '首页 实验室入口', '链接到 AI 实验室');
   log(home.html.includes('href="/guide.html"'), '首页 教育理念按钮', '链接到 guide.html');
-  const wd = await fetchHtml('/web-development/');
-  log(/location\.href\s*=\s*['"]\//.test(wd.html) || /href=["']\//.test(wd.html), 'Web开发 返回首页按钮', '可返回首页');
+  log(home.html.includes('window.AI_EVOLUTION'), '首页 演化数据接入', 'initTimeline 使用共享数据');
   const aiPage = await fetchHtml('/artificial-intelligence/');
   const tlPage = await fetchHtml('/artificial-intelligence/timeline.html');
   log(tlPage.html.includes('lab.html'), '时间轴 进入实验室按钮', '链接到实验室页');
@@ -139,8 +136,8 @@ async function main() {
   try { appsData = await appsRes.json(); } catch {}
   log(appsRes.status === 200, 'GET /api/apps', `status=${appsRes.status}`);
   log(Array.isArray(appsData), '/api/apps 返回数组', `长度=${Array.isArray(appsData) ? appsData.length : 'N/A'}`);
-  log(Array.isArray(appsData) && appsData.some(a => a.id === 'web-development'), '/api/apps 含 web-development',
-    Array.isArray(appsData) && appsData.some(a => a.id === 'web-development') ? '找到' : '未找到');
+  log(Array.isArray(appsData) && !appsData.some(a => a.id === 'web-development'), '/api/apps 不含 web-development',
+    Array.isArray(appsData) && appsData.some(a => a.id === 'web-development') ? '未删除' : '已删除');
   log(Array.isArray(appsData) && appsData.some(a => a.id === 'artificial-intelligence'), '/api/apps 含 artificial-intelligence',
     Array.isArray(appsData) && appsData.some(a => a.id === 'artificial-intelligence') ? '找到' : '未找到');
 

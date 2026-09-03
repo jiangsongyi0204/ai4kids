@@ -1,90 +1,10 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<meta http-equiv="refresh" content="0; url=/">
-<title>人工智能的未来 · 演化时间轴</title>
-<link rel="stylesheet" href="/css/common.css">
-<style>
-  /* 页面独有样式：神经网络入口（公共样式见 /css/common.css） */
-  #app { max-width:1100px; }
-  .nn-card { text-align:center; }
-  .btn-nn { display:inline-block; margin-top:6px; background:linear-gradient(135deg,#2f6bff,#1e4fd6);
-    color:#fff; font-size:15px; font-weight:800; padding:12px 26px; border-radius:30px; text-decoration:none;
-    box-shadow:0 6px 18px -6px rgba(47,107,255,.55); transition:.15s; }
-  .btn-nn:hover { transform:translateY(-2px); box-shadow:0 8px 22px -6px rgba(47,107,255,.65); }
-  .btn-nn:active { transform:scale(.96); }
-  .nn-card .btn-nn { margin:6px 6px 0; }
-  .btn-nn2 { background:linear-gradient(135deg,#ff8fc7,#f2559d) !important;
-    box-shadow:0 6px 18px -6px rgba(242,85,157,.5) !important; }
-  .btn-nn2:hover { box-shadow:0 8px 22px -6px rgba(242,85,157,.6) !important; }
-  .btn-nn3 { background:linear-gradient(135deg,#12c98c,#0ea876) !important;
-    box-shadow:0 6px 18px -6px rgba(18,201,140,.5) !important; }
-  .btn-nn3:hover { box-shadow:0 8px 22px -6px rgba(18,201,140,.6) !important; }
-  .btn-nn4 { background:linear-gradient(135deg,#8a5cf6,#6d3fbd) !important;
-    box-shadow:0 6px 18px -6px rgba(138,92,246,.5) !important; }
-  .btn-nn4:hover { box-shadow:0 8px 22px -6px rgba(138,92,246,.6) !important; }
-</style>
-</head>
-<body>
-<div class="bg">
-  <div class="sun">☀️</div>
-  <div class="stars"></div>
-  <div class="cloud c1"></div>
-  <div class="cloud c2"></div>
-</div>
-
-<div id="app">
-  <header class="topbar">
-    <button class="back" onclick="location.href='/'">← 返回首页</button>
-    <span class="t">🤖 人工智能 · 时间轴课程</span>
-    <span class="pr" id="pr"></span>
-  </header>
-
-  <section class="hero">
-    <span class="big">🤖</span>
-    <h1>人工智能专家</h1>
-    <p class="tagline">教机器学会思考的魔法师</p>
-    <div class="meta">
-      <span class="chip">📅 诞生 1950</span>
-      <span class="chip">🎓 12 堂课</span>
-      <span class="chip">⚡ 难度 ★★★</span>
-    </div>
-  </section>
-
-  <div class="card">
-    <h3>🧐 这个职业是做什么的？</h3>
-    <p>你手机里的语音助手、解锁手机的<b>人脸识别</b>、推荐你爱看的视频的算法……背后都站着一群「人工智能专家」！他们教机器像人一样<b>看、听、说、思考、做决定</b>。现在，让我们一起钻进时间隧道，从 1950 年它「出生」那天开始，一堂堂学懂这门魔法！</p>
-  </div>
-
-  <div class="card">
-    <h3>🛰️ 时间隧道 · 从诞生到今天</h3>
-    <p style="font-size:13px;color:#8a93b8;">沿着时间轴往下走，每一个节点就是<b>一堂课</b>。点开它，就能学到那个年代人工智能的大魔法！学完一堂，节点会变绿 🌱。</p>
-    <div class="tl" id="tl"></div>
-  </div>
-
-  <div class="foot">🎉 全部学完 12 堂课，你就点亮了「人工智能」这颗职业星球！<br>进度只保存在本机浏览器。</div>
-</div>
-
-<!-- 课程弹层 -->
-<div id="modal">
-  <button class="l-close" onclick="closeLesson()">✕ 关闭</button>
-  <div class="lesson" id="lesson"></div>
-</div>
-
-<div id="toast"></div>
-
-<script src="/js/common.js"></script>
-<script src="/js/timeline.js"></script>
-<script>
-/* =====================================================
-   人工智能 · 时间轴课程数据
-   每堂课：故事（story）→ 知识（teach）→ 动手（activity）
-            → 小测试（quiz）→ 思考（think）
-===================================================== */
-const COURSES = [
+/* ============================================================
+   ai4kids · AI 演化史共享数据 (ai-evolution.js)
+   首页「人工智能的未来」与人工智能力量轴课程共用
+   每站：year / emoji / title / tag / brief
+        story(故事) → teach(知识) → activity(动手) → quiz(小测验) → think(思考)
+   ============================================================ */
+window.AI_EVOLUTION = [
 {
   year:'1950', emoji:'💬', title:'图灵测试', tag:'一切的开始',
   brief:'图灵爷爷问了一个问题：机器能思考吗？',
@@ -157,6 +77,20 @@ const COURSES = [
   think:'专家的经验写成规则，机器就能「假装专家」。那你还觉得人需要学知识吗？'
 },
 {
+  year:'1986', emoji:'🔁', title:'反向传播诞生', tag:'神经网络会「纠错」了',
+  brief:'让多层神经网络真正会学习的「向后纠错」算法',
+  story:'1986 年，鲁梅尔哈特、辛顿等科学家终于让「感知机的后代」——多层神经网络真正活了起来。关键是一招叫<b>反向传播（Backpropagation）</b>的算法：网络答错后，会从最后一个神经元开始一步步倒回去，算出「每个环节错在哪、该改多少」，再微调自己。就像投篮没进时，你会倒着回想「手腕、手肘、站位哪里出了问题」。',
+  teach:'神经网络学习 = 一遍遍「向前算答案 + 向后纠错」。反向传播把「错误」像涟漪一样从输出端传回每一层，让每一根连接线都知道自己该往哪个方向微调。没有它，2012 年后的深度学习、今天的大模型都无从谈起——它是整个现代 AI 的引擎。',
+  activity:{title:'动手：当一次「反向传播裁判」', steps:[
+    '和爸爸妈妈玩「你说我猜」：你出一个数，对方猜你心里想的是几。',
+    '猜错时，从答案倒着推：是高太多，还是低太多？该往哪个方向调？',
+    '体会「根据错误倒着修正每一步」——这就是反向传播在做的事！']},
+  quiz:{q:'反向传播最厉害的地方是什么？', options:[
+    '让网络答错后能倒着算出每处该改多少','让电脑跑得更快','让屏幕变彩色','让 AI 会说话'], answer:0,
+    explain:'反向传播把错误从输出端一层层传回去，告诉每个连接该往哪调，是神经网络学习的引擎。'},
+  think:'学习新本领时，你犯错后是怎么「倒着找原因」的？这跟反向传播像不像？'
+},
+{
   year:'1997', emoji:'♟️', title:'深蓝战胜棋王', tag:'电脑赢了世界冠军',
   brief:'超级计算机第一次在正式比赛打败国际象棋世界冠军',
   story:'1997 年，IBM 的超级计算机「深蓝」（Deep Blue）在正式比赛中，打败了国际象棋世界冠军卡斯帕罗夫！全世界都震惊了——这是电脑第一次在「人类智慧的巅峰」国际象棋上，堂堂正正赢了世界第一。人们开始相信：机器，真的能比人算得快。',
@@ -169,6 +103,20 @@ const COURSES = [
     '运气特别好','算得特别快、想得特别全','比人长得高','会魔法'], answer:1,
     explain:'深蓝每秒计算几亿个棋步，靠「算得多、算得快」获胜。'},
   think:'如果一台机器下棋总是赢你，你会不服气还是佩服它？为什么？'
+},
+{
+  year:'1998', emoji:'🧩', title:'卷积神经网络 LeNet', tag:'AI 第一次会「看」',
+  brief:'杨立昆用会「扫描特征」的网络，让电脑读懂手写数字',
+  story:'1998 年，杨立昆（Yann LeCun）做出了 <b>LeNet-5</b>——第一个真正实用的<b>卷积神经网络（CNN）</b>。它用一个个小「滤镜窗口」在图片上滑来滑去：先找边、再找形状，一层层拼出「这是什么」。美国银行真的用它读支票上的手写数字！这是 AI 学会「看」世界的起点。',
+  teach:'CNN 会「看」的秘密 = <b>卷积</b>（小窗口扫特征）+ <b>池化</b>（挑重点）+ <b>层层组合</b>。今天的手机人脸解锁、相册自动分类、自动驾驶「看路」，都是这条脉络长出来的。',
+  activity:{title:'动手：玩「窗口扫一扫」', steps:[
+    '找一张报纸或卡片上的照片，用一张中间挖了小方洞的纸在上面慢慢移动。',
+    '透过小窗一格一格看，说说你看到了哪些「局部特征」（边、角、颜色块）。',
+    '把看到的特征拼起来，就能认出整张图——这就是卷积「扫」的感觉！']},
+  quiz:{q:'卷积神经网络（CNN）最擅长做什么？', options:[
+    '看懂图片里的内容','算乘法','写日记','打扫房间'], answer:0,
+    explain:'CNN 用「小窗口扫特征 + 层层组合」来识别图片，是现代计算机视觉的基础。'},
+  think:'你是怎么一眼认出熟悉的人或东西的？先看局部还是先看整体？'
 },
 {
   year:'2012', emoji:'🐱', title:'电脑学会了认猫', tag:'深度学习爆发',
@@ -197,6 +145,20 @@ const COURSES = [
     '自己和自己下了几百万盘棋','看了一百本书','请了十个老师','吃了很多核桃'], answer:0,
     explain:'AlphaGo 用强化学习自己和自己对弈数百万盘，练出了棋感。'},
   think:'「直觉」能教给别人吗？如果机器也有了直觉，人的直觉还值钱吗？'
+},
+{
+  year:'2017', emoji:'📐', title:'Transformer 架构', tag:'GPT 的「心脏」',
+  brief:'一篇论文用「注意力机制」，改变了整个 AI 世界',
+  story:'2017 年，谷歌一篇名为《Attention Is All You Need》的论文提出了 <b>Transformer</b>——它靠「注意力（Attention）」一下子同时「回头看」句子里的每一个字，判断谁和谁有关系。这个结构又快又能并行计算，成了 GPT、BERT 等一切现代大模型共同的「心脏」。',
+  teach:'注意力机制 = 让 AI 在写每一个字时，都「回头看」前面所有的字并给它们打分，知道该重点参考谁。Transformer 把语言模型从「一个词一个词地傻猜」，升级成「先全局看懂，再下笔」。',
+  activity:{title:'动手：给朋友“打分”', steps:[
+    '一句话里有好几个词，想象你要决定「它」指的是谁。',
+    '和爸爸妈妈分别给每个词打一个「重要分」，看谁的理解最接近。',
+    '体会「让重要的词得到更多关注」——这就是注意力机制！']},
+  quiz:{q:'Transformer 的「心脏」是什么？', options:[
+    '注意力机制','更大的屏幕','更快的风扇','更亮的灯'], answer:0,
+    explain:'Transformer 靠注意力机制同时关注上下文里所有词，是现代大模型的共同基础。'},
+  think:'读长句时，你是怎么判断「它」指代谁的？大脑的「注意力」和 AI 的像不像？'
 },
 {
   year:'2018', emoji:'📚', title:'大语言模型', tag:'AI 读懂了文字',
@@ -253,11 +215,19 @@ const COURSES = [
     '能自己拆步骤、做计划、完成任务','只会回答一句话','只会唱一首歌','没有任何想法'], answer:0,
     explain:'AI 智能体能自己拆解目标、做计划并执行任务，像能独立工作的小管家。'},
   think:'长大后，你想成为「指挥 AI 的导演」，还是「被 AI 指挥的人」？为什么？'
+},
+{
+  year:'2025', emoji:'🌐', title:'具身智能 · 走进真实世界', tag:'AI 的未来：动手做事',
+  brief:'AI 不再只活在屏幕里，开始拥有「身体」去感知和改造世界',
+  story:'2025 年起，人工智能走向<b>具身智能（Embodied AI）</b>：把聪明的大脑装进机器人身体，让 AI 通过看、听、触摸真实世界来学习，再动手叠衣服、搬东西、做家务，甚至探索太空。<b>世界模型</b>让 AI 不再只「猜下一个字」，而是能预判「下一秒真实世界会怎样」。',
+  teach:'具身智能 = <b>大脑</b>（大模型）+ <b>身体</b>（机器人）+ <b>世界模型</b>（对真实世界的理解）。这是 AI 从「虚拟助手」走向「真实伙伴」的下一步——也是「人工智能的未来」。',
+  activity:{title:'动手：给机器人派个任务', steps:[
+    '列一个你想让「具身智能机器人」帮你做的家务（比如收玩具、倒水）。',
+    '把任务拆成它要完成的 3 个小步骤，还要想它需要认识哪些物品。',
+    '和爸爸妈妈聊聊：机器人要有「身体」才能做到哪些事？']},
+  quiz:{q:'「具身智能」和普通 AI 最大的区别是什么？', options:[
+    'AI 有了能感知和行动的身体','AI 跑得更快','AI 屏幕更大','AI 声音更响'], answer:0,
+    explain:'具身智能把大脑装进身体，让 AI 能在真实世界里感知、行动和改造环境。'},
+  think:'如果未来家里有一个机器人伙伴，你希望它帮你做什么？你又会教它什么呢？'
 }
 ];
-
-/* ============ 状态管理 ============ */
-initTimeline({ courses: COURSES, careerKey: 'artificial-intelligence', name: '人工智能', timelineUrl: '/artificial-intelligence/timeline.html' });
-</script>
-</body>
-</html>

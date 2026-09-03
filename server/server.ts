@@ -1,5 +1,5 @@
 /**
- * ai4kids · 儿童职业启蒙101 Express 入口
+ * ai4kids · 人工智能的未来 Express 入口
  *
  * 结构对齐 sx-aitrialclass（课程星云）：
  *   - public/    主站前端（静态服务，根目录）
@@ -122,7 +122,7 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, HOST, () => {
-  console.log(`🚀 ai4kids 儿童职业启蒙101 服务器已启动: http://${HOST}:${PORT}`);
+  console.log(`🚀 ai4kids · 人工智能的未来 服务器已启动: http://${HOST}:${PORT}`);
   console.log(`   主站首页:  http://${HOST}:${PORT}/`);
   for (const name of APPS) {
     console.log(`   ${name}: http://${HOST}:${PORT}/${name}/`);

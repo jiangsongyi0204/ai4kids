@@ -4,75 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<title>儿童职业启蒙101</title>
+<title>人工智能的未来 · 儿童AI启蒙</title>
 <link rel="stylesheet" href="/css/common.css">
 <style>
-  /* 页面独有样式：现代版职业星图（公共样式见 /css/common.css） */
+  /* 页面独有样式：AI 演化时间轴首页（公共样式见 /css/common.css） */
   #app { max-width:1180px; }
-  .home-hero .big { font-size:86px; }
-  h1 .grad { background:linear-gradient(100deg,#2f6bff,#8a5cf6,#f2559d); -webkit-background-clip:text;
-    background-clip:text; -webkit-text-fill-color:transparent; }
-
-  /* 职业卡片网格 */
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(122px,1fr)); gap:14px; margin-top:18px; }
-  .job { position:relative; display:flex; flex-direction:column; align-items:center; gap:6px;
-    background:#fff; border-radius:20px; padding:18px 10px 14px; text-align:center;
-    cursor:pointer; transition:.2s; border:1px solid #eef2fc; user-select:none;
-    box-shadow:0 10px 26px -14px rgba(47,107,255,.28); overflow:visible; }
-  .job:hover { transform:translateY(-4px); box-shadow:0 18px 34px -16px rgba(47,107,255,.4); border-color:#cfddfc; }
-  .job .ic { width:58px; height:58px; border-radius:18px; display:flex; align-items:center; justify-content:center;
-    font-size:32px; line-height:1; background:var(--icb,#eef2ff); transition:.2s; }
-  .job:hover .ic { transform:scale(1.08) rotate(-4deg); }
-  .job .nm { font-size:13px; font-weight:800; color:#0d2259; display:block; margin-top:2px; }
-  .job .cat-tag { font-size:10px; font-weight:800; color:#8496bb; display:inline-block;
-    padding:2px 9px; border-radius:20px; background:#f3f6ff; }
-
-  /* 已点亮 */
-  .job.lit { border-color:#ffd021; background:linear-gradient(180deg,#ffffff,#fffdf4);
-    box-shadow:0 10px 26px -10px rgba(255,176,32,.4); }
-  .job.lit .ic { animation:bounce 2.2s ease-in-out infinite; }
-  .job.lit .badge { position:absolute; top:-11px; left:50%; transform:translateX(-50%);
-    background:linear-gradient(135deg,#ffd021,#ffb020); color:#7a4a00; font-size:10px; font-weight:800;
-    padding:3px 11px; border-radius:30px; white-space:nowrap; box-shadow:0 4px 12px -2px rgba(255,176,32,.6);
-    z-index:2; }
-  .job.lit .cat-tag { color:#9a6b00; background:#fff3cf; }
-  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
-
-  /* 未点亮（灰锁） */
-  .job.lock { background:#f7f9ff; filter:grayscale(.9); opacity:.78; cursor:not-allowed; }
-  .job.lock .ic { background:#e9eefb; opacity:.7; }
-  .job.lock .nm { color:#8a97b8; }
-  .job.lock .cat-tag { color:#b6c0dc; background:#eef1f9; }
-  .lock-ic { position:absolute; top:10px; right:12px; font-size:14px; opacity:.75; }
-
-  /* 广告卡片 */
-  .job.ad { display:flex; text-decoration:none; border:2px dashed #ffc24d;
-    background:linear-gradient(160deg,#fff9ec,#fff0d4); }
-  .job.ad .ad-tag { position:absolute; top:8px; right:10px; font-size:9px; color:#8a5600;
-    background:#ffe1a1; padding:1px 7px; border-radius:12px; font-weight:800; }
-  .job.ad .ic { background:#ffe9be; font-size:30px; }
-  .job.ad .nm { color:#8a5600; }
-  .job.ad .cat-tag { color:#a06c16; background:#ffefc9; }
-
-  /* 分类筛选 + 进度 */
-  .deck { background:rgba(255,255,255,.72); border:1px solid #eef2fc; border-radius:26px;
-    padding:20px 20px 24px; margin-top:18px; box-shadow:0 20px 50px -28px rgba(47,107,255,.35);
-    backdrop-filter:blur(6px); }
-  .deck-head { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
-  .deck-head h2 { font-size:19px; color:#0d2259; }
-  .deck-head .muted { margin-top:3px; }
-  .progress { flex:1; min-width:200px; height:14px; border-radius:30px; background:#e6edfb; overflow:hidden;
-    position:relative; }
-  .progress i { position:absolute; left:0; top:0; bottom:0; width:0; border-radius:30px;
-    background:linear-gradient(90deg,#2f6bff,#8a5cf6,#f2559d); transition:width .8s ease; }
-  .cat-filters { display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
-  .cat-filters button { border:none; cursor:pointer; font-family:inherit; font-size:12px; font-weight:800;
-    color:#54689a; background:#fff; border:1px solid #dbe4f8; border-radius:30px; padding:7px 15px;
-    transition:.15s; }
-  .cat-filters button:hover { border-color:#2f6bff; color:#1e4fd6; }
-  .cat-filters button.on { background:linear-gradient(135deg,#2f6bff,#1e4fd6); color:#fff; border-color:transparent;
-    box-shadow:0 6px 16px -6px rgba(47,107,255,.6); }
-  .cat-filters button .n { opacity:.7; font-size:10px; margin-left:3px; }
+  .timeline-card h3 { text-align:center; }
+  .timeline-card .muted { text-align:center; margin-bottom:10px; }
 </style>
 </head>
 <body>
@@ -81,264 +19,42 @@
 <div id="app">
   <header class="topbar">
     <a class="logo" href="/">
-      <span class="logo-ic">🚀</span><span class="logo-name">儿童职业启蒙</span><span class="logo-num">AI赋能</span>
+      <span class="logo-ic">🤖</span><span class="logo-name">人工智能的未来</span><span class="logo-num">儿童AI启蒙</span>
     </a>
     <div class="right">
-      <a class="btn-guide" href="/guide.html">📖 教育理念</a>
+      <a class="btn-guide" href="/artificial-intelligence/lab.html">🔬 AI 实验室</a>
+      <a class="btn-gh" href="/guide.html">🧭 教育理念</a>
       <a class="btn-gh" href="https://github.com/jiangsongyi0204/ai4kids" target="_blank" rel="noopener">🐙 GitHub</a>
     </div>
   </header>
 
-  <section class="hero home-hero">
-    <span class="kicker">K12 · AI 赋能职业启蒙</span>
-    <span class="big">🪐</span>
-    <h1>点亮你的「职业星球」<span class="grad">· 101 种人生可能</span></h1>
-    <p class="tagline">每个职业都是一颗待点亮的星星，点开它就能穿越历史、动手实验、认识真实世界。</p>
-    <div class="meta" id="heroMeta"></div>
-  </section>
-
-  <div class="deck">
-    <div class="deck-head">
-      <div>
-        <h2>🗺️ 职业星图</h2>
-        <p class="muted" id="deckSub"></p>
-      </div>
-      <div class="progress" id="prog"><i id="progBar"></i></div>
-    </div>
-    <div class="cat-filters" id="catFilters"></div>
-    <main class="grid" id="grid"></main>
+  <div class="card timeline-card">
+    <h3>🛰️ 人工智能演化时间轴</h3>
+    <p class="muted">每一个节点，都是历史上的一次「第一次」。</p>
+    <div class="tl" id="tl"></div>
   </div>
 
-  <div class="foot">💡 完成一个职业的时间轴课程，就能「点亮」它，并解锁通往更多职业星球的道路！<br>进度只保存在本机浏览器，不会上传。</div>
+  <div class="foot">✨ 走完 16 站，你就读懂了人工智能「从出生到今天」的完整故事——而真正的 <b>未来</b>，正等着你的想象与行动！<br>点击任意节点，翻开每一站的故事、知识与小测验。</div>
+</div>
+
+<!-- 每站详情（打开后会进入对应年份的详情页） -->
+<div id="modal">
+  <button class="l-close" onclick="closeLesson()">✕ 关闭</button>
+  <div class="lesson" id="lesson"></div>
 </div>
 
 <div id="toast"></div>
 
 <script src="/js/common.js"></script>
+<script src="/js/ai-evolution.js"></script>
+<script src="/js/timeline.js"></script>
 <script>
-/* ============ 101 个职业数据 ============ */
-/* 每个职业：名称, emoji, 所属分类, 详情页文件名(可选), 简介 */
-const JOBS = [
-  // —— 科技 (10) ——
-  ['人工智能',   '🤖', 'tech', 'artificial-intelligence', '让机器学会思考'],
-  ['Web 开发',   '🖥️', 'tech', 'web-development', '点亮世界的网页魔法师'],
-  ['游戏开发',   '🎮', 'tech', null, '创造好玩世界的造梦师'],
-  ['数据科学',   '📊', 'tech', null, '从数字里发现秘密'],
-  ['网络安全',   '🔐', 'tech', null, '网络的超级保镖'],
-  ['机器人工程', '🦾', 'tech', null, '给机器人装上大脑'],
-  ['软件工程师', '💻', 'tech', null, '藏在电脑里的魔法师'],
-  ['无人机飞手', '🛸', 'tech', null, '天空的摄影师'],
-  ['3D 打印',    '🖨️', 'tech', null, '把想象变成实物'],
-  ['硬件工程师', '🔌', 'tech', null, '电脑元件的建筑师'],
-  // —— 医疗健康 (10) ——
-  ['医生',      '🩺', 'health', null, '守护健康的白衣天使'],
-  ['护士',      '💉', 'health', null, '最温暖的照顾者'],
-  ['牙医',      '🦷', 'health', null, '牙齿的微笑守护者'],
-  ['药剂师',    '💊', 'health', null, '配药的科学管家'],
-  ['兽医',      '🐾', 'health', null, '小动物的好医生'],
-  ['营养师',    '🥗', 'health', null, '搭配健康的魔法'],
-  ['心理医生',  '🧠', 'health', null, '心灵花园的园丁'],
-  ['康复师',    '🤸', 'health', null, '帮身体重新出发'],
-  ['眼科医生',  '👁️', 'health', null, '明亮世界的守护者'],
-  ['助产士',    '👶', 'health', null, '迎接新生命的双手'],
-  // —— 教育 (8) ——
-  ['小学老师',    '👩‍🏫', 'edu', null, '启蒙路上的领航员'],
-  ['大学教授',    '🎓', 'edu', null, '知识殿堂的导师'],
-  ['绘本作家',    '📚', 'edu', null, '用图画讲故事的人'],
-  ['科普讲解员',  '🔬', 'edu', null, '把科学讲得有趣'],
-  ['外语老师',    '🗣️', 'edu', null, '打开世界的钥匙'],
-  ['幼教老师',    '🧸', 'edu', null, '童年的快乐陪伴者'],
-  ['特教老师',    '🤗', 'edu', null, '用爱心点燃希望'],
-  ['体育教练',    '🏅', 'edu', null, '带着汗水追梦'],
-  // —— 艺术创意 (14) ——
-  ['画家',      '🎨', 'art', null, '把颜色变成心情'],
-  ['音乐家',    '🎵', 'art', null, '让音符开口说话'],
-  ['舞蹈家',    '💃', 'art', null, '用身体写诗'],
-  ['演员',      '🎭', 'art', null, '体验千万种人生'],
-  ['导演',      '🎬', 'art', null, '镜头后的总指挥'],
-  ['摄影师',    '📷', 'art', null, '定格瞬间的光影'],
-  ['插画师',    '✏️', 'art', null, '会讲故事的线条'],
-  ['动画师',    '🎞️', 'art', null, '让画活过来'],
-  ['服装设计师','👗', 'art', null, '用布料造梦'],
-  ['室内设计师','🛋️', 'art', null, '给房间画表情'],
-  ['建筑师',    '🏛️', 'art', null, '大地上的巨人积木'],
-  ['珠宝设计师','💎', 'art', null, '石头里的星光'],
-  ['陶艺师',    '🏺', 'art', null, '泥土与火的魔法'],
-  ['书法家',    '🖌️', 'art', null, '一笔一画的呼吸'],
-  // —— 建造制造 (19) ——
-  ['木匠',      '🪚', 'make', null, '木头里的手艺'],
-  ['电工',      '⚡', 'make', null, '电的驯服师'],
-  ['焊接工',    '🔥', 'make', null, '钢铁的缝纫师'],
-  ['面包师',    '🥖', 'make', null, '麦香味的清晨'],
-  ['厨师',      '👨‍🍳', 'make', null, '舌尖上的魔术师'],
-  ['甜品师',    '🍰', 'make', null, '甜甜的幸福制造者'],
-  ['裁缝',      '🧵', 'make', null, '针线里的温柔'],
-  ['修车技师',  '🚗', 'make', null, '汽车的好医生'],
-  ['飞行员',    '✈️', 'make', null, '云端上的领航员'],
-  ['船长',      '⛵', 'make', null, '大海的方向盘'],
-  ['火车司机',  '🚂', 'make', null, '铁轨上的列车长'],
-  ['快递员',    '📦', 'make', null, '城市里的信鸽'],
-  ['外卖骑手',  '🛵', 'make', null, '热饭的闪电侠'],
-  ['环卫工人',  '🧹', 'make', null, '城市的美容师'],
-  ['园丁',      '🌷', 'make', null, '花草的守护者'],
-  ['农民',      '🌾', 'make', null, '大地的播种者'],
-  ['渔夫',      '🎣', 'make', null, '江河湖海的捕手'],
-  ['牧场主',    '🐄', 'make', null, '草原上的管家'],
-  ['咖啡师',    '☕', 'make', null, '一杯香气的手艺人'],
-  // —— 商业财经 (9) ——
-  ['企业家',    '💼', 'biz', null, '创造价值的总设计师'],
-  ['会计',      '🧾', 'biz', null, '数字的账房先生'],
-  ['银行家',    '🏦', 'biz', null, '金钱的守门人'],
-  ['理财分析师','📈', 'biz', null, '数字里的远见者'],
-  ['保险顾问',  '🛡️', 'biz', null, '风险的保护伞'],
-  ['销售员',    '🛍️', 'biz', null, '把好物带给需要的人'],
-  ['市场经理',  '📣', 'biz', null, '让好产品被看见'],
-  ['直播主播',  '🎤', 'biz', null, '屏幕前的欢乐'],
-  ['电商运营',  '🛒', 'biz', null, '线上大掌柜'],
-  // —— 法律公共 (9) ——
-  ['法官',      '⚖️', 'law', null, '公平的天平'],
-  ['律师',      '🧑‍⚖️', 'law', null, '正义的代言人'],
-  ['警察',      '👮', 'law', null, '平安的守护者'],
-  ['消防员',    '🧑‍🚒', 'law', null, '逆行的英雄'],
-  ['军人',      '🪖', 'law', null, '祖国的钢铁长城'],
-  ['外交官',    '🌍', 'law', null, '国家之间的桥梁'],
-  ['公务员',    '🏢', 'law', null, '大家的服务员'],
-  ['海关关员',  '🛃', 'law', null, '国门的检查员'],
-  ['动物保护者','🐘', 'law', null, '地球朋友的代言人'],
-  // —— 科学探索 (10) ——
-  ['天文学家',    '🔭', 'sci', null, '仰望星空的诗人'],
-  ['海洋生物学家','🐠', 'sci', null, '蓝色世界的探秘者'],
-  ['地质学家',    '⛰️', 'sci', null, '大地的阅读者'],
-  ['化学家',      '🧪', 'sci', null, '分子的魔术师'],
-  ['物理学家',    '⚛️', 'sci', null, '宇宙规律的发现者'],
-  ['生物学家',    '🧬', 'sci', null, '生命的解密者'],
-  ['气象学家',    '🌦️', 'sci', null, '天空的预报员'],
-  ['考古学家',    '🦴', 'sci', null, '和历史对话的人'],
-  ['航天工程师',  '🚀', 'sci', null, '把梦想送上太空'],
-  ['环境科学家',  '🌍', 'sci', null, '地球的医生'],
-  // —— 媒体传播 (5) ——
-  ['记者',    '📰', 'media', null, '真相的发现者'],
-  ['编辑',    '📝', 'media', null, '文字的雕刻师'],
-  ['播音员',  '🎙️', 'media', null, '用声音传递温暖'],
-  ['视频剪辑','🎥', 'media', null, '画面的拼图师'],
-  ['游戏主播','🕹️', 'media', null, '欢乐的分享者'],
-  // —— 生活服务 (7) ——
-  ['运动员',    '🏃', 'life', null, '挑战极限的勇者'],
-  ['健身教练',  '🏋️', 'life', null, '健康的引路人'],
-  ['瑜伽老师',  '🧘', 'life', null, '身心平衡的导师'],
-  ['理发师',    '💇', 'life', null, '发丝的造型师'],
-  ['美妆师',    '💄', 'life', null, '自信的魔法师'],
-  ['宠物美容师','🐶', 'life', null, '毛孩子的好朋友'],
-  ['空乘人员',  '🛩️', 'life', null, '云端上的微笑'],
-];
-
-/* ============ 状态管理 ============ */
-const KEY_UNLOCKED = 'career101_unlocked';
-const KEY_DONE     = 'career101_done';
-
-/* 已解锁的职业（点亮 = 可点击进入；未来的可在这里手动加） */
-const UNLOCKED = ['artificial-intelligence'];
-/* 每个职业已完成课程的年份集合：{ 'web-development': ['1989','1991',...] } */
-const DONE = load(KEY_DONE, {});
-
-/* ============ 渲染 ============ */
-const gridEl = document.getElementById('grid');
-const CAT_NAME = { tech:'科技', health:'医疗', edu:'教育', art:'艺术', make:'建造',
-  biz:'商业', law:'法律', sci:'科学', media:'媒体', life:'生活' };
-/* 分类主题色：[图标主色, 浅底] */
-const CAT_COLOR = {
-  tech:['#2f6bff','#e2ecff'], health:['#f2559d','#ffe4f0'], edu:['#ff9f1c','#ffeed6'],
-  art:['#c04cf0','#f2e5ff'], make:['#e8832a','#ffe9d6'], biz:['#d9a514','#fff3cd'],
-  law:['#5a6b9c','#e6ebf6'], sci:['#12b3c9','#ddf6f9'], media:['#0ea876','#dff5ea'], life:['#12c98c','#e3f9f0']
-};
-
-/* 广告卡片：名称, emoji, 链接, 简介 */
-const ADS = [
-  ['DeepSeek', '🧠', 'https://www.deepseek.com', 'AI 大模型 · 免费对话'],
-  ['VS Code', '💻', 'https://code.visualstudio.com', '免费代码编辑器'],
-];
-function adCard(j){
-  const [name, emoji, url, desc] = j;
-  return `<a class="job ad" href="${url}" target="_blank" rel="noopener" title="${desc}">
-    <span class="ad-tag">广告</span>
-    <span class="ic">${emoji}</span>
-    <span class="nm">${name}</span>
-    <span class="cat-tag">${desc}</span>
-  </a>`;
-}
-
-/* 当前分类筛选：'' = 全部 */
-let curCat = '';
-const LIT_SET = new Set(UNLOCKED);
-
-function countByCat(){ const c = {}; JOBS.forEach(j=>{ c[j[2]] = (c[j[2]]||0)+1; }); return c; }
-function renderFilters(){
-  const counts = countByCat();
-  const el = document.getElementById('catFilters');
-  const opts = [['','全部']].concat(Object.keys(CAT_NAME).map(k=>[k,CAT_NAME[k]]));
-  el.innerHTML = opts.map(([k,label])=>`
-    <button data-cat="${k}" class="${curCat===k?'on':''}">${label==='全部'?'🌐 ':''}${label}<span class="n">${k===''?JOBS.length:counts[k]||0}</span></button>`).join('');
-  el.querySelectorAll('button').forEach(b=>{ b.onclick = ()=>{ curCat = b.dataset.cat; renderFilters(); renderGrid(); }; });
-}
-
-function jobCard(j){
-  const [name, emoji, cat, page, desc] = j;
-  const lit = page && LIT_SET.has(page);
-  const [c, cb] = CAT_COLOR[cat] || CAT_COLOR.tech;
-  const css = `style="--ic:${c};--icb:${cb};"`;
-  if(lit){
-    return `<div class="job lit" data-page="${page}" data-cat="${cat}" ${css} title="${desc}">
-      <span class="badge">✨ 已点亮</span>
-      <span class="ic">${emoji}</span>
-      <span class="nm">${name}</span>
-      <span class="cat-tag">${CAT_NAME[cat]}</span>
-    </div>`;
-  }
-  return `<div class="job lock" data-name="${name}" data-cat="${cat}" ${css} title="未解锁">
-      <span class="lock-ic">🔒</span>
-      <span class="ic">${emoji}</span>
-      <span class="nm">${name}</span>
-      <span class="cat-tag">${CAT_NAME[cat]}</span>
-    </div>`;
-}
-
-function renderGrid(){
-  const jobs = curCat ? JOBS.filter(j=>j[2]===curCat) : JOBS;
-  const cards = jobs.map(jobCard);
-  // 「全部」视图在随机位置插入两张广告卡片
-  if(!curCat){
-    const n = cards.length;
-    let a = Math.floor(Math.random()*(n+1)), b = Math.floor(Math.random()*(n+1));
-    if(a === b) b = (b+1)%(n+1);
-    const lo = Math.min(a,b), hi = Math.max(a,b);
-    cards.splice(hi, 0, adCard(ADS[1]));
-    cards.splice(lo, 0, adCard(ADS[0]));
-  }
-  gridEl.innerHTML = cards.join('');
-
-  gridEl.querySelectorAll('.job.lit').forEach(el=>{
-    el.onclick = ()=>{ location.href = '/' + el.dataset.page + '/'; };
-  });
-  gridEl.querySelectorAll('.job.lock').forEach(el=>{
-    el.onclick = ()=> toast(`🔒「${el.dataset.name}」还没点亮，先完成已点亮的职业再回来吧！`);
-  });
-  updateStats(jobs.length);
-}
-
-function updateStats(shown){
-  const heroMeta = document.getElementById('heroMeta');
-  heroMeta.innerHTML = `
-    <span class="chip">🗺️ 101 个职业</span>
-    <span class="chip">✨ 已点亮 ${LIT_SET.size}</span>
-    <span class="chip">�️ 10 大类 · 从科技到生活</span>`;
-  document.getElementById('deckSub').textContent =
-    `${shown} 个职业 · 点击已点亮✨的卡片开始探险，其余职业完成课程后将陆续开启`;
-  const bar = document.getElementById('progBar');
-  bar.style.width = Math.round(LIT_SET.size / JOBS.length * 100) + '%';
-}
-
-renderFilters();
-renderGrid();
+/* ============ 首页：人工智能演化时间轴 ============ */
+/* 数据：public/js/ai-evolution.js（16 站共享数据） */
+initTimeline({
+  courses: window.AI_EVOLUTION,
+  name: '人工智能'    // 未传 timelineUrl → 点开节点即在弹层展开详情
+});
 </script>
 </body>
 </html>
