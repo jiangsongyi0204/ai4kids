@@ -6,69 +6,109 @@
 <title>儿童职业启蒙101</title>
 <link rel="stylesheet" href="/css/common.css">
 <style>
-  /* 页面独有样式：职业卡片网格（公共样式见 /css/common.css） */
-  #app { max-width:1100px; }
+  /* 页面独有样式：现代版职业星图（公共样式见 /css/common.css） */
+  #app { max-width:1180px; }
+  .home-hero .big { font-size:86px; }
+  h1 .grad { background:linear-gradient(100deg,#2f6bff,#8a5cf6,#f2559d); -webkit-background-clip:text;
+    background-clip:text; -webkit-text-fill-color:transparent; }
 
   /* 职业卡片网格 */
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(118px,1fr)); gap:12px; margin-top:14px; }
-  .job { position:relative; background:#fff; border-radius:22px; padding:16px 8px 12px; text-align:center;
-    cursor:pointer; transition:.18s; border:3px solid #eaf3ff; user-select:none;
-    box-shadow:0 8px 18px rgba(120,160,210,.18); }
-  .job:hover { transform:translateY(-3px); box-shadow:0 12px 26px rgba(120,160,210,.28); }
-  .job .ic { font-size:40px; line-height:1; display:block; }
-  .job .nm { font-size:13px; font-weight:800; color:#3a4470; margin-top:8px; display:block; }
-  .job .cat-tag { font-size:10px; color:#8aa0c9; font-weight:700; margin-top:3px; display:block; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(122px,1fr)); gap:14px; margin-top:18px; }
+  .job { position:relative; display:flex; flex-direction:column; align-items:center; gap:6px;
+    background:#fff; border-radius:20px; padding:18px 10px 14px; text-align:center;
+    cursor:pointer; transition:.2s; border:1px solid #eef2fc; user-select:none;
+    box-shadow:0 10px 26px -14px rgba(47,107,255,.28); overflow:visible; }
+  .job:hover { transform:translateY(-4px); box-shadow:0 18px 34px -16px rgba(47,107,255,.4); border-color:#cfddfc; }
+  .job .ic { width:58px; height:58px; border-radius:18px; display:flex; align-items:center; justify-content:center;
+    font-size:32px; line-height:1; background:var(--icb,#eef2ff); transition:.2s; }
+  .job:hover .ic { transform:scale(1.08) rotate(-4deg); }
+  .job .nm { font-size:13px; font-weight:800; color:#0d2259; display:block; margin-top:2px; }
+  .job .cat-tag { font-size:10px; font-weight:800; color:#8496bb; display:inline-block;
+    padding:2px 9px; border-radius:20px; background:#f3f6ff; }
 
   /* 已点亮 */
-  .job.lit { border-color:#ffd76a; box-shadow:0 10px 28px rgba(255,200,80,.45);
-    background:linear-gradient(180deg,#fffdf5,#fff3cf); animation:glow 2.4s ease-in-out infinite; }
-  @keyframes glow { 0%,100%{box-shadow:0 10px 28px rgba(255,200,80,.45)} 50%{box-shadow:0 10px 40px rgba(255,200,80,.72)} }
+  .job.lit { border-color:#ffd021; background:linear-gradient(180deg,#ffffff,#fffdf4);
+    box-shadow:0 10px 26px -10px rgba(255,176,32,.4); }
+  .job.lit .ic { animation:bounce 2.2s ease-in-out infinite; }
   .job.lit .badge { position:absolute; top:-11px; left:50%; transform:translateX(-50%);
-    background:linear-gradient(135deg,#ffd76a,#ff9a3d); color:#7a3a00; font-size:11px; font-weight:800;
-    padding:3px 10px; border-radius:20px; white-space:nowrap; box-shadow:0 4px 10px rgba(255,154,61,.4); }
-  .job.lit .ic { animation:bounce 2s ease-in-out infinite; }
+    background:linear-gradient(135deg,#ffd021,#ffb020); color:#7a4a00; font-size:10px; font-weight:800;
+    padding:3px 11px; border-radius:30px; white-space:nowrap; box-shadow:0 4px 12px -2px rgba(255,176,32,.6);
+    z-index:2; }
+  .job.lit .cat-tag { color:#9a6b00; background:#fff3cf; }
   @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
 
-  /* 未点亮（灰色锁定） */
-  .job.lock { background:#f0f3fa; border-color:#e2e8f4; filter:grayscale(1); opacity:.82; cursor:not-allowed; }
-  .job.lock .ic { opacity:.55; }
-  .job.lock .nm { color:#9aa0b8; }
-  .job.lock .lock-ic { position:absolute; top:10px; right:10px; font-size:13px; opacity:.8; }
-  .job.lock .cat-tag { color:#c2c7da; }
+  /* 未点亮（灰锁） */
+  .job.lock { background:#f7f9ff; filter:grayscale(.9); opacity:.78; cursor:not-allowed; }
+  .job.lock .ic { background:#e9eefb; opacity:.7; }
+  .job.lock .nm { color:#8a97b8; }
+  .job.lock .cat-tag { color:#b6c0dc; background:#eef1f9; }
+  .lock-ic { position:absolute; top:10px; right:12px; font-size:14px; opacity:.75; }
 
   /* 广告卡片 */
-  .job.ad { display:block; text-decoration:none; border:2px dashed #ffb84d;
-    background:linear-gradient(135deg,#fff7e6,#ffe9c2); box-shadow:0 8px 18px rgba(255,180,77,.28); }
-  .job.ad .ad-tag { position:absolute; top:6px; right:8px; font-size:9px; color:#b45309;
-    background:#ffe1a1; padding:1px 6px; border-radius:10px; font-weight:800; }
-  .job.ad .ic { font-size:34px; }
-  .job.ad .nm { color:#b45309; }
-  .job.ad .cat-tag { color:#c98a3a; }
+  .job.ad { display:flex; text-decoration:none; border:2px dashed #ffc24d;
+    background:linear-gradient(160deg,#fff9ec,#fff0d4); }
+  .job.ad .ad-tag { position:absolute; top:8px; right:10px; font-size:9px; color:#8a5600;
+    background:#ffe1a1; padding:1px 7px; border-radius:12px; font-weight:800; }
+  .job.ad .ic { background:#ffe9be; font-size:30px; }
+  .job.ad .nm { color:#8a5600; }
+  .job.ad .cat-tag { color:#a06c16; background:#ffefc9; }
+
+  /* 分类筛选 + 进度 */
+  .deck { background:rgba(255,255,255,.72); border:1px solid #eef2fc; border-radius:26px;
+    padding:20px 20px 24px; margin-top:18px; box-shadow:0 20px 50px -28px rgba(47,107,255,.35);
+    backdrop-filter:blur(6px); }
+  .deck-head { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  .deck-head h2 { font-size:19px; color:#0d2259; }
+  .deck-head .muted { margin-top:3px; }
+  .progress { flex:1; min-width:200px; height:14px; border-radius:30px; background:#e6edfb; overflow:hidden;
+    position:relative; }
+  .progress i { position:absolute; left:0; top:0; bottom:0; width:0; border-radius:30px;
+    background:linear-gradient(90deg,#2f6bff,#8a5cf6,#f2559d); transition:width .8s ease; }
+  .cat-filters { display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
+  .cat-filters button { border:none; cursor:pointer; font-family:inherit; font-size:12px; font-weight:800;
+    color:#54689a; background:#fff; border:1px solid #dbe4f8; border-radius:30px; padding:7px 15px;
+    transition:.15s; }
+  .cat-filters button:hover { border-color:#2f6bff; color:#1e4fd6; }
+  .cat-filters button.on { background:linear-gradient(135deg,#2f6bff,#1e4fd6); color:#fff; border-color:transparent;
+    box-shadow:0 6px 16px -6px rgba(47,107,255,.6); }
+  .cat-filters button .n { opacity:.7; font-size:10px; margin-left:3px; }
 </style>
 </head>
 <body>
-<div class="bg">
-  <div class="sun">☀️</div>
-  <div class="stars"></div>
-  <div class="cloud c1"></div>
-  <div class="cloud c2"></div>
-  <div class="cloud c3"></div>
-  <div class="balloon b1">🎈</div>
-  <div class="balloon b2">🎈</div>
-</div>
+<div class="bg"></div>
 
 <div id="app">
   <header class="topbar">
-    <div class="logo"><span class="logo-ic">🚀</span><span class="logo-name">儿童职业启蒙</span><span class="logo-num">AI赋能</span></div>
+    <a class="logo" href="/">
+      <span class="logo-ic">🚀</span><span class="logo-name">儿童职业启蒙</span><span class="logo-num">AI赋能</span>
+    </a>
     <div class="right">
-      <a class="btn-gh" href="https://github.com/jiangsongyi0204/ai4kids" target="_blank" rel="noopener">🐙 GitHub</a>
       <a class="btn-guide" href="/guide.html">📖 教育理念</a>
+      <a class="btn-gh" href="https://github.com/jiangsongyi0204/ai4kids" target="_blank" rel="noopener">🐙 GitHub</a>
     </div>
   </header>
 
-  <main class="grid" id="grid"></main>
+  <section class="hero home-hero">
+    <span class="kicker">K12 · AI 赋能职业启蒙</span>
+    <span class="big">🪐</span>
+    <h1>点亮你的「职业星球」<span class="grad">· 101 种人生可能</span></h1>
+    <p class="tagline">每个职业都是一颗待点亮的星星，点开它就能穿越历史、动手实验、认识真实世界。</p>
+    <div class="meta" id="heroMeta"></div>
+  </section>
 
-  <div class="foot">💡 每完成一个职业的时间轴课程，就可以「点亮」下一颗职业星球哦！<br>数据只保存在本机浏览器，不会上传。</div>
+  <div class="deck">
+    <div class="deck-head">
+      <div>
+        <h2>🗺️ 职业星图</h2>
+        <p class="muted" id="deckSub"></p>
+      </div>
+      <div class="progress" id="prog"><i id="progBar"></i></div>
+    </div>
+    <div class="cat-filters" id="catFilters"></div>
+    <main class="grid" id="grid"></main>
+  </div>
+
+  <div class="foot">💡 完成一个职业的时间轴课程，就能「点亮」它，并解锁通往更多职业星球的道路！<br>进度只保存在本机浏览器，不会上传。</div>
 </div>
 
 <div id="toast"></div>
@@ -201,11 +241,15 @@ const UNLOCKED = ['artificial-intelligence'];
 const DONE = load(KEY_DONE, {});
 
 /* ============ 渲染 ============ */
-const CAT_NAME = {
-  tech:'科技', health:'医疗', edu:'教育', art:'艺术', make:'建造',
-  biz:'商业', law:'法律', sci:'科学', media:'媒体', life:'生活'
-};
 const gridEl = document.getElementById('grid');
+const CAT_NAME = { tech:'科技', health:'医疗', edu:'教育', art:'艺术', make:'建造',
+  biz:'商业', law:'法律', sci:'科学', media:'媒体', life:'生活' };
+/* 分类主题色：[图标主色, 浅底] */
+const CAT_COLOR = {
+  tech:['#2f6bff','#e2ecff'], health:['#f2559d','#ffe4f0'], edu:['#ff9f1c','#ffeed6'],
+  art:['#c04cf0','#f2e5ff'], make:['#e8832a','#ffe9d6'], biz:['#d9a514','#fff3cd'],
+  law:['#5a6b9c','#e6ebf6'], sci:['#12b3c9','#ddf6f9'], media:['#0ea876','#dff5ea'], life:['#12c98c','#e3f9f0']
+};
 
 /* 广告卡片：名称, emoji, 链接, 简介 */
 const ADS = [
@@ -222,33 +266,53 @@ function adCard(j){
   </a>`;
 }
 
+/* 当前分类筛选：'' = 全部 */
+let curCat = '';
+const LIT_SET = new Set(UNLOCKED);
+
+function countByCat(){ const c = {}; JOBS.forEach(j=>{ c[j[2]] = (c[j[2]]||0)+1; }); return c; }
+function renderFilters(){
+  const counts = countByCat();
+  const el = document.getElementById('catFilters');
+  const opts = [['','全部']].concat(Object.keys(CAT_NAME).map(k=>[k,CAT_NAME[k]]));
+  el.innerHTML = opts.map(([k,label])=>`
+    <button data-cat="${k}" class="${curCat===k?'on':''}">${label==='全部'?'🌐 ':''}${label}<span class="n">${k===''?JOBS.length:counts[k]||0}</span></button>`).join('');
+  el.querySelectorAll('button').forEach(b=>{ b.onclick = ()=>{ curCat = b.dataset.cat; renderFilters(); renderGrid(); }; });
+}
+
+function jobCard(j){
+  const [name, emoji, cat, page, desc] = j;
+  const lit = page && LIT_SET.has(page);
+  const [c, cb] = CAT_COLOR[cat] || CAT_COLOR.tech;
+  const css = `style="--ic:${c};--icb:${cb};"`;
+  if(lit){
+    return `<div class="job lit" data-page="${page}" data-cat="${cat}" ${css} title="${desc}">
+      <span class="badge">✨ 已点亮</span>
+      <span class="ic">${emoji}</span>
+      <span class="nm">${name}</span>
+      <span class="cat-tag">${CAT_NAME[cat]}</span>
+    </div>`;
+  }
+  return `<div class="job lock" data-name="${name}" data-cat="${cat}" ${css} title="未解锁">
+      <span class="lock-ic">🔒</span>
+      <span class="ic">${emoji}</span>
+      <span class="nm">${name}</span>
+      <span class="cat-tag">${CAT_NAME[cat]}</span>
+    </div>`;
+}
+
 function renderGrid(){
-  const jobs = JOBS;
-  const cards = jobs.map(j=>{
-    const [name, emoji, cat, page, desc] = j;
-    const lit = page && UNLOCKED.includes(page);
-    if(lit){
-      return `<div class="job lit" data-page="${page}" title="${desc}">
-        <span class="badge">✨ 已点亮</span>
-        <span class="ic">${emoji}</span>
-        <span class="nm">${name}</span>
-        <span class="cat-tag">${CAT_NAME[cat]}</span>
-      </div>`;
-    }
-    return `<div class="job lock" data-name="${name}" title="未解锁">
-        <span class="lock-ic">🔒</span>
-        <span class="ic">${emoji}</span>
-        <span class="nm">${name}</span>
-        <span class="cat-tag">${CAT_NAME[cat]}</span>
-      </div>`;
-  });
-  // 在网格随机位置插入两张广告卡片（每次刷新位置都不同）
-  const n = cards.length;
-  let a = Math.floor(Math.random()*(n+1)), b = Math.floor(Math.random()*(n+1));
-  if(a === b) b = (b+1)%(n+1);                 // 保证两张不在同一位置
-  const lo = Math.min(a,b), hi = Math.max(a,b);
-  cards.splice(hi, 0, adCard(ADS[1]));         // 先插靠后的，避免下标错位
-  cards.splice(lo, 0, adCard(ADS[0]));
+  const jobs = curCat ? JOBS.filter(j=>j[2]===curCat) : JOBS;
+  const cards = jobs.map(jobCard);
+  // 「全部」视图在随机位置插入两张广告卡片
+  if(!curCat){
+    const n = cards.length;
+    let a = Math.floor(Math.random()*(n+1)), b = Math.floor(Math.random()*(n+1));
+    if(a === b) b = (b+1)%(n+1);
+    const lo = Math.min(a,b), hi = Math.max(a,b);
+    cards.splice(hi, 0, adCard(ADS[1]));
+    cards.splice(lo, 0, adCard(ADS[0]));
+  }
   gridEl.innerHTML = cards.join('');
 
   gridEl.querySelectorAll('.job.lit').forEach(el=>{
@@ -257,11 +321,22 @@ function renderGrid(){
   gridEl.querySelectorAll('.job.lock').forEach(el=>{
     el.onclick = ()=> toast(`🔒「${el.dataset.name}」还没点亮，先完成已点亮的职业再回来吧！`);
   });
+  updateStats(jobs.length);
 }
 
-/* 顶部日期 */
-document.getElementById('today') && (document.getElementById('today').textContent = new Date().toLocaleDateString('zh-CN', {month:'long', day:'numeric'}));
+function updateStats(shown){
+  const heroMeta = document.getElementById('heroMeta');
+  heroMeta.innerHTML = `
+    <span class="chip">🗺️ 101 个职业</span>
+    <span class="chip">✨ 已点亮 ${LIT_SET.size}</span>
+    <span class="chip">�️ 10 大类 · 从科技到生活</span>`;
+  document.getElementById('deckSub').textContent =
+    `${shown} 个职业 · 点击已点亮✨的卡片开始探险，其余职业完成课程后将陆续开启`;
+  const bar = document.getElementById('progBar');
+  bar.style.width = Math.round(LIT_SET.size / JOBS.length * 100) + '%';
+}
 
+renderFilters();
 renderGrid();
 </script>
 </body>
