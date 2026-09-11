@@ -1,0 +1,109 @@
+/* ============ 恩尼格玛密码机可视化 (lesson1 彩蛋) — 作用域限定 #enigmaLab ============ */
+#enigmaLab{--c1:#0e9f6e;--c2:#35d39b;--deep:#0b5d44;--mid:#1e7d5c;--soft:#e7f6ef;--line:#c9e8da;
+  --gold:#e8a23c;--gold-soft:#fdf3dd;--ok:#16a34a;--ok-soft:#e7f7ee;--err:#ef4444;--ink:#2b2f45;--ink2:#5a6178;--ink3:#8fa09a;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  color:var(--ink);padding:2px 0 16px;}
+#enigmaLab *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+#enigmaLab .eg-head{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,var(--soft),#fff);
+  border:1px solid var(--line);border-radius:16px;padding:12px 16px;box-shadow:0 8px 22px -16px rgba(14,159,110,.55);margin-bottom:12px;}
+#enigmaLab .eg-logo{font-size:30px;}
+#enigmaLab .eg-t b{font-size:16.5px;color:var(--deep);display:block;}
+#enigmaLab .eg-t .eg-s{font-size:12px;color:var(--ink3);}
+#enigmaLab h3{font-size:14.5px;color:var(--deep);margin-bottom:8px;}
+
+#enigmaLab .eg-machine{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px;}
+#enigmaLab .eg-rotors{display:flex;justify-content:center;gap:26px;flex-wrap:wrap;padding:8px 0 4px;}
+#enigmaLab .eg-rotor{display:flex;flex-direction:column;align-items:center;gap:6px;}
+#enigmaLab .eg-rotor .eg-rotor-label{font-size:11px;color:var(--ink3);font-weight:800;}
+#enigmaLab .eg-dial{width:74px;height:74px;border-radius:50%;border:4px solid #cde3ff;
+  background:radial-gradient(circle at 30% 28%,#fff,#e8f0ff);color:#24407f;font-size:32px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;box-shadow:inset 0 -6px 10px -6px rgba(30,60,120,.35),0 6px 12px -6px rgba(30,60,120,.4);
+  transition:all .18s;font-family:Consolas,Menlo,monospace;}
+#enigmaLab .eg-dial.step{animation:egTurn .3s ease;}
+@keyframes egTurn{0%{transform:rotate(-10deg) scale(1);}50%{transform:rotate(8deg) scale(1.06);}100%{transform:rotate(0) scale(1);}}
+#enigmaLab .eg-dial{cursor:pointer;user-select:none;}
+#enigmaLab .eg-dial:hover{border-color:var(--c1);}
+#enigmaLab .eg-keytip{text-align:center;font-size:11.5px;color:var(--ink3);margin:0 0 2px;line-height:1.7;}
+#enigmaLab .eg-flow{text-align:center;color:var(--mid);font-size:12.5px;padding:10px 0 6px;line-height:1.9;}
+#enigmaLab .eg-flow b{color:var(--deep);}
+#enigmaLab .eg-reflect{display:flex;align-items:center;justify-content:center;gap:8px;margin:2px auto 6px;
+  border:2px dashed var(--c1);color:var(--deep);background:var(--soft);border-radius:30px;
+  font-size:12px;font-weight:800;padding:6px 16px;max-width:fit-content;}
+
+#enigmaLab .eg-lamps{display:grid;grid-template-columns:repeat(26,minmax(0,1fr));gap:3px;margin-top:8px;}
+#enigmaLab .eg-lamp{aspect-ratio:1;border-radius:8px;background:#f4f6fb;border:1px solid #dbe3f0;color:#5a6178;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;transition:all .12s;cursor:default;font-family:Consolas,Menlo,monospace;}
+#enigmaLab .eg-lamp.in{background:#dbe7ff;border-color:#7f9ef0;color:#24407f;}
+#enigmaLab .eg-lamp.on{background:radial-gradient(circle,#fff2c2,#ffd968);border-color:var(--gold);color:#7a5400;box-shadow:0 0 0 3px rgba(232,162,60,.3);}
+
+#enigmaLab .eg-ctrl{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0;}
+#enigmaLab .eg-ctrl input{flex:1;min-width:180px;border:2px solid var(--line);border-radius:30px;padding:9px 16px;
+  font-size:14px;color:var(--ink);font-family:Consolas,Menlo,monospace;outline:none;letter-spacing:1px;}
+#enigmaLab .eg-ctrl input:focus{border-color:var(--c1);}
+#enigmaLab .eg-btn{border:none;cursor:pointer;border-radius:30px;font-size:13.5px;font-weight:800;padding:10px 18px;color:#fff;
+  background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 8px 18px -8px rgba(14,159,110,.55);transition:transform .12s;}
+#enigmaLab .eg-btn:hover{transform:translateY(-1px);}
+#enigmaLab .eg-btn.ghost{background:#fff;color:var(--mid);border:2px solid var(--line);box-shadow:none;}
+#enigmaLab .eg-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+#enigmaLab .eg-status{font-size:13px;color:var(--ink2);background:var(--soft);border:1px solid var(--line);
+  border-radius:12px;padding:9px 12px;margin:8px 0;line-height:1.8;}
+#enigmaLab .eg-status b{color:var(--deep);}
+
+#enigmaLab .eg-out{display:flex;gap:14px;flex-wrap:wrap;margin:6px 0 4px;font-size:13.5px;}
+#enigmaLab .eg-out b{color:var(--deep);}
+#enigmaLab .eg-out .eg-cipher{color:var(--c1);}
+#enigmaLab .eg-ciph{border:1px dashed var(--line);background:#fff;border-radius:12px;padding:8px 12px;margin-bottom:8px;font-size:14px;
+  min-height:38px;line-height:1.9;font-family:Consolas,Menlo,monospace;letter-spacing:2px;}
+#enigmaLab .eg-ciph b{color:var(--deep);}
+#enigmaLab .eg-ciph .ch{display:inline-block;transition:all .15s;color:#123;}
+#enigmaLab .eg-ciph .ch.fresh{color:var(--c1);text-shadow:0 0 6px rgba(14,159,110,.5);}
+#enigmaLab .eg-ciph .ch.from{color:#8a93b8;}
+#enigmaLab .eg-ciph .ch.arrow{color:#c4cbd8;font-family:inherit;letter-spacing:0;}
+
+#enigmaLab .eg-log{margin-top:8px;max-height:220px;overflow-y:auto;background:#fafbff;border:1px solid var(--line);
+  border-radius:12px;padding:8px 12px;}
+#enigmaLab .eg-log .eg-line{font-size:12.5px;color:var(--ink2);line-height:1.9;border-bottom:1px dashed #edf0f8;padding:2px 0;font-family:Consolas,Menlo,monospace;}
+#enigmaLab .eg-log .eg-line:last-child{border-bottom:none;}
+#enigmaLab .eg-log .eg-line b{color:var(--deep);}
+#enigmaLab .eg-log .eg-line em{font-style:normal;color:var(--ink3);}
+#enigmaLab .eg-detail{margin:6px 0;padding:7px 10px 5px;background:#fff;border:1px solid var(--line);border-radius:12px;}
+#enigmaLab .eg-detail .eg-line{border-bottom:none;padding:1px 0;font-size:12px;color:var(--ink2);}
+#enigmaLab .eg-detail .eg-top{border-bottom:1px dashed #d9e7df;margin-bottom:3px;padding-bottom:4px;color:var(--ink);}
+#enigmaLab .eg-detail .eg-stage{font-family:Consolas,Menlo,monospace;letter-spacing:.2px;}
+#enigmaLab .eg-detail .eg-stage .eg-arr{color:var(--ink2);}
+#enigmaLab .eg-detail .eg-stage b{color:var(--c1);}
+#enigmaLab .eg-detail .eg-ref{color:#b7791f;font-weight:800;}
+
+#enigmaLab .eg-recap{margin-top:10px;background:#fdf6e8;border:1px dashed var(--gold);color:#7a5b12;border-radius:12px;
+  padding:10px 14px;font-size:13px;line-height:1.9;}
+
+/* ============ 破译可视化 (lesson1 彩蛋2) — 作用域 #enigmaBreakLab ============ */
+#enigmaBreakLab{--deep:#0b5d44;--mid:#1e7d5c;--soft:#e7f6ef;--line:#c9e8da;--gold:#e8a23c;--gold-soft:#fdf3dd;
+  --ink:#2b2f45;--ink2:#5a6178;--ink3:#8fa09a;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;padding:2px 0 12px;}
+#enigmaBreakLab *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+#enigmaBreakLab .bk-t b{font-size:15.5px;color:var(--deep);display:block;}
+#enigmaBreakLab .bk-t span{font-size:12px;color:var(--ink3);}
+#enigmaBreakLab .bk-crib{font-size:13px;color:var(--ink2);background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:8px 0;line-height:1.8;}
+#enigmaBreakLab .bk-crib .bk-word{color:#c2410c;background:#fff1e6;border-radius:6px;padding:1px 6px;font-family:Consolas,Menlo,monospace;}
+#enigmaBreakLab .bk-cipher{font-size:13px;color:var(--ink2);margin:6px 0 2px;}
+#enigmaBreakLab .bk-code{display:block;background:#0f172a;color:#7ff0c0;border-radius:10px;padding:8px 12px;margin-top:4px;font-family:Consolas,Menlo,monospace;font-size:15px;letter-spacing:2px;word-break:break-all;}
+#enigmaBreakLab .bk-box{display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;margin:8px 0;}
+#enigmaBreakLab .bk-dials{display:flex;gap:12px;}
+#enigmaBreakLab .bk-dial{width:52px;height:52px;border-radius:50%;border:3px solid #cde3ff;background:radial-gradient(circle at 30% 28%,#fff,#e8f0ff);color:#24407f;font-size:24px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 -5px 8px -5px rgba(30,60,120,.35);font-family:Consolas,Menlo,monospace;}
+#enigmaBreakLab .bk-dial.flash{animation:egTurn .18s ease;}
+#enigmaBreakLab .bk-count{font-size:13px;color:var(--ink2);}
+#enigmaBreakLab .bk-count b{color:var(--deep);}
+#enigmaBreakLab .bk-ctrl{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0;}
+#enigmaBreakLab .bk-btn{border:none;cursor:pointer;border-radius:30px;font-size:13.5px;font-weight:800;padding:10px 20px;color:#fff;background:linear-gradient(135deg,#0e9f6e,#35d39b);box-shadow:0 8px 18px -8px rgba(14,159,110,.55);transition:transform .12s;}
+#enigmaBreakLab .bk-btn:hover{transform:translateY(-1px);}
+#enigmaBreakLab .bk-btn.ghost{background:#fff;color:var(--mid);border:2px solid var(--line);box-shadow:none;}
+#enigmaBreakLab .bk-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+#enigmaBreakLab .bk-status{font-size:13px;color:var(--ink2);background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:8px 0;line-height:1.8;}
+#enigmaBreakLab .bk-status b{color:var(--deep);}
+#enigmaBreakLab .bk-result{display:none;border-radius:12px;padding:10px 12px;margin:6px 0;font-size:13.5px;line-height:1.9;}
+#enigmaBreakLab .bk-result.ok{display:block;background:var(--gold-soft);border:1px dashed var(--gold);color:#7a5b12;}
+#enigmaBreakLab .bk-result .bk-found{font-size:14px;font-weight:800;}
+#enigmaBreakLab .bk-result .bk-found b{color:var(--deep);}
+#enigmaBreakLab .bk-line{font-family:Consolas,Menlo,monospace;font-size:13px;}
+#enigmaBreakLab .bk-recap{margin-top:10px;background:#fdf6e8;border:1px dashed var(--gold);color:#7a5b12;border-radius:12px;padding:10px 14px;font-size:12.5px;line-height:1.9;}

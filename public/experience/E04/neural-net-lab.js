@@ -1,273 +1,5 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<title>神经网络 · 细菌找食物</title>
-<link rel="stylesheet" href="/css/common.css">
-<style>
-  /* 页面独有样式：ANN 调试器（公共样式见 /css/common.css） */
-  #app { max-width:1100px; }
-  .hero { text-align:center; padding:26px 10px 10px; }
-  .hero .big { font-size:80px; display:inline-block; animation:float 3.4s ease-in-out infinite;
-    filter:drop-shadow(0 10px 22px rgba(47,107,255,.22)); }
-  .hero h1 { color:#0d2259; font-size:28px; margin:8px 0 6px; }
-  .hero .tagline { color:#5469a0; font-size:15px; }
-  .fmt { background:#e8f0ff; border:1px solid #cfddfc; border-radius:14px; padding:12px 15px; margin:10px 0;
-    font-family:Consolas,Menlo,monospace; font-size:13px; color:#384f82; line-height:1.9; }
-  .fmt b { color:#f2559d; }
+(function(){
 
-  /* ===== ANN 调试器 ===== */
-  .ann-card { position:relative; }
-  .fs-btn { position:absolute; top:12px; right:14px; width:38px; height:38px; border:none; border-radius:12px;
-    background:#eef3ff; color:#2f4a8a; font-size:19px; cursor:pointer; transition:.15s; line-height:1;
-    box-shadow:0 2px 6px rgba(90,107,255,.15); }
-  .fs-btn:hover { background:#dbe7ff; transform:scale(1.06); }
-  .fs-btn:active { transform:scale(.94); }
-  .ann-card:fullscreen { width:100vw; height:100vh; overflow-y:auto; border-radius:0; border:none; margin:0;
-    background:linear-gradient(180deg,#eef4ff 0%,#f7fbff 100%); }
-  .ann-card:fullscreen .trainer-grid { grid-template-columns:300px 1fr 360px; }
-  .ann-card:fullscreen .trainer-side { display:flex; }
-  .trainer-grid { display:grid; grid-template-columns:240px 1fr; gap:16px; margin-top:8px; }
-  .trainer-side { display:none; flex-direction:column; gap:10px; min-width:0; }
-  @media (max-width:860px){ .trainer-grid { grid-template-columns:1fr; } }
-  .trainer-main { min-width:0; }
-  .left-col { display:flex; flex-direction:column; gap:12px; align-self:start; min-width:0; }
-  .data-list-panel { background:#fff; border:2px solid #eaf3ff; border-radius:18px; padding:12px 10px;
-    max-height:360px; overflow-y:auto; align-self:stretch; }
-  .data-list-panel .panel-title { font-size:13px; font-weight:800; color:#2f4a8a; margin-bottom:8px;
-    display:flex; align-items:center; gap:6px; }
-  .data-list-panel .badge { font-size:11px; background:#eef3ff; color:#5a6b96; padding:0 10px; border-radius:30px; font-weight:700; }
-  .dl-row { display:flex; gap:6px; align-items:center; font-family:Consolas,Menlo,monospace; font-size:11px;
-    padding:5px 8px; border-radius:8px; cursor:pointer; border:1px solid transparent; }
-  .dl-row:hover { background:#f0f6ff; }
-  .dl-row.active { background:#eef3ff; border-color:#7c8bff; font-weight:700; }
-  .dl-idx { color:#8a93b8; width:30px; flex-shrink:0; }
-  .dl-in { color:#3a4470; }
-  .dl-out { color:#c44a8f; margin-left:auto; white-space:nowrap; }
-
-  /* 8 方向九宫格 */
-  .mini9 { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; margin-bottom:12px; }
-  .mini9 .m9 { aspect-ratio:1; background:#fff; border:2px solid #e3ecf8; border-radius:10px;
-    display:flex; align-items:center; justify-content:center; font-size:15px; position:relative; }
-  .mini9 .m9.food { background:#eafff2; border-color:#4cd07d; }
-  .mini9 .m9.empty { background:#f8fafc; }
-  .mini9 .m9.empty::after { content:''; width:8px; height:8px; border-radius:50%; background:#dbe4f0; }
-  .mini9 .m9.center { background:#eef3ff; border-color:#7c8bff; font-size:22px; }
-  .mini9 .m9 .tag { position:absolute; bottom:1px; left:0; right:0; text-align:center; font-size:8px; color:#8a93b8; }
-  .mini9 .m9.food .tag { color:#1d9e5c; font-weight:700; }
-
-  .debug-grid { display:grid; grid-template-columns:1fr 1.1fr; gap:16px; margin-top:6px; }
-  @media (max-width:820px){ .debug-grid { grid-template-columns:1fr; } }
-
-  /* 网络结构图 */
-  .net-panel { display:flex; align-items:center; gap:16px; }
-  .mini9-wrap { flex-shrink:0; width:176px; }
-  .mini9-wrap .panel-title { font-size:12px; font-weight:800; color:#2f4a8a; margin-bottom:6px; text-align:center; }
-  .net-side { flex:1; min-width:0; }
-  .net-viz { display:flex; justify-content:center; align-items:center; padding:8px 0 6px; overflow-x:auto; }
-  .net-viz svg { width:100%; max-width:600px; height:auto; display:block; }
-  .net-legend { display:flex; gap:14px; align-items:center; justify-content:center; font-size:11px; color:#5a6b96; flex-wrap:wrap; }
-  .net-legend .lg { display:inline-block; width:20px; height:5px; border-radius:3px; }
-  .net-legend .lg.red { background:#ef4444; }
-  .net-legend .lg.blue { background:#3b82f6; }
-  .layer { display:flex; flex-direction:column; align-items:center; gap:6px; }
-  .layer-label { font-size:12px; font-weight:800; color:#2f4a8a; background:#eef3ff; padding:2px 14px; border-radius:30px; }
-  .neurons { display:flex; flex-direction:column; gap:5px; align-items:center; }
-  .neuron { width:28px; height:28px; border-radius:50%; background:#dbeafe; border:2px solid #7c8bff;
-    display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:#3a4470;
-    transition:all .15s; }
-  .neuron.small { width:24px; height:24px; font-size:8px; }
-  .neuron.input { background:#dbeafe; border-color:#7c8bff; }
-  .neuron.hidden { background:#d1fae5; border-color:#34d399; }
-  .neuron.output { background:#fce7f3; border-color:#ec4899; }
-  .neuron.hot { background:#3b82f6 !important; color:#fff !important; border-color:#2563eb !important;
-    box-shadow:0 0 10px rgba(59,130,246,.45); }
-  .neuron.hot-out { background:#ec4899 !important; color:#fff !important; border-color:#db2777 !important;
-    box-shadow:0 0 10px rgba(236,72,153,.45); }
-  .arrow-symbol { font-size:24px; color:#94a3b8; font-weight:300; }
-  .layer-dims { font-size:11px; color:#6b7f94; }
-
-  /* 右栏合并面板：学习率/样本 + 状态栏 */
-  .side-panel { padding:12px 14px; }
-  .side-panel .status-bar { background:transparent; border:none; border-top:1px solid #e6edf4; border-radius:0;
-    padding:10px 0 0; margin:0; }
-
-  /* 损失曲线 */
-  #lossCanvas { width:100%; height:170px; display:block; border-radius:14px; margin-top:8px; background:#f8fafc;
-    border:1px solid #e6edf4; }
-
-  /* 测试 */
-  .test-area { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:8px; }
-  .test-inputs { display:flex; gap:5px; flex-wrap:wrap; align-items:center; }
-  .test-inputs .ti { display:flex; flex-direction:column; align-items:center; gap:2px; }
-  .test-inputs .ti span { font-size:9px; color:#6b7f94; }
-  .test-inputs input { width:34px; padding:4px 2px; text-align:center; border-radius:8px; border:2px solid #d1d9e6;
-    font-size:13px; font-weight:600; outline:none; }
-  .test-inputs input:focus { border-color:#7c8bff; }
-  .test-result { font-family:Consolas,Menlo,monospace; font-size:13px; font-weight:700; color:#0b1e33;
-    background:#f1f5f9; padding:6px 14px; border-radius:30px; }
-
-  /* 互动演示地图 */
-  .grid-wrap { display:flex; flex-wrap:wrap; gap:18px; align-items:flex-start; }
-  #grid { display:grid; grid-template-columns:repeat(10,1fr); gap:2px; width:min(100%,420px);
-    background:#fff; border:3px solid #dbe7ff; border-radius:14px; padding:6px; box-shadow:0 8px 20px rgba(120,160,210,.18); }
-  .cell { aspect-ratio:1; background:#fff; border:1px solid #e3ecf8; border-radius:5px; position:relative; }
-  .cell.seen { background:#fff7dc; }
-  .cell.food::after { content:''; position:absolute; inset:22%; border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #7de8a6, #2fb56a 70%); box-shadow:0 1px 3px rgba(0,0,0,.25); }
-  .cell.bact::after { content:''; position:absolute; inset:16%; border-radius:50%;
-    background:radial-gradient(circle at 32% 28%, #aeb8ff, #5a6bff 70%); box-shadow:0 0 0 2px #fff, 0 2px 8px rgba(90,107,255,.55); }
-  /* 实际问题卡片：右侧随机地图 */
-  .problem-body { display:flex; gap:20px; align-items:flex-start; }
-  .problem-body ul { flex:1; min-width:0; }
-  .problem-map { flex:0 0 auto; width:240px; }
-  .random-map { display:grid; grid-template-columns:repeat(10,1fr); gap:2px;
-    background:#fff; border:3px solid #dbe7ff; border-radius:14px; padding:6px; box-shadow:0 8px 20px rgba(120,160,210,.18); }
-  .cell.bact-red::after { content:''; position:absolute; inset:16%; border-radius:50%;
-    background:radial-gradient(circle at 32% 28%, #ffb4b4, #e53935 70%); box-shadow:0 0 0 2px #fff, 0 2px 8px rgba(229,57,53,.55); }
-  @media (max-width:820px){ .problem-body { flex-direction:column; } .problem-map { width:100%; } }
-  .side { flex:1; min-width:220px; }
-  .stat { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-  .stat .chip { background:#eef6ff; border:1px solid #dcebff; border-radius:14px; padding:6px 12px; font-size:13px; font-weight:700; color:#3a5bb0; }
-</style>
-</head>
-<body>
-<div class="bg">
-  <div class="sun">☀️</div>
-  <div class="stars"></div>
-  <div class="cloud c1"></div>
-  <div class="cloud c2"></div>
-</div>
-
-<div id="app">
-  <header class="topbar">
-    <a class="back" href="/artificial-intelligence/lab.html">← 返回实验室</a>
-    <span class="t">🧠 神经网络 · 细菌找食物</span>
-  </header>
-
-  <section class="hero">
-    <span class="big">🧠</span>
-    <h1>神经网络实验室</h1>
-    <p class="tagline">训练一个小小的大脑，让细菌自己学会找食物</p>
-  </section>
-
-  <div class="card">
-    <h3>🎯 实际问题</h3>
-    <div class="problem-body">
-      <ul>
-        <li>在一个 <b>10×10</b> 的点阵地图里，随机分布着一些<b>食物</b>。</li>
-        <li>地图里有一只<b>细菌</b>：它能看到周围 <b>8 个方向</b>（上下左右 + 4 个斜角），只能往 <b>上、下、左、右</b> 4 个方向移动。</li>
-        <li>有时候<b>好几个方向都有食物</b>，有时候<b>一个都没有</b>——细菌要自己判断该往哪儿走。</li>
-        <li>我们训练一个神经网络，让细菌根据"看到的 8 个方向"决定"往哪走"，一步步找到食物。</li>
-      </ul>
-      <div class="problem-map">
-        <div id="randomMap" class="random-map"></div>
-        <p class="muted" style="margin-top:8px;text-align:center;font-size:12px;">🔴 红色细菌随机移动，吃到绿色食物 🍎</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h3>📋 训练数据格式</h3>
-    <div class="fmt">
-      <b>输入</b>（8 个数，1=这个方向有食物）：[ 左上, 上, 右上, 左, 右, 左下, 下, 右下 ]<br>
-      <b>输出</b>（4 个数，one-hot 移动方向）：[ 上, 左, 下, 右 ]<br>
-      <b>规则</b>：先数「上 / 左 / 下 / 右」四个方向各有几个食物（斜角算给相邻两个方向），<b>哪边多就往哪边走</b>；一样多时<b>优先水平</b>（左/右）；<b>一个食物都没有</b>就往上走继续找<br>
-      <b>例子①</b>：上方和右上都有食物 <b>[0,1,1,0,0,0,0,0]</b> → 上面有 2 个 → 输出 <b>[1,0,0,0]</b>（往上）<br>
-      <b>例子②</b>：上方和右方各 1 个 <b>[0,1,0,0,1,0,0,0]</b> → 一样多，优先水平 → 输出 <b>[0,0,0,1]</b>（往右）<br>
-      <b>例子③</b>：一个食物都没有 <b>[0,0,0,0,0,0,0,0]</b> → 输出 <b>[1,0,0,0]</b>（往上搜索）
-    </div>
-    <p class="muted">数据自动生成 100 组：有时 1 个食物、有时 2~3 个食物、有时没有食物；目标 = 按上面的规则算出该往哪个方向走。<br>测试集用另一套种子和分布，保证都是网络没见过的新样本。</p>
-  </div>
-
-  <div class="card ann-card" id="annCard">
-    <button class="fs-btn" id="annFsBtn" title="全屏">⛶</button>
-    <h3>🧠 ANN 可视化训练器 <span class="badge" style="font-size:11px;background:#eef3ff;color:#5a6b96;padding:2px 10px;border-radius:30px;font-weight:700;">8 输入 · 8 隐藏 · 4 输出</span></h3>
-    <p class="muted" style="margin-bottom:10px;">先点「🎬 开始可视化训练」看完整训练过程（损失曲线 + 神经元点亮）；再用下面的按钮一步一步调试（前向→反向→更新）。</p>
-
-    <div class="trainer-grid">
-      <div class="left-col">
-        <div class="data-list-panel">
-          <div class="panel-title">📚 训练数据集 <span class="badge">100 组 · 点击加载</span></div>
-          <div id="dataList"></div>
-        </div>
-        <div class="data-list-panel">
-          <div class="panel-title">📊 测试数据集 <span class="badge">100 组 · 点击加载</span></div>
-          <div id="testList"></div>
-        </div>
-      </div>
-      <div class="trainer-main">
-
-    <div class="panel net-panel">
-      <div class="mini9-wrap">
-        <div class="panel-title">🧭 视野</div>
-        <div class="mini9" id="mini9"></div>
-      </div>
-      <div class="net-side">
-        <div class="net-viz" id="netViz"></div>
-        <div class="net-legend">
-          <span class="lg red"></span> 正权值（线越粗值越大）
-          <span class="lg blue"></span> 负权值
-        </div>
-      </div>
-    </div>
-
-    <div class="ctrl-group" style="margin-top:12px;">
-      <button class="btn btn-success" id="btnTrain">🎬 开始可视化训练</button>
-      <button class="btn btn-primary" id="btnStep">👣 单步</button>
-      <button class="btn btn-danger" id="btnReset">🔄 重置</button>
-    </div>
-
-    <canvas id="lossCanvas" width="600" height="170"></canvas>
-      </div><!-- /trainer-main -->
-
-      <div class="trainer-side">
-    <div class="panel side-panel">
-      <div class="ctrl-group" style="margin-top:0;">
-        <span class="ctrl-label">学习率 η =</span>
-        <input class="ctrl-input" id="lrInput" type="number" value="0.5" step="0.05" min="0.01" max="2.0" style="width:64px;">
-      </div>
-      <div class="status-bar" id="statusBar">
-        <span class="status-item"><span class="dot blue"></span> 状态: <span id="statusText">就绪</span></span>
-        <span class="status-item">📉 损失: <span id="lossDisplay">—</span></span>
-        <span class="status-item">🔢 步数: <span id="stepDisplay">0</span></span>
-        <span class="status-item">📚 epoch: <span id="epochDisplay">0</span></span>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-title">📊 数据面板 <span class="badge" id="dataPanelBadge">当前样本</span></div>
-      <div class="scroll-data" id="dataPanel"></div>
-    </div>
-      </div><!-- /trainer-side -->
-    </div><!-- /trainer-grid -->
-  </div>
-
-  <div class="card">
-    <h3>🦠 互动演示：细菌找食物</h3>
-    <p class="muted">黄色格子 = 细菌看到的 8 格；绿色圆点 = 食物；蓝色圆点 = 细菌。细菌用训练好的网络决定方向。（先点上方「开始可视化训练」效果最好！）</p>
-    <div class="grid-wrap">
-      <div id="grid"></div>
-      <div class="side">
-        <div class="stat">
-          <span class="chip">🍎 吃到：<b id="statScore">0</b></span>
-          <span class="chip">👣 走了：<b id="statSteps">0</b></span>
-        </div>
-        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn btn-ghost" id="stepBtn">👣 走一步</button>
-          <button class="btn btn-success" id="runBtn">▶️ 连续走</button>
-          <button class="btn btn-ghost" id="resetBtn">🔄 重置</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="foot">🧠 这就是「输入 → 神经网络 → 输出」：8 个方向的信号，经过层层神经元，变成 4 个方向的动作！<br>数据只保存在本机浏览器。</div>
-</div>
-
-<script>
 /* ============================================================
    1. 神经网络核心 (8-8-4, sigmoid + MSE)  —— 来自 ANN 调试器
 ============================================================ */
@@ -342,8 +74,8 @@ class NeuralNetwork {
 
 /* ============================================================
    2. 数据生成 (100 组)
-      一个样本 = 细菌看到的 8 个方向，每个方向有食物(1)或没有(0)
-      三种情况都会出现：① 一个方向有食物  ② 多个方向有食物  ③ 没有食物
+      一个样本 = 扫地机器人看到的 8 个方向，每个方向有垃圾(1)或没有(0)
+      三种情况都会出现：① 一个方向有垃圾  ② 多个方向有垃圾  ③ 没有垃圾
 ============================================================ */
 const ACTION_MAP = { '上':[1,0,0,0], '左':[0,1,0,0], '下':[0,0,1,0], '右':[0,0,0,1] };
 // 8 个方向 → 归属的 4 个移动方向（斜角同时算给相邻两个方向）
@@ -358,14 +90,14 @@ function buildTarget(inp){
     let sc = 0; for(const i of DIR_GROUPS[g]) sc += inp[i];
     if(sc > bestScore){ bestScore = sc; best = g; }
   }
-  if(bestScore === 0) return '上';   // 8 个方向都没有食物 → 往上走继续找
+  if(bestScore === 0) return '上';   // 8 个方向都没有垃圾 → 往上走继续找
   return best;
 }
 
-// 核心生成器：mix 控制「没有食物 / 一个食物 / 多个食物」的比例
+// 核心生成器：mix 控制「没有垃圾 / 一个垃圾 / 多个垃圾」的比例
 function generateDataSet(n = 100, mix = {}){
-  const p0 = mix.noFoodP !== undefined ? mix.noFoodP : 0.20;   // 没有食物
-  const p1 = mix.oneFoodP !== undefined ? mix.oneFoodP : 0.35; // 只有一个食物
+  const p0 = mix.noFoodP !== undefined ? mix.noFoodP : 0.20;   // 没有垃圾
+  const p1 = mix.oneFoodP !== undefined ? mix.oneFoodP : 0.35; // 只有一个垃圾
   const data = []; let attempts = 0;
   while(data.length < n && attempts < 10000){
     attempts++;
@@ -373,7 +105,7 @@ function generateDataSet(n = 100, mix = {}){
     let nFood;
     if(r < p0) nFood = 0;
     else if(r < p0 + p1) nFood = 1;
-    else nFood = 2 + Math.floor(Math.random()*2);   // 2~3 个食物
+    else nFood = 2 + Math.floor(Math.random()*2);   // 2~3 个垃圾
     const inp = Array(8).fill(0);
     const dirs = []; let guard = 0;
     while(dirs.length < nFood && guard++ < 20){
@@ -526,16 +258,16 @@ function updateStatus(msg, loss, step){
   if(loss!==undefined) document.getElementById('lossDisplay').textContent = (loss!==null&&loss!=='—')?loss.toFixed(6):'—';
   if(step!==undefined) document.getElementById('stepDisplay').textContent = step;
 }
-// 8 方向九宫格（左侧顶部：8 个方向放食物，中间放细菌）
+// 8 方向九宫格（左侧顶部：8 个方向放垃圾，中间放扫地机器人）
 function renderMini9(inpOverride){
   const el = document.getElementById('mini9');
   if(!el) return;
   const inp = inpOverride || (app.currentSample ? app.currentSample.input : [0,0,0,0,0,0,0,0]);
-  // 标题动态显示当前看到了几个食物
+  // 标题动态显示当前看到了几个垃圾
   const title = document.querySelector('.mini9-wrap .panel-title');
   if(title){
     const cnt = inp.filter(Boolean).length;
-    title.textContent = cnt===0 ? '🧭 视野 · 没有食物' : `🧭 视野 · 看到 ${cnt} 个食物 🍎`;
+    title.textContent = cnt===0 ? '🧭 视野 · 没有垃圾' : `🧭 视野 · 看到 ${cnt} 个垃圾 🧹`;
   }
   // 网络输出：argmax → 预测方向（上0/左1/下2/右3）
   let pred = null;
@@ -551,12 +283,12 @@ function renderMini9(inpOverride){
     if(idx===-1){
       const arrow = pred!==null ? ARROWS[pred] : '·';
       return `<div class="m9 center" style="flex-direction:column;gap:1px;">
-        <span style="font-size:14px;line-height:1;">🦠</span>
+        <span style="font-size:14px;line-height:1;">🤖</span>
         <span style="font-size:20px;font-weight:800;color:#1d9e5c;line-height:1.15;">${arrow}</span>
       </div>`;
     }
     const has = inp[idx]===1;
-    return `<div class="m9 ${has?'food':'empty'}">${has?'🍎':''}<span class="tag">${labels[pos]}</span></div>`;
+    return `<div class="m9 ${has?'food':'empty'}">${has?'🧹':''}<span class="tag">${labels[pos]}</span></div>`;
   }).join('');
 }
 
@@ -737,7 +469,7 @@ document.getElementById('btnReset').onclick = ()=>{
   refreshUI('网络已重置', app.nn.loss, app.nn.stepCount);
 };
 /* ============================================================
-   7. 互动演示：10×10 地图，细菌用网络找食物
+   7. 互动演示：10×10 地图，扫地机器人用网络找垃圾
 ============================================================ */
 const N = 10;
 let grid = [], bx=0, by=0, score=0, steps=0;
@@ -746,7 +478,7 @@ function valid(x,y){ return x>=0&&x<N&&y>=0&&y<N; }
 function resetMap(){
   grid = Array.from({length:N},()=>Array(N).fill(0));
   let placed=0;
-  const FOOD_TOTAL = Math.floor(N*N*0.5); // 食物数量 = 格子总数的 50%
+  const FOOD_TOTAL = Math.floor(N*N*0.5); // 垃圾数量 = 格子总数的 50%
   while(placed<FOOD_TOTAL){ const x=Math.floor(Math.random()*N), y=Math.floor(Math.random()*N);
     if(grid[y][x]===0){ grid[y][x]=1; placed++; } }
   do{ bx=Math.floor(Math.random()*N); by=Math.floor(Math.random()*N); }while(grid[by][bx]===1);
@@ -785,7 +517,7 @@ document.getElementById('runBtn').onclick = ()=>{
   (async function loop(){
     while(running){
       move();
-      if(score>=12){ running=false; document.getElementById('runBtn').textContent='▶️ 连续走'; alert('🎉 全部 12 个食物都吃到啦！'); break; }
+      if(score>=12){ running=false; document.getElementById('runBtn').textContent='▶️ 连续走'; alert('🎉 全部 12 处垃圾都扫干净啦！'); break; }
       await sleep(120);
     }
   })();
@@ -812,14 +544,14 @@ document.addEventListener('fullscreenchange', ()=>{
 /* ============================================================
    8. 初始化
 ============================================================ */
-/* 实际问题卡片右侧：红色细菌随机移动吃食物（独立于神经网络演示） */
+/* 实际问题卡片右侧：红色扫地机器人随机移动吃垃圾（独立于神经网络演示） */
 const RM_N = 10;
 let rmGrid = [], rmx = 0, rmy = 0, rmTimerOn = false;
 const rmEl = document.getElementById('randomMap');
 function rmInit(){
   rmGrid = Array.from({length:RM_N},()=>Array(RM_N).fill(0));
   let placed = 0;
-  const FOOD_TOTAL = Math.floor(RM_N * RM_N * 0.4);   // 食物约占地图 40%
+  const FOOD_TOTAL = Math.floor(RM_N * RM_N * 0.4);   // 垃圾约占地图 40%
   while(placed < FOOD_TOTAL){ const x=Math.floor(Math.random()*RM_N), y=Math.floor(Math.random()*RM_N); if(rmGrid[y][x]===0){ rmGrid[y][x]=1; placed++; } }
   do { rmx=Math.floor(Math.random()*RM_N); rmy=Math.floor(Math.random()*RM_N); } while(rmGrid[rmy][rmx]===1);
   rmRender();
@@ -854,6 +586,5 @@ function init(){
   rmInit();
 }
 init();
-</script>
-</body>
-</html>
+
+})();

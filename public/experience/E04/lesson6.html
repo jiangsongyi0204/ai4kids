@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>第6课：反向传播：让神经网络学会纠错 - 人工智能简史 · AI星少年</title>
+    <link href="https://fonts.googleapis.cn/css2?family=ZCOOL+KuaiLe&family=Noto+Serif+SC:wght@500;700;900&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../../css/style.css?v=1789090598" />
+    <link rel="stylesheet" href="lesson.css?v=1789090598" />
+    <link rel="stylesheet" href="neural-net-lab.css?v=1789090598" />
+    <style>:root{--acc:#E0563F;--acc2:#F2998A;}</style>
+</head>
+<body data-ls="6" data-lsn="16" data-title="反向传播：让神经网络学会纠错" data-titles="🚀 出发|🕰️ 故事|📖 知识|🖐️ 小任务|❓ 小测验|🏁 完成">
+<div class="wrap">
+
+    <header class="hd">
+        <div class="hd-row">
+            <a class="back-chip" href="/">← 返回课程</a>
+            <span class="hd-badge">🛰️ E04 · 第6课</span>
+            <span class="hd-step">1986 年 · 人工智能简史</span>
+        </div>
+        <h1 class="hd-title">🔁 反向传播：让神经网络学会纠错</h1>
+        <div class="hd-goal">🎯 理解 1986 年反向传播算法让多层神经网络能「向后纠错」，从错误中不断调整自己</div>
+    </header>
+
+    <!-- 1 · 封面 -->
+    <section class="slide active" id="s0">
+        <div class="cover">
+            <span class="yr">1986</span>
+            <span class="c-emoji">🔁</span>
+            <span class="c-station">第 6 站 / 16 · 1986 年</span>
+            <h1>反向传播：让神经网络学会纠错</h1>
+            <div class="c-sub">「向后纠错」的魔法算法</div>
+            <div class="c-goal">🎯 本课目标：理解 1986 年反向传播算法让多层神经网络能「向后纠错」，从错误中不断调整自己</div>
+            <button class="start-btn" onclick="goSlide(1)">🚀 开始本站探索</button>
+        </div>
+    </section>
+
+    <!-- 2 · 故事 -->
+    <section class="slide" id="s1">
+        <div class="card story">
+            <h2>🕰️ 故事时间 · 那时候发生了什么？</h2>
+            <span class="story-mark">1986 年 · 🔁</span>
+
+        <div class="story-fig person">
+          <div class="fig-photo"><img src="img/lesson06-hinton.jpg" alt="杰弗里·辛顿" loading="lazy" /></div>
+          <div class="fig-info">
+            <div class="fig-head"><span class="fig-name">杰弗里·辛顿</span><span class="fig-en">Geoffrey Hinton</span></div>
+            <div class="fig-years">1947 —</div>
+            <div class="fig-role">英国裔加拿大科学家 · 「深度学习之父」</div>
+            <ul class="fig-facts">
+              <li>1947 年出生在英国伦敦</li>
+              <li>1986 年和同事让「反向传播」算法大放光彩</li>
+              <li>在大家放弃时，坚持研究神经网络几十年</li>
+              <li>2018 图灵奖 · 2024 诺贝尔物理学奖</li>
+            </ul>
+          </div>
+        </div>
+        <p class="fig-credit">🖼️ 图片来源：CC BY-SA 4.0 · Wikimedia Commons</p>
+            <div class="story-tl">
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">1947</span>
+                <p>这一站，我们要认识一位坚持了几十年的科学家——杰弗里·辛顿。他一直相信：只要把很多层「人工神经元」叠在一起，组成更深的神经网络，机器就能学会特别复杂的事。</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">1986 前</span>
+                <p>可问题很快来了：就像传球接力，球传丢了，是第一个人的错，还是中间的人、最后一个人的错？一层层的网络出错时，也很难分清该调整哪一层的「权重」。</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">1986</span>
+                <p>1986 年，辛顿和同事们让一个叫「反向传播」的算法大放光彩：当答案错了，它会把错误从最后面一层，一层一层「向后传」，倒着找到每一层该负的责任，分别调整。这样一来，多层神经网络终于能真正「学会」了！</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">❄️ AI 寒冬</span>
+                <p>有趣的是，当时很多科学家都觉得这条路走不通，纷纷放弃；辛顿却像一团小火苗，在寒冷的「AI 寒冬」里坚持了几十年。</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">2018 · 2024</span>
+                <p>他的坚持没有白费：从这天起，神经网络开始大步向前，最终长成了今天改变世界的深度学习。因为这份功劳，辛顿获得了计算机界的最高奖——图灵奖，还在 2024 年捧回了诺贝尔物理学奖！</p>
+              </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3 · 知识 -->
+    <section class="slide" id="s2">
+        <div class="card">
+            <h2>📖 知识小课堂 · 记住这个魔法！</h2>
+            <p style="font-size:13.5px;color:var(--ink3);margin-bottom:12px;">点击卡片翻开，看看背后的知识～</p>
+            <div class="k-grid">
+
+            <div class="kcard" onclick="openK(this)">
+              <div class="kcard-inner">
+                <div class="kfront"><span class="kt">✨</span><span class="kh">纠错算法</span><span class="ktip">👆 点我翻开</span></div>
+                <div class="kback">反向传播：把错误从输出层向后一层层传回去</div>
+              </div>
+            </div>
+            <div class="kcard" onclick="openK(this)">
+              <div class="kcard-inner">
+                <div class="kfront"><span class="kt">💡</span><span class="kh">给每层分责任</span><span class="ktip">👆 点我翻开</span></div>
+                <div class="kback">每一层都收到「该调整多少」的信息，各自改正</div>
+              </div>
+            </div>
+            <div class="kcard" onclick="openK(this)">
+              <div class="kcard-inner">
+                <div class="kfront"><span class="kt">🔑</span><span class="kh">意义</span><span class="ktip">👆 点我翻开</span></div>
+                <div class="kback">让多层神经网络真正能学习 → 现代深度学习的发动机</div>
+              </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4 · 小任务 -->
+    <section class="slide" id="s3">
+        <div id="nnlab">
+<div class="nn-head"><span class="nn-ico">🧠</span><b>神经网络实验室 · 扫地机器人</b><span class="nn-sub">训练一个小小的大脑，让扫地机器人自己学会清扫垃圾</span></div>
+
+<div class="card">
+    <h3>🎯 实际问题</h3>
+    <div class="problem-body">
+      <ul>
+        <li>在一个 <b>10×10</b> 的点阵地图里，随机分布着一些<b>垃圾</b>。</li>
+        <li>地图里有一只<b>扫地机器人</b>：它能看到周围 <b>8 个方向</b>（上下左右 + 4 个斜角），只能往 <b>上、下、左、右</b> 4 个方向移动。</li>
+        <li>有时候<b>好几个方向都有垃圾</b>，有时候<b>一个都没有</b>——扫地机器人要自己判断该往哪儿走。</li>
+        <li>我们训练一个神经网络，让扫地机器人根据"看到的 8 个方向"决定"往哪走"，一步步找到垃圾。</li>
+      </ul>
+      <div class="problem-map">
+        <div id="randomMap" class="random-map"></div>
+        <p class="muted" style="margin-top:8px;text-align:center;font-size:12px;">🔴 红色扫地机器人随机移动，扫到绿色垃圾 🧹</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📋 训练数据格式</h3>
+    <div class="fmt">
+      <b>输入</b>（8 个数，1=这个方向有垃圾）：[ 左上, 上, 右上, 左, 右, 左下, 下, 右下 ]<br>
+      <b>输出</b>（4 个数，one-hot 移动方向）：[ 上, 左, 下, 右 ]<br>
+      <b>规则</b>：先数「上 / 左 / 下 / 右」四个方向各有几个垃圾（斜角算给相邻两个方向），<b>哪边多就往哪边走</b>；一样多时<b>优先水平</b>（左/右）；<b>一个垃圾都没有</b>就往上走继续找<br>
+      <b>例子①</b>：上方和右上都有垃圾 <b>[0,1,1,0,0,0,0,0]</b> → 上面有 2 个 → 输出 <b>[1,0,0,0]</b>（往上）<br>
+      <b>例子②</b>：上方和右方各 1 个 <b>[0,1,0,0,1,0,0,0]</b> → 一样多，优先水平 → 输出 <b>[0,0,0,1]</b>（往右）<br>
+      <b>例子③</b>：一个垃圾都没有 <b>[0,0,0,0,0,0,0,0]</b> → 输出 <b>[1,0,0,0]</b>（往上搜索）
+    </div>
+    <p class="muted">数据自动生成 100 组：有时 1 个垃圾、有时 2~3 个垃圾、有时没有垃圾；目标 = 按上面的规则算出该往哪个方向走。<br>测试集用另一套种子和分布，保证都是网络没见过的新样本。</p>
+  </div>
+
+  <div class="card ann-card" id="annCard">
+    <button class="fs-btn" id="annFsBtn" title="全屏">⛶</button>
+    <h3>🧠 ANN 可视化训练器 <span class="badge" style="font-size:11px;background:#eef3ff;color:#5a6b96;padding:2px 10px;border-radius:30px;font-weight:700;">8 输入 · 8 隐藏 · 4 输出</span></h3>
+    <p class="muted" style="margin-bottom:10px;">先点「🎬 开始可视化训练」看完整训练过程（损失曲线 + 神经元点亮）；再用下面的按钮一步一步调试（前向→反向→更新）。</p>
+
+    <div class="trainer-grid">
+      <div class="left-col">
+        <div class="data-list-panel">
+          <div class="panel-title">📚 训练数据集 <span class="badge">100 组 · 点击加载</span></div>
+          <div id="dataList"></div>
+        </div>
+        <div class="data-list-panel">
+          <div class="panel-title">📊 测试数据集 <span class="badge">100 组 · 点击加载</span></div>
+          <div id="testList"></div>
+        </div>
+      </div>
+      <div class="trainer-main">
+
+    <div class="panel net-panel">
+      <div class="mini9-wrap">
+        <div class="panel-title">🧭 视野</div>
+        <div class="mini9" id="mini9"></div>
+      </div>
+      <div class="net-side">
+        <div class="net-viz" id="netViz"></div>
+        <div class="net-legend">
+          <span class="lg red"></span> 正权值（线越粗值越大）
+          <span class="lg blue"></span> 负权值
+        </div>
+      </div>
+    </div>
+
+    <div class="ctrl-group" style="margin-top:12px;">
+      <button class="btn btn-success" id="btnTrain">🎬 开始可视化训练</button>
+      <button class="btn btn-primary" id="btnStep">👣 单步</button>
+      <button class="btn btn-danger" id="btnReset">🔄 重置</button>
+    </div>
+
+    <canvas id="lossCanvas" width="600" height="170"></canvas>
+      </div><!-- /trainer-main -->
+
+      <div class="trainer-side">
+    <div class="panel side-panel">
+      <div class="ctrl-group" style="margin-top:0;">
+        <span class="ctrl-label">学习率 η =</span>
+        <input class="ctrl-input" id="lrInput" type="number" value="0.5" step="0.05" min="0.01" max="2.0" style="width:64px;">
+      </div>
+      <div class="status-bar" id="statusBar">
+        <span class="status-item"><span class="dot blue"></span> 状态: <span id="statusText">就绪</span></span>
+        <span class="status-item">📉 损失: <span id="lossDisplay">—</span></span>
+        <span class="status-item">🔢 步数: <span id="stepDisplay">0</span></span>
+        <span class="status-item">📚 epoch: <span id="epochDisplay">0</span></span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">📊 数据面板 <span class="badge" id="dataPanelBadge">当前样本</span></div>
+      <div class="scroll-data" id="dataPanel"></div>
+    </div>
+      </div><!-- /trainer-side -->
+    </div><!-- /trainer-grid -->
+  </div>
+
+  <div class="card">
+    <h3>🤖 互动演示：扫地机器人</h3>
+    <p class="muted">黄色格子 = 扫地机器人看到的 8 格；绿色圆点 = 垃圾；蓝色圆点 = 扫地机器人。扫地机器人用训练好的网络决定方向。（先点上方「开始可视化训练」效果最好！）</p>
+    <div class="grid-wrap">
+      <div id="grid"></div>
+      <div class="side">
+        <div class="stat">
+          <span class="chip">🧹 已扫：<b id="statScore">0</b></span>
+          <span class="chip">👣 走了：<b id="statSteps">0</b></span>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-ghost" id="stepBtn">👣 走一步</button>
+          <button class="btn btn-success" id="runBtn">▶️ 连续走</button>
+          <button class="btn btn-ghost" id="resetBtn">🔄 重置</button>
+        </div>
+      </div>
+    </div>
+  </div>
+        </div>
+    </section>
+
+    <!-- 5 · 小测验 -->
+    <section class="slide" id="s4">
+        <div class="card">
+            <h2>❓ 小测验 · 你学会了吗？</h2>
+            <p style="font-size:13.5px;color:var(--ink3);margin-bottom:10px;">点选答案，答对会变绿、答错会变红（可重试）～</p>
+
+            <div class="quiz-item" data-a="1">
+              <p class="quiz-q">Q1. 「反向传播」主要解决什么问题？</p>
+              <div class="quiz-opts">
+                <button type="button" class="quiz-opt" data-i="0" onclick="pickQuiz(this)">A. 让网络更快发热</button><button type="button" class="quiz-opt" data-i="1" onclick="pickQuiz(this)">B. 把错误向后传、让每层学会调整</button><button type="button" class="quiz-opt" data-i="2" onclick="pickQuiz(this)">C. 给网络配音</button><button type="button" class="quiz-opt" data-i="3" onclick="pickQuiz(this)">D. 让网络变彩色</button>
+              </div>
+              <p class="quiz-fb"></p>
+            </div>
+            <div class="quiz-item" data-a="1">
+              <p class="quiz-q">Q2. 反向传播时，错误从哪里传到哪里？</p>
+              <div class="quiz-opts">
+                <button type="button" class="quiz-opt" data-i="0" onclick="pickQuiz(this)">A. 从前往后传</button><button type="button" class="quiz-opt" data-i="1" onclick="pickQuiz(this)">B. 从后往前（输出层→前面各层）传</button><button type="button" class="quiz-opt" data-i="2" onclick="pickQuiz(this)">C. 原地不动</button><button type="button" class="quiz-opt" data-i="3" onclick="pickQuiz(this)">D. 从天上掉下来</button>
+              </div>
+              <p class="quiz-fb"></p>
+            </div>
+            <div class="quiz-item" data-a="0">
+              <p class="quiz-q">Q3. 有了反向传播，神经网络最大的收获是什么？</p>
+              <div class="quiz-opts">
+                <button type="button" class="quiz-opt" data-i="0" onclick="pickQuiz(this)">A. 真正学会了从错误中调整</button><button type="button" class="quiz-opt" data-i="1" onclick="pickQuiz(this)">B. 学会了唱歌</button><button type="button" class="quiz-opt" data-i="2" onclick="pickQuiz(this)">C. 变轻了</button><button type="button" class="quiz-opt" data-i="3" onclick="pickQuiz(this)">D. 会飞了</button>
+              </div>
+              <p class="quiz-fb"></p>
+            </div>
+            <div class="quiz-result" id="quizResult"></div>
+            <div class="quiz-actions">
+                <button class="qbtn ghost" onclick="retryQuiz()">🔄 重新作答</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6 · 完成 -->
+    <section class="slide" id="s5">
+        <div class="card">
+            <h2>🏁 回顾与完课 · 为自己盖章</h2>
+            <div class="field">
+                <label for="stuName">👧 小小学员，写下你的名字</label>
+                <input id="stuName" placeholder="写下你的名字" maxlength="20" />
+            </div>
+            <div class="field">
+                <label for="harvest">🌟 这一站你最大的收获是什么？（可点下面的小标签快速填写）</label>
+                <div class="chips"><span class="chip" onclick="fillChip('harvest', '我从故事里记住了一个新知识')">我从故事里记住了一个新知识</span><span class="chip" onclick="fillChip('harvest', '我能把这个故事讲给家人听')">我能把这个故事讲给家人听</span><span class="chip" onclick="fillChip('harvest', '我完成了一次小任务挑战')">我完成了一次小任务挑战</span><span class="chip" onclick="fillChip('harvest', '我想把这一站和下一站连起来想一想')">我想把这一站和下一站连起来想一想</span></div>
+                <textarea id="harvest" rows="3" placeholder="把你这一站的收获写下来，保存后就会贴到收获墙上～"></textarea>
+            </div>
+            <div style="text-align:center;">
+                <button class="qbtn primary" id="btnFinish" onclick="finishLesson()">💾 保存收获 · 完成本站</button>
+            </div>
+            <p class="finish-msg" id="finishMsg"></p>
+            <p style="text-align:center;font-size:13px;color:var(--ink3);margin-top:6px;">💭 思考一下：做错题的时候，是「从头再学一遍」有用，还是「找到错在哪一步、改那一步」更有用？为什么？</p>
+        </div>
+        <div class="complete-card" id="completeCard">
+            <div class="stamp-icon">🏅</div>
+            <h3>人工智能简史 · 完课证明</h3>
+            <p><b id="ccName">小小学员</b> 完成了 <b id="ccLesson">本站</b>《<b id="ccTitle">反向传播：让神经网络学会纠错</b>》</p>
+            <p>学会：「向后纠错」的魔法算法</p>
+            <div class="stamp">第 6 站<br/>已完课</div>
+        </div>
+    </section>
+
+</div>
+
+<!-- ═══ 底部导航 ═══ -->
+<div class="slide-nav">
+    <button class="nav-prev" id="btnPrev" onclick="goSlide(-1)">◀ 上一页</button>
+    <span class="nav-counter" id="navCounter"></span>
+    <button class="nav-next" id="btnNext" onclick="goSlide(1)">下一页 ▶</button>
+    <div class="dots" id="dots"></div>
+</div>
+
+
+<script src="../../../js/cloud-records.js?v=1789090598"></script>
+<script src="../../../js/lesson-recorder.js?v=1789090598"></script>
+<script src="../../../js/tracker.js?v=1789090598"></script>
+<script src="lesson.js?v=1789090598"></script>
+<script>Tracker.init('experience/E04-L6');</script>
+<script src="neural-net-lab.js?v=1789090598"></script>
+    <!-- 移植适配：已移除依赖 sx 平台 /api/auth/status 与 /api/user/accessible-courses 的登录/课程权限守卫（本站无该后端） -->
+<script src="/js/classroom-float.js"></script></body>
+</html>

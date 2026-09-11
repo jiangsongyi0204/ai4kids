@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>第5课：专家系统：装进电脑的专家经验 - 人工智能简史 · AI星少年</title>
+    <link href="https://fonts.googleapis.cn/css2?family=ZCOOL+KuaiLe&family=Noto+Serif+SC:wght@500;700;900&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../../css/style.css?v=1789090598" />
+    <link rel="stylesheet" href="lesson.css?v=1789090598" />
+    <link rel="stylesheet" href="expert-lab.css?v=1789090598" />
+    <style>:root{--acc:#0E9384;--acc2:#6FD0C0;}</style>
+</head>
+<body data-ls="5" data-lsn="16" data-title="专家系统：装进电脑的专家经验" data-titles="🚀 出发|🕰️ 故事|📖 知识|🖐️ 小任务|❓ 小测验|🏁 完成">
+<div class="wrap">
+
+    <header class="hd">
+        <div class="hd-row">
+            <a class="back-chip" href="/">← 返回课程</a>
+            <span class="hd-badge">🛰️ E04 · 第5课</span>
+            <span class="hd-step">1980 年 · 人工智能简史</span>
+        </div>
+        <h1 class="hd-title">🏥 专家系统：装进电脑的专家经验</h1>
+        <div class="hd-goal">🎯 认识 1980 年代的专家系统：把专家的经验变成「如果…就…」的规则，让电脑当专家顾问</div>
+    </header>
+
+    <!-- 1 · 封面 -->
+    <section class="slide active" id="s0">
+        <div class="cover">
+            <span class="yr">1980</span>
+            <span class="c-emoji">🏥</span>
+            <span class="c-station">第 5 站 / 16 · 1980 年</span>
+            <h1>专家系统：装进电脑的专家经验</h1>
+            <div class="c-sub">AI 当起了「专家顾问」</div>
+            <div class="c-goal">🎯 本课目标：认识 1980 年代的专家系统：把专家的经验变成「如果…就…」的规则，让电脑当专家顾问</div>
+            <button class="start-btn" onclick="goSlide(1)">🚀 开始本站探索</button>
+        </div>
+    </section>
+
+    <!-- 2 · 故事 -->
+    <section class="slide" id="s1">
+        <div class="card story">
+            <h2>🕰️ 故事时间 · 那时候发生了什么？</h2>
+            <span class="story-mark">1980 年 · 🏥</span>
+
+        <div class="story-fig person">
+          <div class="fig-photo"><img src="img/lesson05-feigenbaum.jpg" alt="爱德华·费根鲍姆" loading="lazy" /></div>
+          <div class="fig-info">
+            <div class="fig-head"><span class="fig-name">爱德华·费根鲍姆</span><span class="fig-en">Edward A. Feigenbaum</span></div>
+            <div class="fig-years">1936 —</div>
+            <div class="fig-role">美国计算机科学家 · 「专家系统之父」</div>
+            <ul class="fig-facts">
+              <li>1936 年出生在美国</li>
+              <li>主持 MYCIN 医学诊断、DENDRAL 化学分析等专家系统</li>
+              <li>提出「把知识装进电脑」，被称为「专家系统之父」</li>
+              <li>他的名言：知识就是力量</li>
+            </ul>
+          </div>
+        </div>
+        <p class="fig-credit">🖼️ 图片来源：公有领域 · Wikimedia Commons</p>
+            <div class="story-tl">
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">1936</span>
+                <p>这一站的主人公是科学家爱德华·费根鲍姆，大家称他为「专家系统之父」。他的梦想很有意思：把最有经验的老专家的智慧，一样一样装进电脑里。</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">1980 年代</span>
+                <p>到了 1980 年代，这个梦想成真了——「专家系统」诞生了。它的办法很朴素：把专家的经验一条条写成「如果……就……」的规则。</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">1970 年代</span>
+                <p>比如在医学里：如果病人发烧，而且身上有红点，就怀疑是某种病；如果再加上咳嗽，就往下一步检查。费根鲍姆主持的 MYCIN 程序，靠上千条医学规则帮医生出主意；他还用 DENDRAL 帮化学家分析分子的结构。</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">1980 年代</span>
+                <p>在工厂、银行、医院里，专家系统真的上岗当起了「顾问」。不过它也有个小毛病：只会在自己熟悉的领域里照章办事，一离开规则，就变得「一问三不知」。</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">💡 名言</span>
+                <p>费根鲍姆常说一句话：知识就是力量。把「知识」装进电脑，正是后来所有 AI 都在做的事。</p>
+              </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3 · 知识 -->
+    <section class="slide" id="s2">
+        <div class="card">
+            <h2>📖 知识小课堂 · 记住这个魔法！</h2>
+            <p style="font-size:13.5px;color:var(--ink3);margin-bottom:12px;">点击卡片翻开，看看背后的知识～</p>
+            <div class="k-grid">
+
+            <div class="kcard" onclick="openK(this)">
+              <div class="kcard-inner">
+                <div class="kfront"><span class="kt">✨</span><span class="kh">装经验的电脑</span><span class="ktip">👆 点我翻开</span></div>
+                <div class="kback">把专家的经验变成「如果…就…」规则，让电脑当专家顾问</div>
+              </div>
+            </div>
+            <div class="kcard" onclick="openK(this)">
+              <div class="kcard-inner">
+                <div class="kfront"><span class="kt">💡</span><span class="kh">上岗领域</span><span class="ktip">👆 点我翻开</span></div>
+                <div class="kback">医疗诊断、设备故障排查等领域都用过专家系统</div>
+              </div>
+            </div>
+            <div class="kcard" onclick="openK(this)">
+              <div class="kcard-inner">
+                <div class="kfront"><span class="kt">🔑</span><span class="kh">它的局限</span><span class="ktip">👆 点我翻开</span></div>
+                <div class="kback">只会照规则走、不懂变通，一遇到规则外的事就卡壳</div>
+              </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4 · 小任务 -->
+    <section class="slide" id="s3">
+        <div class="card">
+            <h2>🖐️ 动手小任务 · 亲自试一试</h2>
+
+            <p style="font-size:13.5px;color:var(--ink3);margin-bottom:12px;">把「小医生」装进电脑，就是一台<b>专家系统</b>。这台可视化演示里你既是病人也是调试员：选症状 → 看推理机怎么<b>点亮规则</b>、得出诊断 → 最后再试一个<b>规则外的“怪病”</b>，看它怎么办～</p>
+
+            <div class="es" id="esWrap">
+              <div class="es-head">
+                <span class="es-badge">🩺 小医生 · 专家系统可视化演示</span>
+                <span class="es-tag">知识库：5 条规则</span>
+              </div>
+              <p class="es-tip">专家系统 = <b>知识库</b>（“如果…就…”的规则）＋ <b>推理机</b>（把规则和事实一条条比对）。先给“病人”挑症状，再按 ▶ 开始，看推理过程～</p>
+              <div class="es-grid">
+                <div class="es-left">
+                  <div class="es-panel">
+                    <div class="es-ptitle"><span>1️⃣ 病人的症状</span><button type="button" class="es-q" id="esHow">📖 玩法</button></div>
+                    <div class="es-syms" id="esSyms"></div>
+                    <div class="es-actions">
+                      <button type="button" class="es-btn primary" id="esRun">▶ 开始推理诊断</button>
+                      <button type="button" class="es-btn weird" id="esWeird">🦩 规则外的“怪病”</button>
+                      <button type="button" class="es-btn ghost" id="esReset">🔄 重新开始</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="es-right">
+                  <div class="es-panel">
+                    <div class="es-ptitle">2️⃣ 知识库 · 医生写好的规则</div>
+                    <div class="es-rules" id="esRules"></div>
+                  </div>
+                  <div class="es-panel">
+                    <div class="es-ptitle">3️⃣ 推理机 · 一步步匹配规则</div>
+                    <div class="es-log" id="esLog"></div>
+                  </div>
+                  <div class="es-panel">
+                    <div class="es-ptitle">4️⃣ 诊断结论</div>
+                    <div class="es-result" id="esResult"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="es-recap">💭 想一想：专家系统只在“写好的规则”里找答案——规则里有，它答得飞快；规则外，它一问三不知。所以它适合当“顾问”（诊断、查故障、定路线），却不会像人类那样自己“想出新办法”。这就是 1980 年代 AI 停步的原因之一。</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5 · 小测验 -->
+    <section class="slide" id="s4">
+        <div class="card">
+            <h2>❓ 小测验 · 你学会了吗？</h2>
+            <p style="font-size:13.5px;color:var(--ink3);margin-bottom:10px;">点选答案，答对会变绿、答错会变红（可重试）～</p>
+
+            <div class="quiz-item" data-a="1">
+              <p class="quiz-q">Q1. 专家系统的「经验」是以什么形式装进电脑的？</p>
+              <div class="quiz-opts">
+                <button type="button" class="quiz-opt" data-i="0" onclick="pickQuiz(this)">A. 图片</button><button type="button" class="quiz-opt" data-i="1" onclick="pickQuiz(this)">B. 如果…就…的规则</button><button type="button" class="quiz-opt" data-i="2" onclick="pickQuiz(this)">C. 音乐</button><button type="button" class="quiz-opt" data-i="3" onclick="pickQuiz(this)">D. 谜语</button>
+              </div>
+              <p class="quiz-fb"></p>
+            </div>
+            <div class="quiz-item" data-a="0">
+              <p class="quiz-q">Q2. 下面哪一项是专家系统的本事？</p>
+              <div class="quiz-opts">
+                <button type="button" class="quiz-opt" data-i="0" onclick="pickQuiz(this)">A. 照规则推理、当专家顾问</button><button type="button" class="quiz-opt" data-i="1" onclick="pickQuiz(this)">B. 会跳芭蕾</button><button type="button" class="quiz-opt" data-i="2" onclick="pickQuiz(this)">C. 会变魔术</button><button type="button" class="quiz-opt" data-i="3" onclick="pickQuiz(this)">D. 会做饭</button>
+              </div>
+              <p class="quiz-fb"></p>
+            </div>
+            <div class="quiz-item" data-a="1">
+              <p class="quiz-q">Q3. 专家系统最大的局限是什么？</p>
+              <div class="quiz-opts">
+                <button type="button" class="quiz-opt" data-i="0" onclick="pickQuiz(this)">A. 跑得太慢</button><button type="button" class="quiz-opt" data-i="1" onclick="pickQuiz(this)">B. 只懂自己领域，规则外就没办法</button><button type="button" class="quiz-opt" data-i="2" onclick="pickQuiz(this)">C. 太贵没人买</button><button type="button" class="quiz-opt" data-i="3" onclick="pickQuiz(this)">D. 会偷懒睡觉</button>
+              </div>
+              <p class="quiz-fb"></p>
+            </div>
+            <div class="quiz-result" id="quizResult"></div>
+            <div class="quiz-actions">
+                <button class="qbtn ghost" onclick="retryQuiz()">🔄 重新作答</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6 · 完成 -->
+    <section class="slide" id="s5">
+        <div class="card">
+            <h2>🏁 回顾与完课 · 为自己盖章</h2>
+            <div class="field">
+                <label for="stuName">👧 小小学员，写下你的名字</label>
+                <input id="stuName" placeholder="写下你的名字" maxlength="20" />
+            </div>
+            <div class="field">
+                <label for="harvest">🌟 这一站你最大的收获是什么？（可点下面的小标签快速填写）</label>
+                <div class="chips"><span class="chip" onclick="fillChip('harvest', '我从故事里记住了一个新知识')">我从故事里记住了一个新知识</span><span class="chip" onclick="fillChip('harvest', '我能把这个故事讲给家人听')">我能把这个故事讲给家人听</span><span class="chip" onclick="fillChip('harvest', '我完成了一次小任务挑战')">我完成了一次小任务挑战</span><span class="chip" onclick="fillChip('harvest', '我想把这一站和下一站连起来想一想')">我想把这一站和下一站连起来想一想</span></div>
+                <textarea id="harvest" rows="3" placeholder="把你这一站的收获写下来，保存后就会贴到收获墙上～"></textarea>
+            </div>
+            <div style="text-align:center;">
+                <button class="qbtn primary" id="btnFinish" onclick="finishLesson()">💾 保存收获 · 完成本站</button>
+            </div>
+            <p class="finish-msg" id="finishMsg"></p>
+            <p style="text-align:center;font-size:13px;color:var(--ink3);margin-top:6px;">💭 思考一下：照着一本「规则手册」做事，和真正灵活地动脑筋，差别在哪里？</p>
+        </div>
+        <div class="complete-card" id="completeCard">
+            <div class="stamp-icon">🏅</div>
+            <h3>人工智能简史 · 完课证明</h3>
+            <p><b id="ccName">小小学员</b> 完成了 <b id="ccLesson">本站</b>《<b id="ccTitle">专家系统：装进电脑的专家经验</b>》</p>
+            <p>学会：AI 当起了「专家顾问」</p>
+            <div class="stamp">第 5 站<br/>已完课</div>
+        </div>
+    </section>
+
+</div>
+
+<!-- ═══ 底部导航 ═══ -->
+<div class="slide-nav">
+    <button class="nav-prev" id="btnPrev" onclick="goSlide(-1)">◀ 上一页</button>
+    <span class="nav-counter" id="navCounter"></span>
+    <button class="nav-next" id="btnNext" onclick="goSlide(1)">下一页 ▶</button>
+    <div class="dots" id="dots"></div>
+</div>
+
+
+<script src="../../../js/cloud-records.js?v=1789090598"></script>
+<script src="../../../js/lesson-recorder.js?v=1789090598"></script>
+<script src="../../../js/tracker.js?v=1789090598"></script>
+<script src="lesson.js?v=1789090598"></script>
+<script src="expert-lab.js?v=1789090598"></script>
+<script>Tracker.init('experience/E04-L5');</script>
+    <!-- 移植适配：已移除依赖 sx 平台 /api/auth/status 与 /api/user/accessible-courses 的登录/课程权限守卫（本站无该后端） -->
+<script src="/js/classroom-float.js"></script></body>
+</html>

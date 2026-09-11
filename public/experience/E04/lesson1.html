@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>第1课：图灵测试：机器会思考吗？ - 人工智能简史 · AI星少年</title>
+    <link href="https://fonts.googleapis.cn/css2?family=ZCOOL+KuaiLe&family=Noto+Serif+SC:wght@500;700;900&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../../css/style.css?v=1789090598" />
+    <link rel="stylesheet" href="lesson.css?v=1789090598" />
+    <link rel="stylesheet" href="turing-lab.css?v=1789090598" />
+    <link rel="stylesheet" href="enigma-lab.css?v=1789090598" />
+    <style>:root{--acc:#4F6DF5;--acc2:#8FA8FF;}</style>
+</head>
+<body data-ls="1" data-lsn="16" data-title="图灵测试：机器会思考吗？" data-titles="🚀 出发|🕰️ 故事|📖 知识|🖐️ 小任务|❓ 小测验|🏁 完成">
+<div class="wrap">
+
+    <header class="hd">
+        <div class="hd-row">
+            <a class="back-chip" href="/">← 返回课程</a>
+            <span class="hd-badge">🛰️ E04 · 第1课</span>
+            <span class="hd-step">1950 年 · 人工智能简史</span>
+        </div>
+        <h1 class="hd-title">💬 图灵测试：机器会思考吗？</h1>
+        <div class="hd-goal">🎯 认识图灵爷爷提出的「模仿游戏」：当人分不清和自己对话的是人还是机器时，机器就算通过了测试</div>
+    </header>
+
+    <!-- 1 · 封面 -->
+    <section class="slide active" id="s0">
+        <div class="cover">
+            <span class="yr">1950</span>
+            <span class="c-emoji">💬</span>
+            <span class="c-station">第 1 站 / 16 · 1950 年</span>
+            <h1>图灵测试：机器会思考吗？</h1>
+            <div class="c-sub">第一台会思考的机器梦</div>
+            <div class="c-goal">🎯 本课目标：认识图灵爷爷提出的「模仿游戏」：当人分不清和自己对话的是人还是机器时，机器就算通过了测试</div>
+            <button class="start-btn" onclick="goSlide(1)">🚀 开始本站探索</button>
+        </div>
+    </section>
+
+    <!-- 2 · 故事 -->
+    <section class="slide" id="s1">
+        <div class="card story">
+            <h2>🕰️ 故事时间 · 那时候发生了什么？</h2>
+            <span class="story-mark">1950 年 · 💬</span>
+
+        <div class="story-fig person">
+          <div class="fig-photo"><img src="img/lesson01-turing.jpg" alt="阿兰·图灵" loading="lazy" /></div>
+          <div class="fig-info">
+            <div class="fig-head"><span class="fig-name">阿兰·图灵</span><span class="fig-en">Alan Turing</span></div>
+            <div class="fig-years">1912 — 1954</div>
+            <div class="fig-role">英国数学家 · 「计算机科学之父」</div>
+            <ul class="fig-facts">
+              <li>1912 年出生在英国伦敦，从小爱数字、爱解谜</li>
+              <li>1936 年提出「图灵机」——所有计算机的理论原型</li>
+              <li>二战时在秘密基地破解「恩尼格玛」密码，立下大功</li>
+              <li>1950 年提出「模仿游戏」，即后来的「图灵测试」</li>
+              <li>被誉为「计算机科学之父」</li>
+              <li>计算机界最高奖「图灵奖」以他命名，被誉为「计算机界的诺贝尔奖」</li>
+            </ul>
+          </div>
+        </div>
+        <p class="fig-credit">🖼️ 图片来源：公有领域图片 · Wikimedia Commons（Alan Turing, 1951）</p>
+            <div class="story-tl">
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">1912</span>
+                <p>1912 年，阿兰·图灵出生在英国伦敦。他小时候就特别着迷数字和谜题，安静又爱动脑筋，长大后果真成了一位了不起的数学家。</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">1936</span>
+                <p>1936 年，年轻的图灵又做了一件了不起的事：他在纸上发明了一台「图灵机」——一台想象中的“万能机器”，只要给它一套规则，它什么计算都能做。这台机器后来成为所有计算机的理论原型：今天我们用的每一台电脑，骨子里都还是一台图灵机！</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">1939 — 1945</span>
+                <p>图灵还做过一件超级秘密的大事：第二次世界大战的时候，他在一个代号「布莱切利园」的秘密基地工作，想办法破解德国军队的密码机「恩尼格玛」。他造出特别的机器，提前读懂敌人的密信，帮大家更快赢得和平，保护了无数人的生命。</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">1945 — 1950</span>
+                <p>战争结束后，图灵开始思考一个让全世界都难住的问题：机器，真的会思考吗？可「思考」看不见也摸不着，怎么判断呢？</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">1950</span>
+                <p>1950 年，他想出一个聪明的办法——「模仿游戏」：你坐在屏幕这边打字聊天，屏幕那边可能是人，也可能是机器。如果你聊着聊着，分不清对面到底是谁，那就说明机器「通过测试」啦！后来，大家都把这个办法叫作「图灵测试」。</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">1954 · 1966</span>
+                <p>可惜，图灵在 1954 年就早早离开了我们。为了纪念这位伟大的科学家，1966 年起，全世界设立了一项以他名字命名的计算机最高荣誉——「图灵奖」，它被誉为「计算机界的诺贝尔奖」，每年颁给为计算机和人工智能做出巨大贡献的人。别着急，在后面的故事里，你就会遇见好几位捧起图灵奖的科学家！</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">💭 后人的评价</span>
+                <p>这个点子特别神奇：我们不用争论机器有没有「内心」，只要看它能不能聊得像人一样就够了。因为这份了不起的贡献，图灵被称作「计算机科学之父」——今天你用的每一台电脑，都得叫他一声「爷爷」呢！</p>
+              </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3 · 知识 -->
+    <section class="slide" id="s2">
+        <div class="card">
+            <h2>📖 知识小课堂 · 记住这个魔法！</h2>
+            <p style="font-size:13.5px;color:var(--ink3);margin-bottom:12px;">点击卡片翻开，看看背后的知识～</p>
+            <div class="k-grid">
+
+            <div class="kcard" onclick="openK(this)">
+              <div class="kcard-inner">
+                <div class="kfront"><span class="kt">✨</span><span class="kh">模仿游戏</span><span class="ktip">👆 点我翻开</span></div>
+                <div class="kback">图灵测试的正式名字：看不到对方，只靠对话来猜</div>
+              </div>
+            </div>
+            <div class="kcard" onclick="openK(this)">
+              <div class="kcard-inner">
+                <div class="kfront"><span class="kt">💡</span><span class="kh">图灵机</span><span class="ktip">👆 点我翻开</span></div>
+                <div class="kback">1936 年图灵设计的“万能机器”模型，是现代电脑的祖先，什么都能算</div>
+              </div>
+            </div>
+            <div class="kcard" onclick="openK(this)">
+              <div class="kcard-inner">
+                <div class="kfront"><span class="kt">🔑</span><span class="kh">图灵爷爷</span><span class="ktip">👆 点我翻开</span></div>
+                <div class="kback">英国科学家阿兰·图灵，被称为「计算机科学之父」</div>
+              </div>
+            </div>
+            <div class="kcard" onclick="openK(this)">
+              <div class="kcard-inner">
+                <div class="kfront"><span class="kt">✨</span><span class="kh">图灵奖</span><span class="ktip">👆 点我翻开</span></div>
+                <div class="kback">计算机界的最高荣誉，1966 年起设立，以图灵命名，被誉为「计算机界的诺贝尔奖」</div>
+              </div>
+            </div>
+            <div class="kcard" onclick="openK(this)">
+              <div class="kcard-inner">
+                <div class="kfront"><span class="kt">💡</span><span class="kh">姚期智 · 首位华人得主</span><span class="ktip">👆 点我翻开</span></div>
+                <div class="kback">2000 年获图灵奖（首位华人）。获奖原因：他在「计算理论」上贡献巨大——研究伪随机数、密码学与通信复杂度，让加密传信更安全、通信更省力。回国后任教清华，推动量子计算。</div>
+              </div>
+            </div>
+            <div class="kcard" onclick="openK(this)">
+              <div class="kcard-inner">
+                <div class="kfront"><span class="kt">🔑</span><span class="kh">判断口诀</span><span class="ktip">👆 点我翻开</span></div>
+                <div class="kback">聊到最后分不清是人还是机器 → 机器就通过测试啦</div>
+              </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4 · 小任务 -->
+    <section class="slide" id="s3">
+        <!-- 图灵机纸带演示（1936 年图灵在纸上发明的“万能机器”） -->
+        <div class="card">
+            <h2>🖐️ 动手小任务 · 亲自试一试</h2>
+            <div id="tmlab">
+                <div class="tm-head"><span class="tm-logo">🧭</span><div class="tm-t"><b>图灵机的演示：一张纸带 + 一个读写头 + 一套规则</b><span class="tm-s">1936 年图灵在纸上发明的「万能机器」——今天所有电脑的老祖宗</span></div></div>
+
+                <div class="card">
+                    <h3>🎯 它怎么工作？</h3>
+                    <ul>
+                      <li><b>纸带</b>：一条画着格子的长纸条，每格写一个符号（这里用 <b>1</b> / <b>0</b> / ▢空格）。</li>
+                      <li><b>读写头</b>：一次只能「看」一个格子，能<b>读</b>它、能<b>改写</b>它、能<b>向左/向右移动</b>。</li>
+                      <li><b>一套规则</b>：像「如果看到 0 就改成 1，然后向右走一步」——规则足够多，它什么都能算！</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🧩 选一个任务，看它一步步执行</h3>
+                    <div class="tm-missions" id="tmMissions"></div>
+                    <div class="tm-tape-wrap">
+                        <div class="tm-tape" id="tmTape"></div>
+                        <div class="tm-headline" id="tmHeadline"></div>
+                        <div class="tm-legend">▢ = 空格&nbsp;&nbsp;·&nbsp;&nbsp;▲ = 读写头（正在盯着这一格）</div>
+                    </div>
+                    <div class="tm-status" id="tmStatus">准备就绪…</div>
+                    <div class="tm-rules"><div class="tm-rhead">📋 规则表（点亮的那条 = 下一步要执行的）</div><div id="tmRules"></div></div>
+                    <div class="tm-ctrl">
+                        <button id="tmAuto" class="tm-btn" type="button">▶ 自动运行</button>
+                        <button id="tmStep" class="tm-btn ghost" type="button">👣 单步</button>
+                        <button id="tmReset" class="tm-btn ghost" type="button">🔄 重置</button>
+                    </div>
+                    <div class="tm-done" id="tmDone"></div>
+                </div>
+
+                <div class="tm-recap">💡 图灵爷爷用「纸带 + 读写头 + 规则」证明了：只要规则足够多，机器什么都能算——这，就是今天所有电脑的起点！</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🔐 动手试一试 · 恩尼格玛密码机</h2>
+            <div id="enigmaLab">
+                <div class="eg-head"><span class="eg-logo">🎛️</span><div class="eg-t"><b>二战德国的「恩尼格玛」密码机</b><span class="eg-s">图灵在布莱切利园拼命要破解的就是它 —— 3 个转子 + 反射器，每按一下转子就转一格，同一个字母每次都会变成不同的密文</span></div></div>
+
+                <div class="eg-machine">
+                    <div class="eg-rotors">
+                        <div class="eg-rotor"><span class="eg-rotor-label">左 · 转子Ⅲ</span><div class="eg-dial" id="egDialL">A</div></div>
+                        <div class="eg-rotor"><span class="eg-rotor-label">中 · 转子Ⅱ</span><div class="eg-dial" id="egDialM">A</div></div>
+                        <div class="eg-rotor"><span class="eg-rotor-label">右 · 转子Ⅰ（转得最快）</span><div class="eg-dial" id="egDialR">A</div></div>
+                    </div>
+                    <div class="eg-keytip">点一下转轮字母，把它设为起始位置（A→Z 循环）——这就是恩尼格玛每天要换的「当天密钥」</div>
+                    <div class="eg-flow">明文 → <b>右Ⅰ → 中Ⅱ → 左Ⅲ</b> → 反射器 → <b>原路返回</b> → 点亮的灯泡 = 密文字母</div>
+                    <div class="eg-lamps" id="egLamps"></div>
+                </div>
+
+                <div class="eg-ctrl">
+                    <input id="egMsg" maxlength="24" placeholder="输入一句话（只留字母），如 HELLO / TURING / LETMEWIN" />
+                    <button id="egAuto" class="eg-btn" type="button">▶ 自动加密</button>
+                    <button id="egStep" class="eg-btn ghost" type="button">👣 加密一个</button>
+                    <button id="egDecode" class="eg-btn ghost" type="button" style="display:none;">🔁 解密：原样再跑一次</button>
+                    <button id="egReset" class="eg-btn ghost" type="button">🔄 重置转轮</button>
+                </div>
+
+                <div class="eg-status" id="egStatus"></div>
+
+                <div class="eg-out">
+                    <div class="eg-plain">明文字母：<b id="egPlain"></b></div>
+                    <div class="eg-cipher">密文：</div>
+                </div>
+                <div class="eg-ciph" id="egCipher"></div>
+
+                <div class="eg-log" id="egLog"></div>
+
+                <div class="eg-recap">💡 恩尼格玛是<b>对称</b>的：只要转轮初始位置相同，把密文原样再跑一遍就会变回明文。所以图灵在布莱切利园真正要找的，是德军<b>每天更换的那组“初始转轮位置”</b>——找对了，就能读懂一整天的密信！</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🔓 破译大挑战 · 图灵怎么破恩尼格玛</h2>
+            <div id="enigmaBreakLab">
+                <div class="bk-head">
+                    <div class="bk-t"><b>截获的德军密报</b><span>不知道密钥也能破：因为密文里藏着德国人固定会写的词</span></div>
+                </div>
+                <div class="bk-crib">已知线索（crib）：破译结果应以 <b class="bk-word">WETTER…</b> 开头 —— 德军天气报告总以 WETTER 开头</div>
+                <div class="bk-cipher">📡 密报：<span class="bk-code" id="bkCipher"></span></div>
+                <div class="bk-box">
+                    <div class="bk-dials">
+                        <div class="bk-dial" id="bkDialL">A</div>
+                        <div class="bk-dial" id="bkDialM">A</div>
+                        <div class="bk-dial" id="bkDialR">A</div>
+                    </div>
+                    <div class="bk-count">正在试的起始位置，已试 <b id="bkTry">0</b> / 17576 种</div>
+                </div>
+                <div class="bk-ctrl">
+                    <button class="bk-btn" id="bkRun" type="button">开始破译</button>
+                    <button class="bk-btn ghost" id="bkNew" type="button">换一封新密报</button>
+                </div>
+                <div class="bk-status" id="bkStatus"></div>
+                <div class="bk-result" id="bkResult"></div>
+                <div class="bk-recap">💡 为什么“从头试到尾”就能破？我们假设：转子顺序固定不变，德军每天只换<b>起始位置</b>（3 个转轮 = 26×26×26 = 17576 种），而且每次都用固定词（如 WETTER）。所以只要一组一组试，总有一组位置能把密文开头解成 WETTER——那组就是当天的密钥！<br>真实世界更麻烦：转子顺序、环位、插线板每天也都换，可选组合多到上亿亿种，人用手算根本算不完——所以图灵在布莱切利园造了「炸弹机 Bombe」：用电路一次排除掉一大批错误设置，再靠 WETTER 这类固定词（crib）快速锁死唯一正确的密钥。</div>
+            </div>
+        </div>
+
+<div class="card">
+            <h2>🖐️ 动手小任务 · 亲自试一试</h2>
+
+            <p style="font-size:13.5px;color:var(--ink3);margin-bottom:12px;">和屏幕对面的「神秘人」聊几句，再猜猜 TA 是真人还是机器——这是一台帮你练「识人辨机」的小训练器。</p>
+            <div class="tt" id="ttWrap">
+              <div class="tt-head">
+                <span class="tt-badge">🧠 图灵测试 · 人机猜猜看训练器</span>
+                <span class="tt-round" id="ttRound">第 1 / 3 局</span>
+              </div>
+              <p class="tt-tip">🖥️ 你看不见屏幕那边，只能靠「聊天」来判断。先问问题，再猜 TA 是谁！</p>
+              <div class="tt-stage">
+                <div class="tt-opp"><span id="ttOppName">🕵️ 神秘人</span><span class="tt-status" id="ttStatus">在线</span></div>
+                <div class="tt-chat" id="ttChat"></div>
+              </div>
+              <div class="tt-actions" id="ttAsk">
+                <button type="button" class="tt-btn" data-q="hi">👋 打招呼</button>
+                <button type="button" class="tt-btn" data-q="math">➗ 问 3+5=?</button>
+                <button type="button" class="tt-btn" data-q="color">🎨 问喜欢的颜色</button>
+                <button type="button" class="tt-btn" data-q="joke">😄 让它讲笑话</button>
+              </div>
+              <div class="tt-input">
+                <input type="text" id="ttInput" placeholder="或者自由输入想问的话…（比如：你叫什么名字？）" maxlength="60" autocomplete="off" />
+                <button type="button" class="tt-btn" id="ttSend">发送 ➤</button>
+              </div>
+              <div class="tt-guess" id="ttGuess">
+                <button type="button" class="tt-btn human" data-g="human">🧑 我猜：是真人</button>
+                <button type="button" class="tt-btn bot" data-g="bot">🤖 我猜：是机器</button>
+              </div>
+              <div class="tt-result" id="ttResult"></div>
+              <div class="tt-ctrl">
+                <button type="button" class="tt-btn primary" id="ttNext" style="display:none;">下一局 ▶</button>
+                <button type="button" class="tt-btn ghost" id="ttHow">📖 玩法</button>
+                <button type="button" class="tt-btn ghost" id="ttReset">🔄 重新开始</button>
+              </div>
+              <div class="tt-score">🧑‍⚖️ 猜对 <b id="ttScore">0</b> / 3　<span id="ttDots"></span></div>
+            </div>
+            <div class="tt-recap">💭 想一想：你为什么会猜对 / 猜错？——机器会「装得像人」，真人也可能被你误会。记住本课口诀：<b>聊到最后分不清，机器就算赢！</b></div>
+        </div>
+
+    
+        </section>
+
+    <!-- 5 · 小测验 -->
+    <section class="slide" id="s4">
+        <div class="card">
+            <h2>❓ 小测验 · 你学会了吗？</h2>
+            <p style="font-size:13.5px;color:var(--ink3);margin-bottom:10px;">点选答案，答对会变绿、答错会变红（可重试）～</p>
+
+            <div class="quiz-item" data-a="0">
+              <p class="quiz-q">Q1. 图灵测试还有一个名字，叫做什么？</p>
+              <div class="quiz-opts">
+                <button type="button" class="quiz-opt" data-i="0" onclick="pickQuiz(this)">A. 模仿游戏</button><button type="button" class="quiz-opt" data-i="1" onclick="pickQuiz(this)">B. 跑步比赛</button><button type="button" class="quiz-opt" data-i="2" onclick="pickQuiz(this)">C. 藏猫猫</button><button type="button" class="quiz-opt" data-i="3" onclick="pickQuiz(this)">D. 成语接龙</button>
+              </div>
+              <p class="quiz-fb"></p>
+            </div>
+            <div class="quiz-item" data-a="1">
+              <p class="quiz-q">Q2. 怎么判断机器「通过了图灵测试」？</p>
+              <div class="quiz-opts">
+                <button type="button" class="quiz-opt" data-i="0" onclick="pickQuiz(this)">A. 它会唱歌</button><button type="button" class="quiz-opt" data-i="1" onclick="pickQuiz(this)">B. 人分不清它和真人谁在说话</button><button type="button" class="quiz-opt" data-i="2" onclick="pickQuiz(this)">C. 它力气特别大</button><button type="button" class="quiz-opt" data-i="3" onclick="pickQuiz(this)">D. 它跑得很快</button>
+              </div>
+              <p class="quiz-fb"></p>
+            </div>
+            <div class="quiz-item" data-a="2">
+              <p class="quiz-q">Q3. 提出图灵测试的「图灵爷爷」是哪国人？</p>
+              <div class="quiz-opts">
+                <button type="button" class="quiz-opt" data-i="0" onclick="pickQuiz(this)">A. 美国人</button><button type="button" class="quiz-opt" data-i="1" onclick="pickQuiz(this)">B. 中国人</button><button type="button" class="quiz-opt" data-i="2" onclick="pickQuiz(this)">C. 英国人</button><button type="button" class="quiz-opt" data-i="3" onclick="pickQuiz(this)">D. 日本人</button>
+              </div>
+              <p class="quiz-fb"></p>
+            </div>
+            <div class="quiz-result" id="quizResult"></div>
+            <div class="quiz-actions">
+                <button class="qbtn ghost" onclick="retryQuiz()">🔄 重新作答</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6 · 完成 -->
+    <section class="slide" id="s5">
+        <div class="card">
+            <h2>🏁 回顾与完课 · 为自己盖章</h2>
+            <div class="field">
+                <label for="stuName">👧 小小学员，写下你的名字</label>
+                <input id="stuName" placeholder="写下你的名字" maxlength="20" />
+            </div>
+            <div class="field">
+                <label for="harvest">🌟 这一站你最大的收获是什么？（可点下面的小标签快速填写）</label>
+                <div class="chips"><span class="chip" onclick="fillChip('harvest', '我从故事里记住了一个新知识')">我从故事里记住了一个新知识</span><span class="chip" onclick="fillChip('harvest', '我能把这个故事讲给家人听')">我能把这个故事讲给家人听</span><span class="chip" onclick="fillChip('harvest', '我完成了一次小任务挑战')">我完成了一次小任务挑战</span><span class="chip" onclick="fillChip('harvest', '我想把这一站和下一站连起来想一想')">我想把这一站和下一站连起来想一想</span></div>
+                <textarea id="harvest" rows="3" placeholder="把你这一站的收获写下来，保存后就会贴到收获墙上～"></textarea>
+            </div>
+            <div style="text-align:center;">
+                <button class="qbtn primary" id="btnFinish" onclick="finishLesson()">💾 保存收获 · 完成本站</button>
+            </div>
+            <p class="finish-msg" id="finishMsg"></p>
+            <p style="text-align:center;font-size:13px;color:var(--ink3);margin-top:6px;">💭 思考一下：你觉得，机器真的会「思考」吗？还是它只是假装会聊天？和爸爸妈妈说一说你的看法。</p>
+        </div>
+        <div class="complete-card" id="completeCard">
+            <div class="stamp-icon">🏅</div>
+            <h3>人工智能简史 · 完课证明</h3>
+            <p><b id="ccName">小小学员</b> 完成了 <b id="ccLesson">本站</b>《<b id="ccTitle">图灵测试：机器会思考吗？</b>》</p>
+            <p>学会：第一台会思考的机器梦</p>
+            <div class="stamp">第 1 站<br/>已完课</div>
+        </div>
+    </section>
+
+</div>
+
+<!-- ═══ 底部导航 ═══ -->
+<div class="slide-nav">
+    <button class="nav-prev" id="btnPrev" onclick="goSlide(-1)">◀ 上一页</button>
+    <span class="nav-counter" id="navCounter"></span>
+    <button class="nav-next" id="btnNext" onclick="goSlide(1)">下一页 ▶</button>
+    <div class="dots" id="dots"></div>
+</div>
+
+
+<script src="../../../js/cloud-records.js?v=1789090598"></script>
+<script src="../../../js/lesson-recorder.js?v=1789090598"></script>
+<script src="../../../js/tracker.js?v=1789090598"></script>
+<script src="lesson.js?v=1789090598"></script>
+<script>Tracker.init('experience/E04-L1');</script>
+<script src="turing-lab.js?v=1789090598"></script>
+    <script src="enigma-lab.js?v=1789090598"></script>
+    <script src="enigma-break.js?v=1789090598"></script>
+    <!-- 移植适配：已移除依赖 sx 平台 /api/auth/status 与 /api/user/accessible-courses 的登录/课程权限守卫（本站无该后端） -->
+<script src="/js/classroom-float.js"></script></body>
+</html>

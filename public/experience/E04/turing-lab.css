@@ -1,0 +1,56 @@
+/* ============ 图灵机纸带演示 (lesson1) — 作用域限定 #tmlab ============ */
+#tmlab{--c1:#4F6DF5;--c2:#8FA8FF;--deep:#22307a;--mid:#4251a8;--soft:#eef2ff;--line:#dbe3fb;
+  --gold:#f6b93b;--gold-soft:#fdf3dd;--ok:#16a34a;--ok-soft:#e7f7ee;--err:#ef4444;--ink:#2b2f45;--ink2:#5a6178;--ink3:#98a0bb;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  color:var(--ink);padding:2px 0 16px;}
+#tmlab *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+#tmlab .tm-head{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#eef2ff,#fff);
+  border:1px solid var(--line);border-radius:16px;padding:12px 16px;box-shadow:0 8px 22px -16px rgba(79,109,245,.6);margin-bottom:12px;}
+#tmlab .tm-logo{font-size:30px;}
+#tmlab .tm-t b{font-size:16.5px;color:var(--deep);display:block;}
+#tmlab .tm-t .tm-s{font-size:12px;color:var(--ink3);}
+#tmlab h3{font-size:14.5px;color:var(--deep);margin-bottom:8px;}
+#tmlab ul{margin-left:18px;color:var(--ink2);font-size:13.5px;line-height:2;}
+#tmlab li b{color:var(--deep);}
+#tmlab .tm-missions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+#tmlab .tm-mis{border:2px solid var(--line);background:#fff;color:var(--mid);border-radius:30px;font-size:13px;
+  font-weight:800;padding:8px 16px;cursor:pointer;transition:all .15s;}
+#tmlab .tm-mis.sel{background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;border-color:var(--c1);}
+#tmlab .tm-mis.disable{opacity:.55;pointer-events:none;}
+#tmlab .tm-tape-wrap{background:#fff;border:1px dashed var(--line);border-radius:14px;padding:8px 10px 8px;overflow-x:auto;}
+#tmlab .tm-legend{font-size:11px;color:var(--ink3);text-align:right;margin-top:6px;}
+#tmlab .tm-tape{display:flex;justify-content:center;gap:4px;min-width:max-content;padding-bottom:26px;position:relative;}
+#tmlab .tm-cell{width:46px;height:52px;border:2px solid var(--line);border-radius:8px;background:#fbfcff;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:var(--deep);
+  position:relative;transition:all .18s;}
+#tmlab .tm-cell .idx{position:absolute;top:-20px;left:0;right:0;text-align:center;font-size:9px;color:#b9c0d8;}
+#tmlab .tm-cell.b1{color:#ef4444;}            /* 1 用红色，像重点符号 */
+#tmlab .tm-cell.blank{color:#c3c9dd;border-style:dashed;}
+#tmlab .tm-cell.cur{border-color:var(--c1);box-shadow:0 0 0 3px rgba(79,109,245,.35);background:#eef2ff;}
+#tmlab .tm-cell.changed{background:#d9f2e4;border-color:var(--ok);}
+#tmlab .tm-headline{position:relative;height:22px;}
+#tmlab .tm-arrow{position:absolute;top:0;transform:translateX(-50%);font-size:20px;line-height:1;color:var(--c1);transition:left .25s ease;pointer-events:none;}
+#tmlab .tm-cell.changed{background:#d9f2e4;border-color:var(--ok);}
+#tmlab .tm-status{font-size:13px;color:var(--ink2);background:var(--soft);border:1px solid var(--line);
+  border-radius:12px;padding:9px 12px;margin:10px 0;line-height:1.8;}
+#tmlab .tm-status b{color:var(--deep);}
+#tmlab .tm-rules{background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:10px;}
+#tmlab .tm-rhead{font-size:12px;font-weight:800;color:var(--mid);margin-bottom:8px;}
+#tmlab .tm-rule{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--ink2);
+  background:#fafbff;border:1px solid #eef1fb;border-radius:10px;padding:6px 10px;margin-bottom:6px;transition:all .2s;}
+#tmlab .tm-rule.hit{background:var(--gold-soft);border-color:var(--gold);color:#7a5400;}
+#tmlab .tm-rule.done{opacity:.55;}
+#tmlab .tm-rule .chip{background:#fff;border:1px solid var(--line);color:var(--deep);border-radius:8px;padding:2px 8px;font-weight:800;font-size:11.5px;}
+#tmlab .tm-rule .arr{color:var(--c1);font-weight:900;}
+#tmlab .tm-ctrl{display:flex;gap:10px;flex-wrap:wrap;}
+#tmlab .tm-btn{border:none;cursor:pointer;border-radius:30px;font-size:13.5px;font-weight:800;padding:10px 20px;color:#fff;
+  background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 8px 18px -8px rgba(79,109,245,.55);transition:transform .12s;}
+#tmlab .tm-btn:hover{transform:translateY(-1px);}
+#tmlab .tm-btn.ghost{background:#fff;color:var(--mid);border:2px solid var(--line);box-shadow:none;}
+#tmlab .tm-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+#tmlab .tm-done{display:none;margin-top:12px;border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.9;font-weight:800;}
+#tmlab .tm-done.show{display:block;}
+#tmlab .tm-done.ok{background:var(--ok-soft);border:1px solid #bfe6d0;color:#0f7a44;}
+#tmlab .tm-done.bad{background:#fff1f1;border:1px solid #f6c9c9;color:#c03535;}
+#tmlab .tm-recap{margin-top:12px;background:#fdf6e8;border:1px dashed var(--gold);color:#7a5b12;border-radius:12px;
+  padding:10px 14px;font-size:13px;line-height:1.9;}

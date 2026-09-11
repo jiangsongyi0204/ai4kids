@@ -1,60 +1,287 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<title>人工智能的未来 · 儿童AI启蒙</title>
-<link rel="stylesheet" href="/css/common.css">
-<style>
-  /* 页面独有样式：AI 演化时间轴首页（公共样式见 /css/common.css） */
-  #app { max-width:1180px; }
-  .timeline-card h3 { text-align:center; }
-  .timeline-card .muted { text-align:center; margin-bottom:10px; }
-</style>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🧠 人工智能简史 - AI星少年 · 成长营</title>
+    <link href="https://fonts.googleapis.cn/css2?family=ZCOOL+KuaiLe&family=Noto+Serif+SC:wght@500;700;900&display=swap" rel="stylesheet">
+    <!-- 移植适配：原 ../../../css/style.css（指向 sx 站点根）→ 本站 /css/style.css -->
+    <link rel="stylesheet" href="/css/style.css?v=1789090598">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif; background:#f7f5f0; color:#2d2d2d; min-height:100vh; }
+        .ev-home { max-width: 1200px; margin: 0 auto; padding: 20px 16px 60px; }
+        .hero { position:relative; background: linear-gradient(135deg,#5B6EE8,#8FA8FF); border-radius: 24px; color:#fff; text-align:center; padding: 34px 24px; margin-bottom:18px; box-shadow:0 16px 44px -16px #5B6EE8; }
+        .hero .ic { font-size: 60px; display:block; margin-bottom:6px; }
+        .hero .ic svg { display:block; margin:0 auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,.18)); }
+        .hero h1 { font-family:'Noto Serif SC',serif; font-size:34px; font-weight:900; }
+        .hero p { font-size:15px; opacity:.95; line-height:1.8; margin-top:8px; max-width:1040px; margin-left:auto; margin-right:auto; }
+        .hero .meta { margin-top:10px; font-size:13px; opacity:.9; }
+        /* 收获墙入口：固定在 hero 区域右上角 */
+        .wall-btn { position:absolute; top:12px; right:14px; z-index:2; display:inline-flex; align-items:center; gap:6px;
+                    padding:8px 16px; border-radius:40px; background:#fff; color:#3a5bd9; font-size:13px; font-weight:800;
+                    text-decoration:none; box-shadow:0 8px 18px -8px rgba(20,40,120,.45); transition:transform .15s, box-shadow .15s; }
+        .wall-btn:hover { transform:translateY(-1px); box-shadow:0 12px 24px -8px rgba(20,40,120,.5); }
+        @media (max-width:640px){ .wall-btn { top:8px; right:8px; font-size:11.5px; padding:6px 10px; } }
+        .tl-card { background:#fff; border-radius:22px; padding:24px 22px 16px; border:1px solid rgba(0,0,0,.05); box-shadow:0 6px 22px rgba(0,0,0,.05); max-width:900px; margin:0 auto; }
+        .tl-card h3 { text-align:center; font-family:'Noto Serif SC',serif; font-size:22px; font-weight:900; }
+        .tl-card .muted { text-align:center; color:#7a7f9e; font-size:13px; margin:6px 0 4px; }
+        .tl { position:relative; margin-top:14px; padding:4px 0 8px; }
+        .tl::before { content:''; position:absolute; left:27px; top:6px; bottom:6px; width:4px; background:linear-gradient(#2F6BFF,#8A5CF6,#F2559D); border-radius:4px; opacity:.9; }
+        .node { position:relative; padding-left:74px; margin-bottom:14px; }
+        .node .dot { position:absolute; left:12px; top:16px; width:34px; height:34px; border-radius:50%; background:#fff; border:3px solid #2F6BFF; display:flex; align-items:center; justify-content:center; font-size:16px; z-index:1; box-shadow:0 6px 14px -4px rgba(47,107,255,.4); }
+        .ncard { display:block; background:#fff; border-radius:16px; padding:13px 16px; text-decoration:none; color:inherit; box-shadow:0 8px 20px -16px rgba(47,107,255,.5); border:1px solid #eef2fc; transition:all .18s; }
+        .ncard:hover { transform:translateY(-2px); border-color:var(--c1); box-shadow:0 16px 30px -18px var(--c1); }
+        .ncard:active { transform:scale(.99); }
+        .node .year { display:inline-block; background:linear-gradient(135deg,#2F6BFF,#1E4FD6); color:#fff; font-size:12px; font-weight:800; padding:3px 11px; border-radius:30px; margin-bottom:7px; letter-spacing:.5px; }
+        .node .row { display:flex; align-items:center; gap:9px; }
+        .node .row .em { font-size:24px; }
+        .node .row .tt { flex:1; min-width:0; }
+        .node .row .tt b { font-size:15.5px; color:#0d2259; display:block; line-height:1.45; }
+        .node .row .tt > span { font-size:12.5px; color:#6a7196; line-height:1.6; display:block; margin-top:2px; }
+        .node .row .arr { color:var(--c1); font-weight:900; opacity:0; transform:translateX(-4px); transition:.18s; flex:0 0 auto; }
+        .ncard:hover .arr { opacity:1; transform:none; }
+        .ncard-goal { font-size:11.5px; color:#a3a8c2; line-height:1.65; margin-top:7px; }
+        .tl-note { text-align:center; color:#6a7196; font-size:13.5px; line-height:1.9; margin-top:22px; max-width:760px; margin-left:auto; margin-right:auto; }
+        .seg { display:flex; align-items:center; gap:10px; margin:18px 0 8px; padding-left:74px; }
+        .seg .pill { display:inline-flex; align-items:center; gap:6px; color:#fff; font-size:12px; font-weight:800; padding:5px 14px; border-radius:30px; box-shadow:0 6px 14px -8px rgba(0,0,0,.35); white-space:nowrap; }
+        .seg .sline { height:1px; flex:1; background:repeating-linear-gradient(90deg,#c9cfe4 0 6px, transparent 6px 12px); }
+        .tl-gap { display:flex; align-items:center; gap:8px; margin:14px 0 4px; padding-left:74px; font-size:11.5px; font-weight:700; color:#b0883a; }
+        .tl-gap::before { content:'⏳'; }
+        .tl-gap .gline { height:1px; flex:1; background:#e8dcbb; }
+        @media (max-width:640px){ .seg, .tl-gap { padding-left:46px; } .seg{ flex-wrap:wrap; } }
+        @media (max-width:640px){ .hero h1{font-size:26px;} .node{padding-left:56px;} .tl::before{left:20px;} .node .dot{left:6px;top:15px;width:28px;height:28px;font-size:13px;} }
+    </style>
 </head>
 <body>
-<div class="bg"></div>
-
-<div id="app">
-  <header class="topbar">
-    <a class="logo" href="/">
-      <span class="logo-ic">🤖</span><span class="logo-name">人工智能的未来</span><span class="logo-num">儿童AI启蒙</span>
-    </a>
-    <div class="right">
-      <a class="btn-guide" href="/artificial-intelligence/lab.html">🔬 AI 实验室</a>
-      <a class="btn-gh" href="/guide.html">🧭 教育理念</a>
-      <a class="btn-gh" href="https://github.com/jiangsongyi0204/ai4kids" target="_blank" rel="noopener">🐙 GitHub</a>
+<div class="ev-home">
+    <div class="hero">
+        <span class="ic"><svg class="nn-ic" width="66" height="66" viewBox="0 0 100 100" aria-hidden="true"><g stroke="rgba(255,255,255,.45)" stroke-width="1.4"><line x1="16" y1="22" x2="40" y2="22"/><line x1="16" y1="22" x2="40" y2="50"/><line x1="16" y1="22" x2="40" y2="78"/><line x1="16" y1="50" x2="40" y2="22"/><line x1="16" y1="50" x2="40" y2="50"/><line x1="16" y1="50" x2="40" y2="78"/><line x1="16" y1="78" x2="40" y2="22"/><line x1="16" y1="78" x2="40" y2="50"/><line x1="16" y1="78" x2="40" y2="78"/><line x1="40" y1="22" x2="64" y2="22"/><line x1="40" y1="22" x2="64" y2="50"/><line x1="40" y1="22" x2="64" y2="78"/><line x1="40" y1="50" x2="64" y2="22"/><line x1="40" y1="50" x2="64" y2="50"/><line x1="40" y1="50" x2="64" y2="78"/><line x1="40" y1="78" x2="64" y2="22"/><line x1="40" y1="78" x2="64" y2="50"/><line x1="40" y1="78" x2="64" y2="78"/><line x1="64" y1="22" x2="88" y2="50"/><line x1="64" y1="50" x2="88" y2="50"/><line x1="64" y1="78" x2="88" y2="50"/></g><g fill="#fff"><circle cx="16" cy="22" r="4.4"/><circle cx="16" cy="50" r="4.4"/><circle cx="16" cy="78" r="4.4"/><circle cx="40" cy="22" r="4.4"/><circle cx="40" cy="50" r="4.4"/><circle cx="40" cy="78" r="4.4"/><circle cx="64" cy="22" r="4.4"/><circle cx="64" cy="50" r="4.4"/><circle cx="64" cy="78" r="4.4"/><circle cx="88" cy="50" r="5.8"/></g><circle cx="88" cy="50" r="5.8" fill="#FFD34D"/></svg></span>
+        <h1>人工智能简史</h1>
+        <p>一条从 1950 到 2025 的人工智能时间轴：图灵测试、人工智能诞生、神经网络、深蓝、AlphaGo、ChatGPT、BERT、文生视频、智能体与跨应用 AI……16 站故事，读懂 AI「从出生到今天」的完整进化史——每一个节点，都是历史上的一次「第一次」。</p>
+        <div class="meta">⏱ 16 小课 × 60 分钟 · 每站含 故事 / 知识 / 小任务 / 小测验 / 收获盖章</div>
+        <a class="wall-btn" href="/harvest.html">🏆 收获墙</a>
     </div>
-  </header>
-
-  <div class="card timeline-card">
-    <h3>🛰️ 人工智能演化时间轴</h3>
-    <p class="muted">每一个节点，都是历史上的一次「第一次」。</p>
-    <div class="tl" id="tl"></div>
-  </div>
-
-  <div class="foot">✨ 走完 16 站，你就读懂了人工智能「从出生到今天」的完整故事——而真正的 <b>未来</b>，正等着你的想象与行动！<br>点击任意节点，翻开每一站的故事、知识与小测验。</div>
+    <div class="tl-card">
+        <h3>🛰️ 人工智能演化时间轴</h3>
+        <p class="muted">每一个节点，都是历史上的一次「第一次」。</p>
+        <div class="tl">
+    <div class="seg"><span class="pill" style="background:linear-gradient(135deg,#2fa36b,#6fd0a0)">🌱 1950 年代 · 梦想的种子</span><span class="sline"></span></div>
+    <div class="node">
+      <div class="dot" style="border-color:#4F6DF5;box-shadow:0 6px 14px -4px #4F6DF566">🤔</div>
+      <a class="ncard" href="lesson1.html" style="--c1:#4F6DF5;--c2:#8FA8FF">
+        <span class="year" style="background:linear-gradient(135deg,#4F6DF5,#8FA8FF)">1950</span>
+        <div class="row">
+          <span class="tt"><b>第1站 · 图灵测试：机器会思考吗？</b><span>第一台会思考的机器梦</span></span>
+          <span class="arr">→</span>
+        </div>
+        <p class="ncard-goal">🎯 认识图灵爷爷提出的「模仿游戏」：当人分不清和自己对话的是人还是机器时，机器就算通过了测试</p>
+      </a>
+    </div>
+    <div class="node">
+      <div class="dot" style="border-color:#22A06B;box-shadow:0 6px 14px -4px #22A06B66">🌱</div>
+      <a class="ncard" href="lesson2.html" style="--c1:#22A06B;--c2:#7AD1A8">
+        <span class="year" style="background:linear-gradient(135deg,#22A06B,#7AD1A8)">1956</span>
+        <div class="row">
+          <span class="tt"><b>第2站 · 人工智能诞生：一场改变世界的会议</b><span>给「聪明的机器」正式起名</span></span>
+          <span class="arr">→</span>
+        </div>
+        <p class="ncard-goal">🎯 了解 1956 年达特茅斯会议上「人工智能」这个名字正式诞生，理解 AI = 人工 + 智能</p>
+      </a>
+    </div>
+    <div class="node">
+      <div class="dot" style="border-color:#E8842C;box-shadow:0 6px 14px -4px #E8842C66">🧠</div>
+      <a class="ncard" href="lesson3.html" style="--c1:#E8842C;--c2:#F5B86E">
+        <span class="year" style="background:linear-gradient(135deg,#E8842C,#F5B86E)">1957</span>
+        <div class="row">
+          <span class="tt"><b>第3站 · 感知机：第一台会学习的机器</b><span>像一颗小小的神经元</span></span>
+          <span class="arr">→</span>
+        </div>
+        <p class="ncard-goal">🎯 认识罗森布拉特的感知机——第一台像神经元一样会「学习」的机器，理解「输入—权重—判断」的雏形</p>
+      </a>
+    </div>
+    <div class="seg"><span class="pill" style="background:linear-gradient(135deg,#5b6ee8,#8fa8ff)">🧊 1960–1980 年代 · 五花八门的探索</span><span class="sline"></span></div>
+    <div class="node">
+      <div class="dot" style="border-color:#C154C1;box-shadow:0 6px 14px -4px #C154C166">🪞</div>
+      <a class="ncard" href="lesson4.html" style="--c1:#C154C1;--c2:#E59AE0">
+        <span class="year" style="background:linear-gradient(135deg,#C154C1,#E59AE0)">1966</span>
+        <div class="row">
+          <span class="tt"><b>第4站 · ELIZA：世界上第一个聊天机器人</b><span>假装成心理医生的程序</span></span>
+          <span class="arr">→</span>
+        </div>
+        <p class="ncard-goal">🎯 认识 1966 年假装心理医生的聊天程序 ELIZA，理解最早的对话程序靠「关键词套话」回应，并没有真正听懂</p>
+      </a>
+    </div>
+    <div class="node">
+      <div class="dot" style="border-color:#0E9384;box-shadow:0 6px 14px -4px #0E938466">🏥</div>
+      <a class="ncard" href="lesson5.html" style="--c1:#0E9384;--c2:#6FD0C0">
+        <span class="year" style="background:linear-gradient(135deg,#0E9384,#6FD0C0)">1980</span>
+        <div class="row">
+          <span class="tt"><b>第5站 · 专家系统：装进电脑的专家经验</b><span>AI 当起了「专家顾问」</span></span>
+          <span class="arr">→</span>
+        </div>
+        <p class="ncard-goal">🎯 认识 1980 年代的专家系统：把专家的经验变成「如果…就…」的规则，让电脑当专家顾问</p>
+      </a>
+    </div>
+    <div class="node">
+      <div class="dot" style="border-color:#E0563F;box-shadow:0 6px 14px -4px #E0563F66">🔁</div>
+      <a class="ncard" href="lesson6.html" style="--c1:#E0563F;--c2:#F2998A">
+        <span class="year" style="background:linear-gradient(135deg,#E0563F,#F2998A)">1986</span>
+        <div class="row">
+          <span class="tt"><b>第6站 · 反向传播：让神经网络学会纠错</b><span>「向后纠错」的魔法算法</span></span>
+          <span class="arr">→</span>
+        </div>
+        <p class="ncard-goal">🎯 理解 1986 年反向传播算法让多层神经网络能「向后纠错」，从错误中不断调整自己</p>
+      </a>
+    </div>
+    <div class="tl-gap"><span>1987–1993 · AI 寒冬：热情一度冷却、资金变少</span><span class="gline"></span></div>
+    <div class="seg"><span class="pill" style="background:linear-gradient(135deg,#e8842c,#f5b86e)">🏆 1997–2016 · 学会「赢」：会算、会看、会下棋</span><span class="sline"></span></div>
+    <div class="node">
+      <div class="dot" style="border-color:#445069;box-shadow:0 6px 14px -4px #44506966">♟️</div>
+      <a class="ncard" href="lesson7.html" style="--c1:#445069;--c2:#8FA0B5">
+        <span class="year" style="background:linear-gradient(135deg,#445069,#8FA0B5)">1997</span>
+        <div class="row">
+          <span class="tt"><b>第7站 · 深蓝战胜棋王：算得快的力量</b><span>电脑第一次赢过世界冠军</span></span>
+          <span class="arr">→</span>
+        </div>
+        <p class="ncard-goal">🎯 认识 IBM 深蓝 1997 年首次在正式比赛中战胜国际象棋世界冠军，理解「算得多、想得全」的力量</p>
+      </a>
+    </div>
+    <div class="node">
+      <div class="dot" style="border-color:#2F80ED;box-shadow:0 6px 14px -4px #2F80ED66">🧩</div>
+      <a class="ncard" href="lesson8.html" style="--c1:#2F80ED;--c2:#7FB2F5">
+        <span class="year" style="background:linear-gradient(135deg,#2F80ED,#7FB2F5)">1998</span>
+        <div class="row">
+          <span class="tt"><b>第8站 · LeNet：教电脑读懂手写数字</b><span>会「扫描特征」的卷积神经网络</span></span>
+          <span class="arr">→</span>
+        </div>
+        <p class="ncard-goal">🎯 认识杨立昆的 LeNet——最早会「扫描特征」的卷积神经网络，理解它一层层提取特征来识图</p>
+      </a>
+    </div>
+    <div class="tl-gap"><span>1998→2012 · 神经网络“睡”了十几年，直到 2012 被深度学习的“闹钟”叫醒</span><span class="gline"></span></div>
+    <div class="node">
+      <div class="dot" style="border-color:#8E44AD;box-shadow:0 6px 14px -4px #8E44AD66">🐱</div>
+      <a class="ncard" href="lesson9.html" style="--c1:#8E44AD;--c2:#C39BD3">
+        <span class="year" style="background:linear-gradient(135deg,#8E44AD,#C39BD3)">2012</span>
+        <div class="row">
+          <span class="tt"><b>第9站 · 电脑学会了认猫：深度学习爆发</b><span>AI 自己看几百万张图学会了「猫」</span></span>
+          <span class="arr">→</span>
+        </div>
+        <p class="ncard-goal">🎯 了解 2012 年神经网络自己看了几百万张图学会认猫，理解深度学习 = 让机器自己找规律</p>
+      </a>
+    </div>
+    <div class="node">
+      <div class="dot" style="border-color:#16A085;box-shadow:0 6px 14px -4px #16A08566">🎯</div>
+      <a class="ncard" href="lesson10.html" style="--c1:#16A085;--c2:#77D5BE">
+        <span class="year" style="background:linear-gradient(135deg,#16A085,#77D5BE)">2016</span>
+        <div class="row">
+          <span class="tt"><b>第10站 · AlphaGo：AI 有了棋感</b><span>学会了「直觉」的围棋高手</span></span>
+          <span class="arr">→</span>
+        </div>
+        <p class="ncard-goal">🎯 认识 2016 年 AlphaGo 战胜李世石，理解强化学习——机器通过自己与自己下棋练出「直觉」</p>
+      </a>
+    </div>
+    <div class="seg"><span class="pill" style="background:linear-gradient(135deg,#8e44ad,#c39bd3)">✨ 2017–2018 · 读懂人话：注意力 + 完形填空</span><span class="sline"></span></div>
+    <div class="node">
+      <div class="dot" style="border-color:#C0392B;box-shadow:0 6px 14px -4px #C0392B66">📐</div>
+      <a class="ncard" href="lesson11.html" style="--c1:#C0392B;--c2:#F1948A">
+        <span class="year" style="background:linear-gradient(135deg,#C0392B,#F1948A)">2017</span>
+        <div class="row">
+          <span class="tt"><b>第11站 · Transformer：注意力改变了世界</b><span>一篇论文带来的 AI 革命</span></span>
+          <span class="arr">→</span>
+        </div>
+        <p class="ncard-goal">🎯 认识 2017 年 Transformer 的「注意力机制」——让 AI 学会关注重点，成为今天大语言模型的基石</p>
+      </a>
+    </div>
+    <div class="node">
+      <div class="dot" style="border-color:#5D6D7E;box-shadow:0 6px 14px -4px #5D6D7E66">📚</div>
+      <a class="ncard" href="lesson12.html" style="--c1:#5D6D7E;--c2:#AEB6BF">
+        <span class="year" style="background:linear-gradient(135deg,#5D6D7E,#AEB6BF)">2018</span>
+        <div class="row">
+          <span class="tt"><b>第12站 · BERT：会读诗、懂情感的语言小天才</b><span>Google 提出双向编码器表示，刷新 11 项 NLP 任务纪录</span></span>
+          <span class="arr">→</span>
+        </div>
+        <p class="ncard-goal">🎯 认识 2018 年 Google 提出的 BERT——用双向编码器同时“读懂”前后文，刷新 11 项 NLP 任务纪录</p>
+      </a>
+    </div>
+    <div class="tl-gap"><span>2018→2022 · GPT 系列悄悄长大 → 这才有会聊天的 ChatGPT</span><span class="gline"></span></div>
+    <div class="seg"><span class="pill" style="background:linear-gradient(135deg,#e0563f,#f5a08a)">🎨 2022–2025 · 会创作、会干活：大模型走进你我的生活</span><span class="sline"></span></div>
+    <div class="node">
+      <div class="dot" style="border-color:#2E86C1;box-shadow:0 6px 14px -4px #2E86C166">💬</div>
+      <a class="ncard" href="lesson13.html" style="--c1:#2E86C1;--c2:#85C1E9">
+        <span class="year" style="background:linear-gradient(135deg,#2E86C1,#85C1E9)">2022</span>
+        <div class="row">
+          <span class="tt"><b>第13站 · ChatGPT：人人都会用的 AI</b><span>AI 走进了千家万户</span></span>
+          <span class="arr">→</span>
+        </div>
+        <p class="ncard-goal">🎯 认识 2022 年 ChatGPT 让 AI 走进千家万户，理解「会提问」是和 AI 合作的关键</p>
+      </a>
+    </div>
+    <div class="node">
+      <div class="dot" style="border-color:#D35400;box-shadow:0 6px 14px -4px #D3540066">🎨</div>
+      <a class="ncard" href="lesson14.html" style="--c1:#D35400;--c2:#F5B041">
+        <span class="year" style="background:linear-gradient(135deg,#D35400,#F5B041)">2023</span>
+        <div class="row">
+          <span class="tt"><b>第14站 · 多模态 AI：看得见、听得懂、画得出</b><span>AI 长出了「眼睛、耳朵和画笔」</span></span>
+          <span class="arr">→</span>
+        </div>
+        <p class="ncard-goal">🎯 认识多模态 AI：不只读文字，还能看图、听声、绘画，像人一样用多种感官理解世界</p>
+      </a>
+    </div>
+    <div class="node">
+      <div class="dot" style="border-color:#6C3483;box-shadow:0 6px 14px -4px #6C348366">🎬</div>
+      <a class="ncard" href="lesson15.html" style="--c1:#6C3483;--c2:#A569BD">
+        <span class="year" style="background:linear-gradient(135deg,#6C3483,#A569BD)">2024</span>
+        <div class="row">
+          <span class="tt"><b>第15站 · 文生视频 · 视频生成</b><span>一句话，生成一段会动的视频</span></span>
+          <span class="arr">→</span>
+        </div>
+        <p class="ncard-goal">🎯 认识文生视频技术——输入一句话，AI 就能生成逼真视频，还能模拟真实的物理世界</p>
+      </a>
+    </div>
+    <div class="node">
+      <div class="dot" style="border-color:#1ABC9C;box-shadow:0 6px 14px -4px #1ABC9C66">🦾</div>
+      <a class="ncard" href="lesson16.html" style="--c1:#1ABC9C;--c2:#82E0AA">
+        <span class="year" style="background:linear-gradient(135deg,#1ABC9C,#82E0AA)">2025</span>
+        <div class="row">
+          <span class="tt"><b>第16站 · OpenClaw：会自己用手机电脑的 AI 助理</b><span>会自己看屏幕、点按钮，跨 App 替你干活</span></span>
+          <span class="arr">→</span>
+        </div>
+        <p class="ncard-goal">🎯 认识 AI 智能体（Agent）——能自己看屏幕、点按钮，跨 App 协同，真正替你「跑腿干活」</p>
+      </a>
+    </div>
+        </div>
+    </div>
+    <div class="tl-note">✨ 走完 16 站，你就读懂了人工智能「从出生到今天」的完整故事——点击任意一站，翻开它的故事、知识与小测验吧！真正的未来，正等着你的想象与行动～</div>
 </div>
-
-<!-- 每站详情（打开后会进入对应年份的详情页） -->
-<div id="modal">
-  <button class="l-close" onclick="closeLesson()">✕ 关闭</button>
-  <div class="lesson" id="lesson"></div>
-</div>
-
-<div id="toast"></div>
-
-<script src="/js/common.js"></script>
-<script src="/js/ai-evolution.js"></script>
-<script src="/js/timeline.js"></script>
-<script>
-/* ============ 首页：人工智能演化时间轴 ============ */
-/* 数据：public/js/ai-evolution.js（16 站共享数据） */
-initTimeline({
-  courses: window.AI_EVOLUTION,
-  name: '人工智能'    // 未传 timelineUrl → 点开节点即在弹层展开详情
-});
-</script>
-</body>
+    <!-- 移植适配：课程目录已作为本站首页；课件路径 /experience/E04/lessonN.html。
+         目前只移植了第 1–6 站，第 7 站起课件未上线（置灰不可点）。补齐课件后把 MAX_LESSON 改大即可。
+         原页面在此处的“登录/课程权限守卫”依赖 sx 平台的 /api/auth/status 与 /api/user/accessible-courses，
+         本站无该后端，故移除。 -->
+    <style>
+        .ncard.soon { opacity:.55; cursor:not-allowed; }
+        .ncard.soon:hover { transform:none; border-color:#eef2fc; box-shadow:0 8px 20px -16px rgba(47,107,255,.5); }
+        .ncard.soon .arr { display:none; }
+        .ncard.soon::after { content:'🚧 本站课件尚未上线'; display:block; margin-top:9px; padding:5px 10px; border:1px dashed #e8dcbb; border-radius:10px; background:#fdf6e3; color:#b0883a; font-size:11.5px; font-weight:700; text-align:center; }
+    </style>
+    <script>
+    (function () {
+        var MAX_LESSON = 6;                        // 已移植的站数
+        var BASE = '/experience/E04/lesson';       // 课件所在目录
+        document.querySelectorAll('.ncard[href]').forEach(function (a) {
+            var m = /^lesson(\d+)\.html$/.exec(a.getAttribute('href'));
+            if (!m) return;
+            var n = Number(m[1]);
+            if (n <= MAX_LESSON) {
+                a.setAttribute('href', BASE + n + '.html');
+            } else {
+                a.removeAttribute('href');
+                a.setAttribute('aria-disabled', 'true');
+                a.classList.add('soon');
+            }
+        });
+    })();
+    </script>
+<script src="/js/classroom-float.js"></script></body>
 </html>

@@ -15,7 +15,7 @@ npm run dev        # 启动服务（监听模式：改 server 文件自动重启
 
 服务运行在 `http://localhost:80`（Windows/Mac 权限受限时可 `PORT=8080 npm run dev`）。
 
-> 💡 开发提示：改动 **前端** 文件（`public/`、`app/` 下的 HTML）**无需重启**，刷新浏览器即可；改动 **后端**（`server/`）文件，`npm run dev` 会自动重启。
+> 💡 开发提示：改动 **前端** 文件（`public/` 下的 HTML/CSS/JS）**无需重启**，刷新浏览器即可；改动 **后端**（`server/`）文件，`npm run dev` 会自动重启。
 
 ---
 
@@ -23,10 +23,10 @@ npm run dev        # 启动服务（监听模式：改 server 文件自动重启
 
 | 页面 | 地址 |
 |------|------|
-| 首页（儿童职业启蒙101） | `http://localhost:80/` |
+| 首页（人工智能简史 · 课程目录） | `http://localhost:80/` |
 | AI时代教育全景导航 | `http://localhost:80/guide.html` |
-| Web 开发 · 时间轴课程 | `http://localhost:80/web-development/` |
-| 人工智能 · 时间轴课程 | `http://localhost:80/artificial-intelligence/` |
+| 第 1–6 站课件 | `http://localhost:80/experience/E04/lesson1.html` … `lesson6.html` |
+| 🏆 收获墙（学员收获卡片） | `http://localhost:80/harvest.html` |
 
 ---
 
@@ -38,7 +38,7 @@ npm run dev        # 启动服务（监听模式：改 server 文件自动重启
 | 框架 | Express 4 |
 | 后端语言 | TypeScript（ts-node 直跑） |
 | 前端 | 原生 HTML/CSS/JS（无框架） |
-| 数据存储 | 本机浏览器 localStorage（不上传） |
+| 数据存储 | Node 内置 `node:sqlite`（`database/ai4kids.db` · 收获墙）+ 浏览器 localStorage |
 
 ---
 
@@ -47,23 +47,27 @@ npm run dev        # 启动服务（监听模式：改 server 文件自动重启
 ```
 ai4kids/
 ├── server/                        # 后端（TypeScript + Express）
-│   └── server.ts                  # Express 入口，静态服务，/api/apps 自动扫描
-├── public/                        # 主站前端
-│   ├── index.html                 # 首页（儿童职业启蒙101 · 101个职业卡片）
-│   └── guide.html                 # AI时代教育全景导航
-├── app/                           # 子应用源码（纯 HTML/CSS/JS）
-│   ├── web-development/           # Web 开发 · 时间轴课程（1989→现在，16堂课）
-│   │   ├── config.json            # 首页卡片配置
-│   │   └── index.html
-│   └── artificial-intelligence/   # 人工智能 · 时间轴课程（1950→现在，12堂课）
-│       ├── config.json            # 首页卡片配置
-│       └── index.html
+│   ├── server.ts                  # Express 入口，静态服务，/api/apps 自动扫描，/api/harvest 收获墙
+│   └── db.ts                      # SQLite 数据层（Node 内置 node:sqlite，无第三方依赖）
+├── public/                        # 主站前端（静态服务根目录）
+│   ├── index.html                 # 首页：「人工智能简史」课程目录（16 站时间轴）
+│   ├── harvest.html               # 🏆 收获墙：所有学员的收获卡片
+│   ├── guide.html                 # AI时代教育全景导航
+│   ├── css/                       # common.css（主站公共样式）+ style.css（课件样式）
+│   ├── js/                        # 课件公共脚本（cloud-records / lesson-recorder / tracker / classroom-float）
+│   ├── fonts/                     # Orbitron 字体（课件用）
+│   └── experience/E04/            # 人工智能简史 · 课件（已移植第 1–6 站）
+│       ├── lesson1.html … lesson6.html
+│       ├── lesson.css / lesson.js
+│       ├── *-lab.css / *-lab.js   # 各站互动实验室（图灵 / 谜题 / 感知机 / ELIZA / 专家系统 / 神经网络）
+│       └── img/                   # 配图
+├── app/                           # （可选，当前不存在）子应用目录：建 app/<name>/index.html 即自动注册到 /<name>/
 ├── database/                      # 运行时数据（AI 生成物 + SQLite）
 │   ├── images/                    # 大模型生成的图像
 │   ├── text/                      # 大模型生成的文字
 │   ├── videos/                    # 大模型生成的视频
 │   ├── music/                     # 大模型生成的音乐
-│   └── ai4kids.db                 # SQLite 数据库（未来）
+│   └── ai4kids.db                 # SQLite 数据库（harvests 表 = 收获墙，首次启动自动建表）
 ├── tests/                         # 自动化测试
 │   └── check.js                   # 页面完整性 + API 检查
 ├── package.json

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>第4课：ELIZA：世界上第一个聊天机器人 - 人工智能简史 · AI星少年</title>
+    <link href="https://fonts.googleapis.cn/css2?family=ZCOOL+KuaiLe&family=Noto+Serif+SC:wght@500;700;900&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../../css/style.css?v=1789090598" />
+    <link rel="stylesheet" href="lesson.css?v=1789090598" />
+    <link rel="stylesheet" href="eliza-lab.css?v=1789090598" />
+    <style>:root{--acc:#C154C1;--acc2:#E59AE0;}</style>
+</head>
+<body data-ls="4" data-lsn="16" data-title="ELIZA：世界上第一个聊天机器人" data-titles="🚀 出发|🕰️ 故事|📖 知识|🖐️ 小任务|❓ 小测验|🏁 完成">
+<div class="wrap">
+
+    <header class="hd">
+        <div class="hd-row">
+            <a class="back-chip" href="/">← 返回课程</a>
+            <span class="hd-badge">🛰️ E04 · 第4课</span>
+            <span class="hd-step">1966 年 · 人工智能简史</span>
+        </div>
+        <h1 class="hd-title">💬 ELIZA：世界上第一个聊天机器人</h1>
+        <div class="hd-goal">🎯 认识 1966 年假装心理医生的聊天程序 ELIZA，理解最早的对话程序靠「关键词套话」回应，并没有真正听懂</div>
+    </header>
+
+    <!-- 1 · 封面 -->
+    <section class="slide active" id="s0">
+        <div class="cover">
+            <span class="yr">1966</span>
+            <span class="c-emoji">💬</span>
+            <span class="c-station">第 4 站 / 16 · 1966 年</span>
+            <h1>ELIZA：世界上第一个聊天机器人</h1>
+            <div class="c-sub">假装成心理医生的程序</div>
+            <div class="c-goal">🎯 本课目标：认识 1966 年假装心理医生的聊天程序 ELIZA，理解最早的对话程序靠「关键词套话」回应，并没有真正听懂</div>
+            <button class="start-btn" onclick="goSlide(1)">🚀 开始本站探索</button>
+        </div>
+    </section>
+
+    <!-- 2 · 故事 -->
+    <section class="slide" id="s1">
+        <div class="card story">
+            <h2>🕰️ 故事时间 · 那时候发生了什么？</h2>
+            <span class="story-mark">1966 年 · 💬</span>
+
+        <div class="story-fig person">
+          <div class="fig-photo"><img src="img/lesson04-weizenbaum.jpg" alt="约瑟夫·魏泽鲍姆" loading="lazy" /></div>
+          <div class="fig-info">
+            <div class="fig-head"><span class="fig-name">约瑟夫·魏泽鲍姆</span><span class="fig-en">Joseph Weizenbaum</span></div>
+            <div class="fig-years">1923 — 2008</div>
+            <div class="fig-role">德国裔美国计算机科学家 · ELIZA 之父</div>
+            <ul class="fig-facts">
+              <li>1923 年出生在德国柏林</li>
+              <li>1966 年在 MIT 写出第一个聊天程序 ELIZA</li>
+              <li>ELIZA 假装心理医生，靠「关键词+现成话」回应</li>
+              <li>看到人们把程序当朋友，他开始思考科技的责任</li>
+            </ul>
+          </div>
+        </div>
+        <p class="fig-credit">🖼️ 图片来源：CC BY-SA 3.0 · Wikimedia Commons</p>
+            <div class="story-tl">
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">1923</span>
+                <p>约瑟夫·魏泽鲍姆出生在德国柏林，小时候因为战乱，和家人一起搬到了美国。长大后，他成了麻省理工学院（MIT）的教授，一位非常厉害的计算机科学家。</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">1966</span>
+                <p>1966 年，他写了一个程序，起名叫 ELIZA——名字来自一部戏剧里一位爱说话的小姐。ELIZA 是最早会「聊天」的程序，而且扮演的是一位——心理医生！</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">😮 人们当真了</span>
+                <p>神奇的是，很多人真的愿意跟它聊天。你说「我很伤心」，它就问「为什么你会伤心呢？」；你说「我讨厌上学」，它就说「跟我多聊聊你讨厌上学的事吧」。听起来是不是很贴心？有人甚至把它当成真正的知心朋友，把心里话都告诉它。</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">🔍 它没听懂</span>
+                <p>但其实 ELIZA 一个词都没听懂！它只是一个小机灵鬼：抓到你说的关键词，再把它套进几句现成的话里还给你。它就像一面镜子，把你自己的话轻轻弹回来。魏泽鲍姆看到大家这么认真地和程序聊天，又惊讶又担心。</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">💭 启示</span>
+                <p>这个故事告诉我们：最早的「聊天机器人」，靠的是聪明的小把戏，而不是真正的理解。真正的「理解」，要等很多年后才慢慢实现。</p>
+              </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3 · 知识 -->
+    <section class="slide" id="s2">
+        <div class="card">
+            <h2>📖 知识小课堂 · 记住这个魔法！</h2>
+            <p style="font-size:13.5px;color:var(--ink3);margin-bottom:12px;">点击卡片翻开，看看背后的知识～</p>
+            <div class="k-grid">
+
+            <div class="kcard" onclick="openK(this)">
+              <div class="kcard-inner">
+                <div class="kfront"><span class="kt">✨</span><span class="kh">最早的聊天机器人</span><span class="ktip">👆 点我翻开</span></div>
+                <div class="kback">1966 年的 ELIZA，世界上第一个会聊天的程序</div>
+              </div>
+            </div>
+            <div class="kcard" onclick="openK(this)">
+              <div class="kcard-inner">
+                <div class="kfront"><span class="kt">💡</span><span class="kh">它扮演的角色</span><span class="ktip">👆 点我翻开</span></div>
+                <div class="kback">一位「心理医生」，用提问引导你一直说下去</div>
+              </div>
+            </div>
+            <div class="kcard" onclick="openK(this)">
+              <div class="kcard-inner">
+                <div class="kfront"><span class="kt">🔑</span><span class="kh">小把戏真相</span><span class="ktip">👆 点我翻开</span></div>
+                <div class="kback">抓到关键词 → 套进现成的话 → 还给你，其实并不真正理解</div>
+              </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4 · 小任务 -->
+    <section class="slide" id="s3">
+        <div id="elizalab">
+<div class="eliza-head"><span class="ei">💬</span><b>ELIZA · 假装心理医生</b><span class="es">1966 年世界上第一个聊天机器人 · 来和它聊聊吧</span></div>
+
+<div class="card">
+    <h3>🎯 实际问题：它真的「懂」你吗？</h3>
+    <p>ELIZA 完全不懂你说的话。它只是<b>抓关键词 → 套模板</b>：你说「我很难过」，它就问「你为什么难过？」。可很多人和它聊着聊着，竟真的把它当成了知心朋友。你试试看，能不能识破它的「小心机」？</p>
+  </div>
+
+  <div class="chat-card">
+    <div class="chat-head">
+      <span class="bot-ava">💬</span>
+      <div>
+        <div class="bot-name">ELIZA · 心理医生</div>
+        <div class="bot-status"><span class="online-dot"></span> 在线（假装是医生，其实是规则）</div>
+      </div>
+    </div>
+    <div class="chat-body" id="chatBody"></div>
+    <div class="chips" id="chips">
+      <button data-txt="你好">👋 你好</button>
+      <button data-txt="我很难过">😢 我很难过</button>
+      <button data-txt="我喜欢小狗">🐶 我喜欢小狗</button>
+      <button data-txt="我今天很开心">😄 我今天很开心</button>
+      <button data-txt="我有点害怕考试">😨 我有点害怕考试</button>
+      <button data-txt="再见">👋 再见</button>
+    </div>
+    <div class="chat-input">
+      <input id="msgInput" type="text" placeholder="和 ELIZA 说点什么…" maxlength="80" autocomplete="off">
+      <button id="btnSend">发送</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🔍 它到底是怎么做到的？</h3>
+    <p style="font-size:13px;color:#5a6b96;">ELIZA 的秘密只有 3 步：<b>① 找关键词 → ② 挑一个准备好的句子 → ③ 把你的话「反射」回去</b>。下面是它真正用到的规则，你刚才的聊天就是它们在工作：</p>
+    <table class="rule-table">
+      <tr><th>你说的话（关键词）</th><th>ELIZA 会这样回</th></tr>
+      <tr><td><code>我很难过 / 伤心</code></td><td>「你为什么难过呢？」</td></tr>
+      <tr><td><code>我喜欢…</code></td><td>「你喜欢它，它让你感觉怎么样？」</td></tr>
+      <tr><td><code>因为…</code></td><td>「原来是这样，继续说下去。」</td></tr>
+      <tr><td><code>我害怕…</code></td><td>「别怕，你在担心什么？」</td></tr>
+      <tr><td><code>（没抓住关键词）</code></td><td>把你说的话「反射」回去：你↔我</td></tr>
+    </table>
+    <p style="font-size:13px;color:#8a93b8;margin-top:8px;">💡 发现了吗？它只是把「你」和「我」互换，再把问题抛回给你——所以听起来好像很懂你！这就是后来所有聊天机器人的老祖宗。</p>
+  </div>
+        </div>
+    </section>
+
+    <!-- 5 · 小测验 -->
+    <section class="slide" id="s4">
+        <div class="card">
+            <h2>❓ 小测验 · 你学会了吗？</h2>
+            <p style="font-size:13.5px;color:var(--ink3);margin-bottom:10px;">点选答案，答对会变绿、答错会变红（可重试）～</p>
+
+            <div class="quiz-item" data-a="1">
+              <p class="quiz-q">Q1. ELIZA 是世界上第一个什么程序？</p>
+              <div class="quiz-opts">
+                <button type="button" class="quiz-opt" data-i="0" onclick="pickQuiz(this)">A. 游戏</button><button type="button" class="quiz-opt" data-i="1" onclick="pickQuiz(this)">B. 聊天机器人</button><button type="button" class="quiz-opt" data-i="2" onclick="pickQuiz(this)">C. 计算器</button><button type="button" class="quiz-opt" data-i="3" onclick="pickQuiz(this)">D. 绘画软件</button>
+              </div>
+              <p class="quiz-fb"></p>
+            </div>
+            <div class="quiz-item" data-a="1">
+              <p class="quiz-q">Q2. ELIZA 在对话中扮演什么角色？</p>
+              <div class="quiz-opts">
+                <button type="button" class="quiz-opt" data-i="0" onclick="pickQuiz(this)">A. 老师</button><button type="button" class="quiz-opt" data-i="1" onclick="pickQuiz(this)">B. 心理医生</button><button type="button" class="quiz-opt" data-i="2" onclick="pickQuiz(this)">C. 厨师</button><button type="button" class="quiz-opt" data-i="3" onclick="pickQuiz(this)">D. 司机</button>
+              </div>
+              <p class="quiz-fb"></p>
+            </div>
+            <div class="quiz-item" data-a="1">
+              <p class="quiz-q">Q3. ELIZA 真的「听懂」了你的话吗？</p>
+              <div class="quiz-opts">
+                <button type="button" class="quiz-opt" data-i="0" onclick="pickQuiz(this)">A. 完全听懂了</button><button type="button" class="quiz-opt" data-i="1" onclick="pickQuiz(this)">B. 它只是抓关键词套话，并没有真懂</button><button type="button" class="quiz-opt" data-i="2" onclick="pickQuiz(this)">C. 它会读心术</button><button type="button" class="quiz-opt" data-i="3" onclick="pickQuiz(this)">D. 它能预测未来</button>
+              </div>
+              <p class="quiz-fb"></p>
+            </div>
+            <div class="quiz-result" id="quizResult"></div>
+            <div class="quiz-actions">
+                <button class="qbtn ghost" onclick="retryQuiz()">🔄 重新作答</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6 · 完成 -->
+    <section class="slide" id="s5">
+        <div class="card">
+            <h2>🏁 回顾与完课 · 为自己盖章</h2>
+            <div class="field">
+                <label for="stuName">👧 小小学员，写下你的名字</label>
+                <input id="stuName" placeholder="写下你的名字" maxlength="20" />
+            </div>
+            <div class="field">
+                <label for="harvest">🌟 这一站你最大的收获是什么？（可点下面的小标签快速填写）</label>
+                <div class="chips"><span class="chip" onclick="fillChip('harvest', '我从故事里记住了一个新知识')">我从故事里记住了一个新知识</span><span class="chip" onclick="fillChip('harvest', '我能把这个故事讲给家人听')">我能把这个故事讲给家人听</span><span class="chip" onclick="fillChip('harvest', '我完成了一次小任务挑战')">我完成了一次小任务挑战</span><span class="chip" onclick="fillChip('harvest', '我想把这一站和下一站连起来想一想')">我想把这一站和下一站连起来想一想</span></div>
+                <textarea id="harvest" rows="3" placeholder="把你这一站的收获写下来，保存后就会贴到收获墙上～"></textarea>
+            </div>
+            <div style="text-align:center;">
+                <button class="qbtn primary" id="btnFinish" onclick="finishLesson()">💾 保存收获 · 完成本站</button>
+            </div>
+            <p class="finish-msg" id="finishMsg"></p>
+            <p style="text-align:center;font-size:13px;color:var(--ink3);margin-top:6px;">💭 思考一下：如果有一个「聊天机器人」只会把你的话弹回来，你会觉得它聪明，还是觉得它狡猾？为什么？</p>
+        </div>
+        <div class="complete-card" id="completeCard">
+            <div class="stamp-icon">🏅</div>
+            <h3>人工智能简史 · 完课证明</h3>
+            <p><b id="ccName">小小学员</b> 完成了 <b id="ccLesson">本站</b>《<b id="ccTitle">ELIZA：世界上第一个聊天机器人</b>》</p>
+            <p>学会：假装成心理医生的程序</p>
+            <div class="stamp">第 4 站<br/>已完课</div>
+        </div>
+    </section>
+
+</div>
+
+<!-- ═══ 底部导航 ═══ -->
+<div class="slide-nav">
+    <button class="nav-prev" id="btnPrev" onclick="goSlide(-1)">◀ 上一页</button>
+    <span class="nav-counter" id="navCounter"></span>
+    <button class="nav-next" id="btnNext" onclick="goSlide(1)">下一页 ▶</button>
+    <div class="dots" id="dots"></div>
+</div>
+
+
+<script src="../../../js/cloud-records.js?v=1789090598"></script>
+<script src="../../../js/lesson-recorder.js?v=1789090598"></script>
+<script src="../../../js/tracker.js?v=1789090598"></script>
+<script src="lesson.js?v=1789090598"></script>
+<script>Tracker.init('experience/E04-L4');</script>
+<script src="eliza-lab.js?v=1789090598"></script>
+    <!-- 移植适配：已移除依赖 sx 平台 /api/auth/status 与 /api/user/accessible-courses 的登录/课程权限守卫（本站无该后端） -->
+<script src="/js/classroom-float.js"></script></body>
+</html>

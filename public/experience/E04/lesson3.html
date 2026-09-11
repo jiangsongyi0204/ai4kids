@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>第3课：感知机：第一台会学习的机器 - 人工智能简史 · AI星少年</title>
+    <link href="https://fonts.googleapis.cn/css2?family=ZCOOL+KuaiLe&family=Noto+Serif+SC:wght@500;700;900&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../../css/style.css?v=1789090598" />
+    <link rel="stylesheet" href="lesson.css?v=1789090598" />
+    <link rel="stylesheet" href="perceptron-trainer.css?v=1789090598" />
+    <style>:root{--acc:#E8842C;--acc2:#F5B86E;}</style>
+</head>
+<body data-ls="3" data-lsn="16" data-title="感知机：第一台会学习的机器" data-titles="🚀 出发|🕰️ 故事|📖 知识|🖐️ 小任务|❓ 小测验|🏁 完成">
+<div class="wrap">
+
+    <header class="hd">
+        <div class="hd-row">
+            <a class="back-chip" href="/">← 返回课程</a>
+            <span class="hd-badge">🛰️ E04 · 第3课</span>
+            <span class="hd-step">1957 年 · 人工智能简史</span>
+        </div>
+        <h1 class="hd-title">🧠 感知机：第一台会学习的机器</h1>
+        <div class="hd-goal">🎯 认识罗森布拉特的感知机——第一台像神经元一样会「学习」的机器，理解「输入—权重—判断」的雏形</div>
+    </header>
+
+    <!-- 1 · 封面 -->
+    <section class="slide active" id="s0">
+        <div class="cover">
+            <span class="yr">1957</span>
+            <span class="c-emoji">🧠</span>
+            <span class="c-station">第 3 站 / 16 · 1957 年</span>
+            <h1>感知机：第一台会学习的机器</h1>
+            <div class="c-sub">像一颗小小的神经元</div>
+            <div class="c-goal">🎯 本课目标：认识罗森布拉特的感知机——第一台像神经元一样会「学习」的机器，理解「输入—权重—判断」的雏形</div>
+            <button class="start-btn" onclick="goSlide(1)">🚀 开始本站探索</button>
+        </div>
+    </section>
+
+    <!-- 2 · 故事 -->
+    <section class="slide" id="s1">
+        <div class="card story">
+            <h2>🕰️ 故事时间 · 那时候发生了什么？</h2>
+            <span class="story-mark">1957 年 · 🧠</span>
+
+        <div class="story-fig person">
+          <div class="fig-photo"><img src="img/lesson03-rosenblatt.jpg" alt="弗兰克·罗森布拉特" loading="lazy" /></div>
+          <div class="fig-info">
+            <div class="fig-head"><span class="fig-name">弗兰克·罗森布拉特</span><span class="fig-en">Frank Rosenblatt</span></div>
+            <div class="fig-years">1928 — 1971</div>
+            <div class="fig-role">美国心理学家 · 计算机科学家</div>
+            <ul class="fig-facts">
+              <li>1928 年出生在美国，是心理学家也是计算机科学家</li>
+              <li>1957 年造出世界上第一台会「学习」的机器——感知机</li>
+              <li>灵感来自大脑里的「神经元」</li>
+              <li>今天 AI 的「学习」，都源自他「拧动权重旋钮」的灵感</li>
+            </ul>
+          </div>
+        </div>
+        <p class="fig-credit">🖼️ 图片来源：CC BY-SA 4.0 · Wikimedia Commons</p>
+            <div class="story-tl">
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">1928</span>
+                <p>1928 年，弗兰克·罗森布拉特出生在美国。他既是一位心理学家，也是一位计算机科学家。小时候的他一定也好奇过：我们人是怎么认出东西、怎么学会新本领的呢？这份好奇，后来带他走上了一条了不起的路。</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">1957</span>
+                <p>1957 年，罗森布拉特造出了「感知机」——世界上第一台会「学习」的机器！它不大，看起来也不算聪明，但它做了一件全新的事：会根据经验改变自己的判断。第二年新闻一发布，全世界都轰动了。</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">💡 灵感</span>
+                <p>感知机的灵感来自我们的大脑。科学家发现，大脑里有一粒粒叫「神经元」的小细胞，它们互相传递信号。感知机就是照着这个模样造出来的「电子神经元」。</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">🎛 学习原理</span>
+                <p>它是怎么学习的呢？它先瞎猜一个答案，如果猜错了，就「拧一拧」自己内部的小旋钮（科学家叫它「权重」），多试几次，它就越猜越准。</p>
+              </div>
+            </div>
+            <div class="st-item">
+              <span class="st-dot"></span>
+              <div class="st-card"><span class="st-chip">🔁 影响至今</span>
+                <p>别小看这个「小旋钮」——今天所有 AI 的「学习」，都是从拧动这个旋钮开始的！罗森布拉特可能也没想到，他造的小机器，会种下整个 AI 学习时代的种子。</p>
+              </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3 · 知识 -->
+    <section class="slide" id="s2">
+        <div class="card">
+            <h2>📖 知识小课堂 · 记住这个魔法！</h2>
+            <p style="font-size:13.5px;color:var(--ink3);margin-bottom:12px;">点击卡片翻开，看看背后的知识～</p>
+            <div class="k-grid">
+
+            <div class="kcard" onclick="openK(this)">
+              <div class="kcard-inner">
+                <div class="kfront"><span class="kt">✨</span><span class="kh">会学习的机器</span><span class="ktip">👆 点我翻开</span></div>
+                <div class="kback">感知机是历史上第一台能通过经验改变判断的机器</div>
+              </div>
+            </div>
+            <div class="kcard" onclick="openK(this)">
+              <div class="kcard-inner">
+                <div class="kfront"><span class="kt">💡</span><span class="kh">仿生小灵感</span><span class="ktip">👆 点我翻开</span></div>
+                <div class="kback">它模仿大脑的「神经元」，是一颗人造的电子小神经</div>
+              </div>
+            </div>
+            <div class="kcard" onclick="openK(this)">
+              <div class="kcard-inner">
+                <div class="kfront"><span class="kt">🔑</span><span class="kh">学习的秘密</span><span class="ktip">👆 点我翻开</span></div>
+                <div class="kback">猜错就调整「权重」小旋钮 → 多试几次就越猜越准</div>
+              </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4 · 小任务 -->
+    <section class="slide" id="s3">
+        <div id="pplab">
+
+  <div class="pp-head"><span class="pe">🧠</span><b>感知机可视化训练器 · 单层感知机（会学习的小神经元）</b></div>
+<div class="card">
+    <h3>📋 训练数据格式</h3>
+    <p style="font-size:13px;color:#5a6b96;">每个样本 = 2 个开关输入 + 1 个正确答案。先选一个逻辑任务，再点训练。</p>
+    <div class="task-picker" id="taskPicker"></div>
+    <div class="task-desc" id="taskDesc"></div>
+    <table class="truth-table" id="truthTable"></table>
+  </div>
+
+<div class="card ann-card">
+    <h3>🧠 感知机可视化训练器 <span class="badge" style="font-size:11px;">2 输入 · 1 输出</span></h3>
+    <p class="muted" style="margin-bottom:10px;">先选一个逻辑任务（与 AND / 或 OR / 异或 XOR），点「🎬 开始可视化训练」看完整训练过程（每轮错误数 + 分界线变化）；再用下面的按钮一步一步调试（单步 → 更新）。</p>
+    <button class="fs-btn" onclick="toggleFS(this)">⛶</button>
+    <div class="trainer-grid">
+      <div class="data-list-panel">
+        <div class="panel-title">📚 训练数据 <span class="badge" id="dsBadge">4 组</span></div>
+        <div id="dataList"></div>
+      </div>
+      <div class="trainer-main">
+        <div class="panel net-panel">
+          <div class="panel-title" style="width:100%;">🧠 网络结构 · 2 输入 + 偏置 → 求和 → 激活</div>
+          <div class="net-viz" id="netViz"></div>
+          <div class="net-legend">
+            <span><span class="lg blue"></span> 权重连线（越粗越重要）</span>
+            <span><span class="lg red"></span> 出错的样本</span>
+          </div>
+        </div>
+
+        <div class="ctrl-group" style="margin-top:12px;">
+          <button class="btn btn-success" id="btnTrain">🎬 开始可视化训练</button>
+          <button class="btn btn-primary" id="btnStep">👣 单步</button>
+          <button class="btn btn-danger" id="btnReset">🔄 重置</button>
+          <button class="btn btn-primary" id="btnRule" style="margin-left:auto;">📖 学习法则</button>
+        </div>
+        <div class="panel-title" style="margin-top:10px;">📉 每轮错误数（学到 0 就学会啦）</div>
+        <canvas id="lossCanvas" width="600" height="170"></canvas>
+      </div><!-- /trainer-main -->
+
+      <div class="trainer-side">
+        <div class="panel side-panel">
+          <div class="ctrl-group" style="margin-top:0;">
+            <span class="ctrl-label">学习率 η =</span>
+            <input class="ctrl-input" id="lrInput" type="number" value="0.4" step="0.05" min="0.05" max="1.0" style="width:64px;">
+          </div>
+          <div class="status-bar" id="statusBar">
+            <span class="status-item"><span class="dot blue"></span> 状态: <span id="stMsg">就绪</span></span>
+            <span class="status-item">❌ 错误: <span id="stErr">0</span></span>
+            <span class="status-item">🔢 步数: <span id="stStep">0</span></span>
+            <span class="status-item">📚 epoch: <span id="stEpoch">0</span></span>
+          </div>
+        </div>
+      </div><!-- /trainer-side -->
+    </div><!-- /trainer-grid -->
+  </div>
+
+<div class="card">
+    <h3>✍️ 互动演示：看看感知机的「分界线」</h3>
+    <p style="font-size:13px;color:#5a6b96;">四个点代表四种输入组合。绿点=答案 1，红点=答案 0。训练后，蓝色直线就是感知机学到的「分界线」——它能把绿点和红点分开吗？试试选「异或 XOR」你会发现……一条直线永远分不开！</p>
+    <div class="demo-wrap">
+      <div class="demo-canvas-wrap">
+        <canvas id="demoCanvas" width="300" height="300"></canvas>
+      </div>
+      <div class="demo-side">
+        <div class="demo-legend">
+          <span><span class="dot g"></span> 答案 1</span>
+          <span><span class="dot r"></span> 答案 0</span>
+          <span>—— 感知机的分界线</span>
+        </div>
+        <p style="font-size:13px;color:#3a4470;line-height:1.8;margin-top:10px;">
+          x₁ = 0/1（横轴），x₂ = 0/1（纵轴）。感知机只能画<b>一条直线</b>，
+          所以它学得会「与 AND」「或 OR」（能分开），
+          却学不会「异或 XOR」（无论怎么画，总有两个点混在一起）——这就是单层感知机的局限！
+        </p>
+      </div>
+    </div>
+  </div>
+
+<!-- 学习法则弹层 -->
+<div id="modal">
+  <button class="l-close" onclick="closeRule()">✕ 关闭</button>
+  <div class="lesson">
+    <div class="l-head">
+      <span class="lemo">🤖</span>
+      <h2>感知机的学习法则</h2>
+      <span class="ltag">犯错 → 改正 · 一次只调一点点</span>
+    </div>
+
+    <div class="sec teach">
+      <h4>🎯 一句话：猜错了才更新</h4>
+      <p>感知机先用现在的权重算出「预测」，再和正确答案比一比。如果<b>猜对了</b>，什么都不用做；如果<b>猜错了</b>，就把权重往「正确答案」的方向推一点点，下次就更可能猜对。练得越多，分界线就越准。</p>
+    </div>
+
+    <div class="sec story">
+      <h4>📐 更新公式（三个权重一起改）</h4>
+      <div class="fmt" style="margin:4px 0 6px;">
+        w₁ ← w₁ + η·(答案 − 预测)·x₁<br>
+        w₂ ← w₂ + η·(答案 − 预测)·x₂<br>
+        b  ← b  + η·(答案 − 预测)·1
+      </div>
+      <ul style="margin:0;padding-left:18px;">
+        <li><b>η（学习率）</b>：每步迈多大。太大容易乱跳，太小学得慢。</li>
+        <li><b>答案 − 预测</b>：猜对是 0（所以不更新）；猜错是 +1 或 −1（所以方向正好指向正确答案）。</li>
+        <li><b>x₁、x₂</b>：每个输入的开关值（0 或 1），表示「这次是谁的锅」——输入是 1 的权重才需要背锅调整。</li>
+      </ul>
+    </div>
+
+    <div class="sec act">
+      <h4>🧮 亲手算一遍（以「与 AND」为例）</h4>
+      <p>输入 (1, 1)，正确答案 = 1，当前权重 w₁=0.5，w₂=−0.5，b=−0.2，学习率 η=0.4：</p>
+      <div class="fmt" style="margin:4px 0 6px;">
+        求和 = 0.5×1 + (−0.5)×1 + (−0.2) = <b>−0.2</b> → 预测 = 0（错了！）<br>
+        w₁ ← 0.5 + 0.4×(1−0)×1 = <b>0.9</b><br>
+        w₂ ← −0.5 + 0.4×(1−0)×1 = <b>−0.1</b><br>
+        b  ← −0.2 + 0.4×(1−0)×1 = <b>0.2</b>
+      </div>
+      <p>下次再看 (1, 1)：0.9 + (−0.1) + 0.2 = 1.0 &gt; 0 → 预测 = 1 ✅ 猜对了！</p>
+    </div>
+
+    <div class="sec story">
+      <h4>⚠️ 它能学会什么？</h4>
+      <p>这条法则只会画<b>一条直线</b>来分界，所以「与」「或」都学得会；但「异或 XOR」无论怎么调都有一条直线分不开——要学它，得等下一课的多层神经网络！</p>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+        </div>
+    </section>
+
+    <!-- 5 · 小测验 -->
+    <section class="slide" id="s4">
+        <div class="card">
+            <h2>❓ 小测验 · 你学会了吗？</h2>
+            <p style="font-size:13.5px;color:var(--ink3);margin-bottom:10px;">点选答案，答对会变绿、答错会变红（可重试）～</p>
+
+            <div class="quiz-item" data-a="1">
+              <p class="quiz-q">Q1. 感知机最重要的本领是什么？</p>
+              <div class="quiz-opts">
+                <button type="button" class="quiz-opt" data-i="0" onclick="pickQuiz(this)">A. 会唱歌</button><button type="button" class="quiz-opt" data-i="1" onclick="pickQuiz(this)">B. 会学习、能根据经验改变判断</button><button type="button" class="quiz-opt" data-i="2" onclick="pickQuiz(this)">C. 会飞</button><button type="button" class="quiz-opt" data-i="3" onclick="pickQuiz(this)">D. 会做饭</button>
+              </div>
+              <p class="quiz-fb"></p>
+            </div>
+            <div class="quiz-item" data-a="1">
+              <p class="quiz-q">Q2. 感知机的灵感来自哪里？</p>
+              <div class="quiz-opts">
+                <button type="button" class="quiz-opt" data-i="0" onclick="pickQuiz(this)">A. 天上的星星</button><button type="button" class="quiz-opt" data-i="1" onclick="pickQuiz(this)">B. 大脑里的神经元</button><button type="button" class="quiz-opt" data-i="2" onclick="pickQuiz(this)">C. 花朵</button><button type="button" class="quiz-opt" data-i="3" onclick="pickQuiz(this)">D. 石头</button>
+              </div>
+              <p class="quiz-fb"></p>
+            </div>
+            <div class="quiz-item" data-a="2">
+              <p class="quiz-q">Q3. 感知机「学习」时，主要调整的是什么？</p>
+              <div class="quiz-opts">
+                <button type="button" class="quiz-opt" data-i="0" onclick="pickQuiz(this)">A. 屏幕亮度</button><button type="button" class="quiz-opt" data-i="1" onclick="pickQuiz(this)">B. 音量</button><button type="button" class="quiz-opt" data-i="2" onclick="pickQuiz(this)">C. 权重（小旋钮）</button><button type="button" class="quiz-opt" data-i="3" onclick="pickQuiz(this)">D. 颜色</button>
+              </div>
+              <p class="quiz-fb"></p>
+            </div>
+            <div class="quiz-result" id="quizResult"></div>
+            <div class="quiz-actions">
+                <button class="qbtn ghost" onclick="retryQuiz()">🔄 重新作答</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6 · 完成 -->
+    <section class="slide" id="s5">
+        <div class="card">
+            <h2>🏁 回顾与完课 · 为自己盖章</h2>
+            <div class="field">
+                <label for="stuName">👧 小小学员，写下你的名字</label>
+                <input id="stuName" placeholder="写下你的名字" maxlength="20" />
+            </div>
+            <div class="field">
+                <label for="harvest">🌟 这一站你最大的收获是什么？（可点下面的小标签快速填写）</label>
+                <div class="chips"><span class="chip" onclick="fillChip('harvest', '我从故事里记住了一个新知识')">我从故事里记住了一个新知识</span><span class="chip" onclick="fillChip('harvest', '我能把这个故事讲给家人听')">我能把这个故事讲给家人听</span><span class="chip" onclick="fillChip('harvest', '我完成了一次小任务挑战')">我完成了一次小任务挑战</span><span class="chip" onclick="fillChip('harvest', '我想把这一站和下一站连起来想一想')">我想把这一站和下一站连起来想一想</span></div>
+                <textarea id="harvest" rows="3" placeholder="把你这一站的收获写下来，保存后就会贴到收获墙上～"></textarea>
+            </div>
+            <div style="text-align:center;">
+                <button class="qbtn primary" id="btnFinish" onclick="finishLesson()">💾 保存收获 · 完成本站</button>
+            </div>
+            <p class="finish-msg" id="finishMsg"></p>
+            <p style="text-align:center;font-size:13px;color:var(--ink3);margin-top:6px;">💭 思考一下：猜错一次没关系，调整一下再来，就越来越准。你在学习上，有没有「调整再试」的经历？</p>
+        </div>
+        <div class="complete-card" id="completeCard">
+            <div class="stamp-icon">🏅</div>
+            <h3>人工智能简史 · 完课证明</h3>
+            <p><b id="ccName">小小学员</b> 完成了 <b id="ccLesson">本站</b>《<b id="ccTitle">感知机：第一台会学习的机器</b>》</p>
+            <p>学会：像一颗小小的神经元</p>
+            <div class="stamp">第 3 站<br/>已完课</div>
+        </div>
+    </section>
+
+</div>
+
+<!-- ═══ 底部导航 ═══ -->
+<div class="slide-nav">
+    <button class="nav-prev" id="btnPrev" onclick="goSlide(-1)">◀ 上一页</button>
+    <span class="nav-counter" id="navCounter"></span>
+    <button class="nav-next" id="btnNext" onclick="goSlide(1)">下一页 ▶</button>
+    <div class="dots" id="dots"></div>
+</div>
+
+
+<script src="../../../js/cloud-records.js?v=1789090598"></script>
+<script src="../../../js/lesson-recorder.js?v=1789090598"></script>
+<script src="../../../js/tracker.js?v=1789090598"></script>
+<script src="lesson.js?v=1789090598"></script>
+<script>Tracker.init('experience/E04-L3');</script>
+<script src="perceptron-trainer.js?v=1789090598"></script>
+    <!-- 移植适配：已移除依赖 sx 平台 /api/auth/status 与 /api/user/accessible-courses 的登录/课程权限守卫（本站无该后端） -->
+<script src="/js/classroom-float.js"></script></body>
+</html>

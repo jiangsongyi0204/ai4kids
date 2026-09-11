@@ -15,6 +15,7 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
+import { openHarvestStore } from './db';
 
 const app = express();
 const PORT = Number(process.env.PORT) || 80;
@@ -29,6 +30,9 @@ const DATABASE_SUBDIRS = ['images', 'text', 'videos', 'music'];
 for (const sub of DATABASE_SUBDIRS) {
   fs.mkdirSync(path.join(DATABASE_DIR, sub), { recursive: true });
 }
+
+// 收获墙数据库（SQLite，文件落在 database/ai4kids.db）
+const harvestStore = openHarvestStore(path.join(DATABASE_DIR, 'ai4kids.db'));
 
 // 中间件
 app.use(cors());
@@ -46,8 +50,10 @@ const noCache = (_res: express.Response) => {
 app.use(express.static(PUBLIC_DIR, { setHeaders: noCache }));
 
 // ========== 自动注册 app/ 目录下的子应用 ==========
+// app/ 不存在时也能正常启动；要新增子应用，建 app/<name>/index.html（+ config.json）即可
 const APPS: string[] = [];
-for (const d of fs.readdirSync(APPS_DIR, { withFileTypes: true })) {
+const appEntries = fs.existsSync(APPS_DIR) ? fs.readdirSync(APPS_DIR, { withFileTypes: true }) : [];
+for (const d of appEntries) {
   if (!d.isDirectory()) continue;
   const name = d.name;
   const appDir = path.join(APPS_DIR, name);
@@ -113,6 +119,51 @@ app.put('/api/apps/:id/status', (req, res) => {
     res.json({ status: config.status });
   } catch (err) {
     res.status(404).json({ error: '应用不存在或无法更新' });
+  }
+});
+
+// ========== 收获墙（SQLite） ==========
+// 课件「💾 保存收获 · 完成本站」提交一条收获
+app.post('/api/harvest', (req, res) => {
+  const body = (req.body || {}) as Record<string, unknown>;
+  const student = String(body.student ?? '').trim();
+  const content = String(body.content ?? '').trim();
+  const lessonTitle = String(body.lessonTitle ?? '').trim().slice(0, 100);
+  const lesson = Number(body.lesson);
+
+  if (!student) return res.status(400).json({ ok: false, error: '请先写上你的名字哦～' });
+  if (student.length > 20) return res.status(400).json({ ok: false, error: '名字太长啦（最多 20 个字）' });
+  if (!content) return res.status(400).json({ ok: false, error: '还没有写收获哦，写一句也好呀～' });
+  if (content.length > 1000) return res.status(400).json({ ok: false, error: '收获太长啦（最多 1000 字）' });
+  if (!Number.isInteger(lesson) || lesson < 1 || lesson > 16) {
+    return res.status(400).json({ ok: false, error: '站点编号不正确' });
+  }
+
+  try {
+    const card = harvestStore.insert({ student, lesson, lessonTitle, content });
+    res.json({ ok: true, card, stats: harvestStore.stats() });
+  } catch (err) {
+    console.error('保存收获失败：', err);
+    res.status(500).json({ ok: false, error: '服务器保存失败，请稍后再试' });
+  }
+});
+
+// 收获墙列表（可按站筛选）
+app.get('/api/harvest', (req, res) => {
+  try {
+    const lessonQ = typeof req.query.lesson === 'string' ? Number(req.query.lesson) : NaN;
+    const limitQ = typeof req.query.limit === 'string' ? Number(req.query.limit) : NaN;
+    const lesson = Number.isInteger(lessonQ) && lessonQ >= 1 && lessonQ <= 16 ? lessonQ : undefined;
+    const limit = Number.isInteger(limitQ) && limitQ > 0 ? Math.min(limitQ, 500) : 200;
+
+    res.json({
+      ok: true,
+      items: harvestStore.list({ lesson, limit }),
+      stats: harvestStore.stats(),
+    });
+  } catch (err) {
+    console.error('读取收获墙失败：', err);
+    res.status(500).json({ ok: false, error: '服务器读取失败，请稍后再试' });
   }
 });
 
