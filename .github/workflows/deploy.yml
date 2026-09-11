@@ -29,6 +29,8 @@ jobs:
             nvm use 24 2>/dev/null || nvm use 18 2>/dev/null || nvm use default || true
 
             # 1. 强制对齐远端代码（丢弃本地修改 + 删除未跟踪文件，如 package-lock.json）
+            #    注意：不要再手工 git pull —— 本脚本第一件事就是 reset --hard，
+            #    服务端工作区本来不该有本地改动（缓存破坏已改为运行时不改文件）
             git fetch origin main
             git reset --hard origin/main
             git clean -fd
@@ -36,12 +38,10 @@ jobs:
             # 2. 安装依赖
             npm install
 
-            # 3. 在 HTML 中注入时间戳（缓存破坏）
-            TIMESTAMP=$(date +%s)
-            find public -name "*.html" -exec sed -i "s|\.css\"|.css?v=${TIMESTAMP}\"|g; s|\.js\"|.js?v=${TIMESTAMP}\"|g" {} \; || true
-
-            # 4. 重启服务（Node 自己监听 80 + 443，不依赖 Nginx）
+            # 3. 重启服务（Node 自己监听 80 + 443，不依赖 Nginx）
             #    证书存在时 443 自动启用 HTTPS；证书不存在则只跑 HTTP，不会挂
+            #    前端缓存破坏由 server/server.ts 在响应 HTML 时按资源 mtime 追加 ?v=，
+            #    这里不再用 sed 改写 public/**.html（那样会让工作区一直是「已修改」）
             pm2 startOrRestart ecosystem.config.js --update-env
             pm2 save || true
 

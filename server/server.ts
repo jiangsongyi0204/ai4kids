@@ -63,7 +63,84 @@ const noCache = (_res: express.Response) => {
   _res.setHeader('Expires', '0');
 };
 
-// 主站前端静态服务
+// ========== HTML 动态缓存破坏（取代「部署时 sed 改写 HTML」） ==========
+// 部署脚本以前会就地改写 public/**.html 给 .css/.js 加 ?v=时间戳，
+// 副作用是服务器工作区永远处于「已修改」，手动 git pull 必定冲突。
+// 现在改成响应时按资源 mtime 追加 ?v=，不需要改动仓库里的任何文件：
+//   - 资源没变 → URL 不变，浏览器（及未来的 CDN）直接命中缓存
+//   - 资源变了 → mtime 变 → URL 变 → 客户端必然重新拉取
+const BUST_RE = /(href|src)="([^"]+?\.(?:css|js))(?:\?[^"]*)?"/gi;
+
+function assetVersion(absFile: string): string | null {
+  try {
+    const st = fs.statSync(absFile);
+    return st.isFile() ? String(Math.floor(st.mtimeMs)) : null;
+  } catch {
+    return null;
+  }
+}
+
+/** 把 HTML 里的本地 .css / .js 引用改成带版本号的 URL（外部链接、data: 不动）
+ *  urlDir：当前页面的 URL 目录，如 `/` 、`/history/`。
+ *  相对路径必须按浏览器规则解析：`../../css/style.css` 从 `/history/` 出发会被
+ *  截断到根，得到 `/css/style.css`（文件系统语义会跑到 public/ 外面去，找不到文件）
+ */
+function bustAssetUrls(html: string, urlDir: string): string {
+  return html.replace(BUST_RE, (whole: string, attr: string, url: string) => {
+    if (url.includes('://') || url.startsWith('//') || url.startsWith('data:')) return whole;
+    let pathname = url;
+    if (!url.startsWith('/')) {
+      try {
+        pathname = new URL(url, 'http://localhost' + urlDir).pathname;
+      } catch {
+        return whole; // 解析不了就原样不动
+      }
+    }
+    const abs = path.join(PUBLIC_DIR, decodeURIComponent(pathname));
+    const v = assetVersion(abs);
+    return v ? `${attr}="${url}?v=${v}"` : whole;
+  });
+}
+
+/** 发 HTML：读文件 → 改写资源 URL → 带 no-cache 响应头返回 */
+function sendHtml(res: express.Response, absFile: string) {
+  const rel = path.relative(PUBLIC_DIR, absFile).split(path.sep).join('/');
+  const slash = rel.lastIndexOf('/');
+  const urlDir = slash < 0 ? '/' : '/' + rel.slice(0, slash + 1);
+  const html = bustAssetUrls(fs.readFileSync(absFile, 'utf8'), urlDir);
+  noCache(res);
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.send(html);
+}
+
+/** URL → public/ 下的 .html 绝对路径（不是 HTML / 不存在 / 越界 则返回 null） */
+function resolveHtmlFile(urlPath: string): string | null {
+  let rel = decodeURIComponent(urlPath).replace(/\\/g, '/');
+  while (rel.startsWith('/')) rel = rel.slice(1);
+  if (rel === '' || rel.endsWith('/')) rel += 'index.html';
+  if (!rel.toLowerCase().endsWith('.html')) return null;
+  const abs = path.resolve(PUBLIC_DIR, rel);
+  if (!abs.startsWith(PUBLIC_DIR + path.sep)) return null; // 防目录穿越
+  try {
+    return fs.statSync(abs).isFile() ? abs : null;
+  } catch {
+    return null;
+  }
+}
+
+app.use((req, res, next) => {
+  if (req.method !== 'GET' && req.method !== 'HEAD') return next();
+  if (req.path.startsWith('/api/') || req.path.startsWith('/.well-known/')) return next();
+  const file = resolveHtmlFile(req.path);
+  if (!file) return next();
+  try {
+    sendHtml(res, file);
+  } catch {
+    next(); // 读不到就交给后面的静态服务
+  }
+});
+
+// 主站前端静态资源（css / js / 图片 / 字体 …）
 app.use(express.static(PUBLIC_DIR, { setHeaders: noCache }));
 
 // ========== 自动注册 app/ 目录下的子应用 ==========
@@ -198,8 +275,13 @@ app.use('/.well-known/acme-challenge', (_req, res) => {
 });
 
 // 其他未匹配请求回退到首页（SPA 支持）
-app.get('*', (req, res) => {
-  res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
+app.get('*', (_req, res) => {
+  const indexFile = path.join(PUBLIC_DIR, 'index.html');
+  try {
+    sendHtml(res, indexFile);
+  } catch {
+    res.sendFile(indexFile);
+  }
 });
 
 // ========== 启动（HTTP；证书存在时同时启动 HTTPS） ==========

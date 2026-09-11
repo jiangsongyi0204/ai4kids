@@ -208,9 +208,11 @@ npm test            # 页面完整性 + API 检查（需先启动服务）
 ## 🚀 部署（对齐 `.github/workflows/deploy.yml`，阿里云 ECS）
 
 1. 推送 `main` 分支，GitHub Actions（`.github/workflows/deploy.yml`）自动 SSH 到服务器执行：
-   `git reset --hard origin/main` + `git clean -fd` → `npm install` → 给 `public/**.html` 里的 `.css`/`.js` 引用注入时间戳（缓存破坏）→ `pm2 startOrRestart ecosystem.config.js --update-env` → `pm2 save`
+   `git reset --hard origin/main` + `git clean -fd` → `npm install` → `pm2 startOrRestart ecosystem.config.js --update-env` → `pm2 save`
 2. 服务器上由 PM2 跑 `server/server.ts`（Express + ts-node，**同时监听 80 与 443**），访问 `https://ai4kids.online/` 直接进入课程；证书不存在时自动只跑 HTTP，部署不会失败
 3. 本地验证：`npm run dev` 后打开 `http://localhost:80/`（权限受限时 `PORT=8080 npm run dev`）
+
+> **前端缓存破坏在运行时完成**：`server.ts` 响应 HTML 时读取 `.css` / `.js` 文件的 mtime 并追加 `?v=<mtime>`（资源不变则 URL 不变，命中缓存；资源一变 URL 就变，客户端必然重新拉取）。部署脚本**不再改写仓库里的 HTML**，所以服务器工作区始终干净，手动 `git pull` 不会再有冲突。
 
 > 因为 Node 始终占着 80 端口，加证书不改端口，所以**部署过程站点不中断**。详见上文「🔒 HTTPS 部署」。
 
