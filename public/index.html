@@ -4,7 +4,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🧠 人工智能简史 - AI星少年 · 成长营</title>
+    <title>🧠 人工智能简史</title>
     <link href="https://fonts.googleapis.cn/css2?family=ZCOOL+KuaiLe&family=Noto+Serif+SC:wght@500;700;900&display=swap" rel="stylesheet">
     <!-- 移植适配：原 ../../../css/style.css（指向 sx 站点根）→ 本站 /css/style.css -->
     <link rel="stylesheet" href="/css/style.css?v=1789090598">
@@ -255,7 +255,7 @@
     </div>
     <div class="tl-note">✨ 走完 16 站，你就读懂了人工智能「从出生到今天」的完整故事——点击任意一站，翻开它的故事、知识与小测验吧！真正的未来，正等着你的想象与行动～</div>
 </div>
-    <!-- 移植适配：课程目录已作为本站首页；课件路径 /experience/E04/lessonN.html。
+    <!-- 移植适配：课程目录已作为本站首页；课件路径 /history/lessonN.html。
          目前只移植了第 1–6 站，第 7 站起课件未上线（置灰不可点）。补齐课件后把 MAX_LESSON 改大即可。
          原页面在此处的“登录/课程权限守卫”依赖 sx 平台的 /api/auth/status 与 /api/user/accessible-courses，
          本站无该后端，故移除。 -->
@@ -268,7 +268,7 @@
     <script>
     (function () {
         var MAX_LESSON = 6;                        // 已移植的站数
-        var BASE = '/experience/E04/lesson';       // 课件所在目录
+        var BASE = '/history/lesson';              // 课件所在目录
         document.querySelectorAll('.ncard[href]').forEach(function (a) {
             var m = /^lesson(\d+)\.html$/.exec(a.getAttribute('href'));
             if (!m) return;

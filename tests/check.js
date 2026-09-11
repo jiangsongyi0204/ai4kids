@@ -61,12 +61,12 @@ async function main() {
   console.log('-- 1. 页面加载 --');
   await checkTitle('/', '首页（人工智能简史课程目录）', '人工智能简史');
   await checkTitle('/guide.html', '教育全景导航', 'AI时代教育全景导航');
-  await checkTitle('/experience/E04/lesson1.html', '简史第1站 图灵测试', '图灵测试');
-  await checkTitle('/experience/E04/lesson2.html', '简史第2站 人工智能诞生', '人工智能诞生');
-  await checkTitle('/experience/E04/lesson3.html', '简史第3站 感知机', '感知机');
-  await checkTitle('/experience/E04/lesson4.html', '简史第4站 ELIZA', 'ELIZA');
-  await checkTitle('/experience/E04/lesson5.html', '简史第5站 专家系统', '专家系统');
-  await checkTitle('/experience/E04/lesson6.html', '简史第6站 反向传播', '反向传播');
+  await checkTitle('/history/lesson1.html', '简史第1站 图灵测试', '图灵测试');
+  await checkTitle('/history/lesson2.html', '简史第2站 人工智能诞生', '人工智能诞生');
+  await checkTitle('/history/lesson3.html', '简史第3站 感知机', '感知机');
+  await checkTitle('/history/lesson4.html', '简史第4站 ELIZA', 'ELIZA');
+  await checkTitle('/history/lesson5.html', '简史第5站 专家系统', '专家系统');
+  await checkTitle('/history/lesson6.html', '简史第6站 反向传播', '反向传播');
   await checkTitle('/harvest.html', '收获墙', '收获墙');
 
   // 二、关键元素
@@ -76,15 +76,15 @@ async function main() {
   await checkContains('/', '首页', 'lesson6.html', '16站目录含课件链接');
   await checkContains('/', '首页', 'MAX_LESSON = 6', '已移植站数开关');
   await checkContains('/', '首页', '/harvest.html', '收获墙入口按钮');
-  await checkContains('/experience/E04/lesson.css', '课件样式', '--acc', '课件样式表可用');
-  await checkContains('/experience/E04/lesson1.html', '简史第1站', '返回课程', '返回课程目录按钮');
-  await checkContains('/experience/E04/lesson1.html', '简史第1站', 'enigma-break.js', '谜题脚本');
-  await checkContains('/experience/E04/lesson2.html', '简史第2站', 'lesson.js', '课件脚本接入');
-  await checkContains('/experience/E04/lesson3.html', '简史第3站', 'perceptron-trainer.js', '感知机实验脚本');
-  await checkContains('/experience/E04/lesson4.html', '简史第4站', 'eliza-lab.js', 'ELIZA 实验室脚本');
-  await checkContains('/experience/E04/lesson5.html', '简史第5站', 'expert-lab.js', '专家系统实验室脚本');
-  await checkContains('/experience/E04/lesson6.html', '简史第6站', '反向传播', '第6站正文');
-  await checkContains('/experience/E04/lesson6.html', '简史第6站', 'neural-net-lab.js', '神经网络实验室脚本');
+  await checkContains('/history/lesson.css', '课件样式', '--acc', '课件样式表可用');
+  await checkContains('/history/lesson1.html', '简史第1站', '返回课程', '返回课程目录按钮');
+  await checkContains('/history/lesson1.html', '简史第1站', 'enigma-break.js', '谜题脚本');
+  await checkContains('/history/lesson2.html', '简史第2站', 'lesson.js', '课件脚本接入');
+  await checkContains('/history/lesson3.html', '简史第3站', 'perceptron-trainer.js', '感知机实验脚本');
+  await checkContains('/history/lesson4.html', '简史第4站', 'eliza-lab.js', 'ELIZA 实验室脚本');
+  await checkContains('/history/lesson5.html', '简史第5站', 'expert-lab.js', '专家系统实验室脚本');
+  await checkContains('/history/lesson6.html', '简史第6站', '反向传播', '第6站正文');
+  await checkContains('/history/lesson6.html', '简史第6站', 'neural-net-lab.js', '神经网络实验室脚本');
   await checkContains('/js/ai-evolution.js', '演化数据', '1950', '数据起点年份');
 
   // 三、导航跳转
@@ -93,9 +93,10 @@ async function main() {
   log(home.html.includes('class="tl"'), '首页 时间轴容器', '16 站时间轴');
   log(home.html.includes('lesson16.html'), '首页 完整 16 站目录', '课程目录完整');
   log(!home.html.includes('hero-btns'), '首页 无海报/打印按钮', '已移除课程海报与课程表打印入口');
-  log(!home.html.includes('class="top"'), '首页 无顶部返回栏', '已移除顶部「🏠 首页 / E04 体验课」栏');
+  log(!home.html.includes('class="top"'), '首页 无顶部返回栏', '已移除顶部「首页 / 体验课」栏');
   log(home.html.includes('/css/style.css'), '首页 课件样式接入', 'style.css 路径已适配本站');
-  const lesson1 = await fetchHtml('/experience/E04/lesson1.html');
+  const lesson1 = await fetchHtml('/history/lesson1.html');
+  log(!lesson1.html.includes('E04'), '课件 无 E04 代号', '已移除课程代号 E04');
   log(lesson1.html.includes('href="/"'), '课件 返回课程目录', '返回首页');
   log(lesson1.html.includes('src="turing-lab.js'), '课件 互动实验脚本', '图灵实验室');
   log(!lesson1.html.includes('ai-fab'), '课件 无 AI 助手', '已移除「🤖 AI 讲解员」悬浮按钮与面板');

@@ -1,7 +1,6 @@
 /**
  * ai4kids · 人工智能的未来 Express 入口
  *
- * 结构对齐 sx-aitrialclass（课程星云）：
  *   - public/    主站前端（静态服务，根目录）
  *   - app/       子应用源码（自动扫描 + 自动注册静态路由）
  *   - database/  运行时数据（AI 生成的图像/文字/视频/音乐 + SQLite）
