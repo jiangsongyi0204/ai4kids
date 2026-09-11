@@ -12,9 +12,11 @@
  * 如需改端口：PORT=8080 npm run dev
  *
  * HTTPS（不用 Nginx，Node 自己扛）：
- *   TLS_DIR      证书目录，默认 /etc/letsencrypt/live/ai4kids.online
- *   HTTPS_PORT   HTTPS 端口，默认 443
- *   ACME_WEBROOT certbot 的 HTTP-01 验证目录，默认 /var/www/certbot
+ *   TLS_DIR       证书目录，默认 /etc/letsencrypt/live/ai4kids.online
+ *   HTTPS_PORT    HTTPS 端口，默认 443
+ *   ACME_WEBROOT  certbot 的 webroot，默认 /var/www/certbot
+ *                 （验证文件实际在 <ACME_WEBROOT>/.well-known/acme-challenge/）
+ *   HTTP_REDIRECT 设成 0 → 80 端口不再 301 跳转（本地想 http/https 并存时用）
  *   → 证书存在：443 跑 HTTPS，80 的请求 301 跳过去（ACME 验证路径除外）
  *   → 证书不存在：只跑 HTTP（本地开发就是这种情况）
  */
@@ -215,6 +217,9 @@ function readCerts(): { key: Buffer; cert: Buffer } | null {
 
 const tlsCerts = readCerts();
 const httpsOn = !!(tlsCerts && HTTPS_PORT > 0);
+// 默认：有证书时 80 端口全部 301 跳 HTTPS（线上要的就是这个）。
+// 本地想「http://localhost/ 和 https://localhost/ 同时都能用」时，把 HTTP_REDIRECT 设为 0。
+const HTTP_REDIRECT = process.env.HTTP_REDIRECT !== '0';
 
 if (tlsCerts && HTTPS_PORT > 0) {
   https.createServer(tlsCerts, app).listen(HTTPS_PORT, HOST, () => {
@@ -226,7 +231,7 @@ http.createServer((req, res) => {
   const url = req.url || '/';
   // 证书验证请求必须留在 80 端口，不能跳转，否则 certbot 校验失败
   const isAcme = url.startsWith('/.well-known/acme-challenge/');
-  if (httpsOn && !isAcme) {
+  if (httpsOn && HTTP_REDIRECT && !isAcme) {
     const host = String(req.headers.host || '').replace(/:\d+$/, '') || `localhost:${HTTPS_PORT}`;
     res.writeHead(301, { Location: `https://${host}${url}` });
     res.end();
@@ -235,9 +240,13 @@ http.createServer((req, res) => {
   app(req, res);
 }).listen(PORT, HOST, () => {
   console.log('🚀 ai4kids · 人工智能的未来 服务器已启动');
-  console.log(httpsOn
-    ? `   HTTP : http://${HOST}:${PORT}/  → 301 跳转到 HTTPS`
-    : `   HTTP : http://${HOST}:${PORT}/  （未检测到证书，本次只跑 HTTP）`);
+  if (!httpsOn) {
+    console.log(`   HTTP : http://${HOST}:${PORT}/  （未检测到证书，本次只跑 HTTP）`);
+  } else if (HTTP_REDIRECT) {
+    console.log(`   HTTP : http://${HOST}:${PORT}/  → 301 跳转到 HTTPS`);
+  } else {
+    console.log(`   HTTP : http://${HOST}:${PORT}/  （HTTP_REDIRECT=0，不跳转，http/https 并存）`);
+  }
   for (const name of APPS) {
     console.log(`   子应用: /${name}/`);
   }

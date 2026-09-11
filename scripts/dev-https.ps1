@@ -4,9 +4,12 @@
 #  用法：
 #      npm run dev:https
 #
-#  之后：
-#      https://localhost/        正常打开（浏览器会提示证书不受信任 → 高级 → 继续访问）
-#      http://localhost/         301 跳转到 https://localhost/
+#  之后（本地默认不跳转，两种协议并存）：
+#      https://localhost/        正常打开（浏览器提示证书不受信任 → 高级 → 继续访问）
+#      http://localhost/         也照常可用，npm test 可以正常跑
+#
+#  想验证线上那种 80 → 443 的 301 跳转：
+#      $env:HTTP_REDIRECT=1; npm run dev:https
 #
 #  想换端口（比如 443 被占用）：
 #      $env:HTTPS_PORT=8443; npm run dev:https
@@ -67,12 +70,17 @@ if (-not $env:PORT)       { $env:PORT = '80' }
 if (-not $env:HTTPS_PORT) { $env:HTTPS_PORT = '443' }
 $env:TLS_DIR      = $certs
 $env:ACME_WEBROOT = $acme
+# 本地默认「不跳转」：这样 http://localhost/ 照常可用（npm test 也能正常跑），
+# 同时 https://localhost/ 也能用，不用在两种模式之间来回切。
+# 想验证线上那种 80 → 443 的 301 跳转，就 $env:HTTP_REDIRECT=1 再跑本脚本。
+if (-not $env:HTTP_REDIRECT) { $env:HTTP_REDIRECT = '0' }
 
 Write-Host ""
 Write-Host "🚀 启动开发服务器（HTTP :$($env:PORT) + HTTPS :$($env:HTTPS_PORT)）"
 Write-Host "   https://localhost:$($env:HTTPS_PORT)/   ← 浏览器提示证书不受信任时选「高级 → 继续访问」"
-Write-Host "   http://localhost:$($env:PORT)/    会 301 跳转到上面"
-Write-Host "   （想免掉警告可以装 mkcert，见本文件顶部注释；线上是 Let's Encrypt 正式证书，不会有警告）"
+Write-Host "   http://localhost:$($env:PORT)/     也照常可用（本地默认不跳转，npm test 能正常跑）"
+Write-Host "   想验证线上那种 301 跳转：`$env:HTTP_REDIRECT=1; npm run dev:https"
+Write-Host "   （想免掉证书警告可用 mkcert，见本文件顶部注释；线上是 Let's Encrypt 正式证书，没有警告）"
 Write-Host ""
 
 Set-Location $root
