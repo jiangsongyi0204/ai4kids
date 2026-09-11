@@ -124,7 +124,7 @@ Node 一直占着 80 端口，加证书不改变端口，所以**部署过程不
 
 | 文件 | 用途 |
 |---|---|
-| `ecosystem.config.js` | PM2 配置：`PORT=80`、`HTTPS_PORT=443`、`TLS_DIR`、`ACME_WEBROOT` |
+| `ecosystem.config.js` | PM2 配置：`PORT=80`、`HTTPS_PORT=443`、`TLS_DIR`、`ACME_WEBROOT`（certbot 的 webroot；验证文件实际落在 `<ACME_WEBROOT>/.well-known/acme-challenge/`） |
 | `deploy/setup-https.sh` | 一次性脚本（装 certbot + 签证书 + 配续期重启） |
 | `server/server.ts` | 启动时读证书：有则起 HTTPS + 80 跳转，无则只跑 HTTP |
 

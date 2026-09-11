@@ -100,12 +100,15 @@ else
   echo "    ❌ 等了 40 秒本机 80 端口仍无响应，请先看：pm2 logs ai4kids --lines 50 --nostream"
   exit 1
 fi
-# 放一个探针文件，确认 ACME 路径确实由 Node 提供
-echo "ai4kids-acme-ok" > "$WEBROOT/ping.txt"
+# 放一个探针文件 —— 路径必须和 certbot 实际写入的一致：
+#   <webroot>/.well-known/acme-challenge/<token>
+# 否则自检会「假通过」，到 certbot 那一步才 404。
+mkdir -p "$WEBROOT/.well-known/acme-challenge"
+echo "ai4kids-acme-ok" > "$WEBROOT/.well-known/acme-challenge/ping.txt"
 if [ "$(curl -fsS --max-time 10 "http://127.0.0.1/.well-known/acme-challenge/ping.txt" 2>/dev/null)" = "ai4kids-acme-ok" ]; then
   echo "    ✅ ACME 验证路径通畅"
 else
-  echo "    ❌ /.well-known/acme-challenge/ 未正确响应，certbot 会失败（检查 server.ts 里是否注册了该静态目录）"; exit 1
+  echo "    ❌ /.well-known/acme-challenge/ 未正确响应，certbot 会失败（检查 server.ts 里的 ACME_CHALLENGE_DIR）"; exit 1
 fi
 
 echo "==> 4/8 申请 Let's Encrypt 证书（$DOMAIN + $WWW_DOMAIN）"
@@ -155,7 +158,7 @@ elif command -v ufw >/dev/null && ufw status 2>/dev/null | grep -q "Status: acti
 else
   echo "    未检测到启用的本机防火墙，跳过"
 fi
-rm -f "$WEBROOT/ping.txt"
+rm -f "$WEBROOT/.well-known/acme-challenge/ping.txt"
 
 echo
 echo "============================================================"

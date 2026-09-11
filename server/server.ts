@@ -183,10 +183,14 @@ app.get('/api/harvest', (req, res) => {
   }
 });
 
-// Let's Encrypt 的 HTTP-01 验证文件（certbot 写到这里，必须能通过 80 端口访问到）
-// 目录不存在时先建出来，避免 serve-static 因 root 不存在而抛 ENOENT
-try { fs.mkdirSync(ACME_WEBROOT, { recursive: true }); } catch { /* 权限不足时忽略 */ }
-app.use('/.well-known/acme-challenge', express.static(ACME_WEBROOT));
+// Let's Encrypt 的 HTTP-01 验证文件。
+// ⚠️ certbot `--webroot -w <ACME_WEBROOT>` 会把文件写到
+//      <ACME_WEBROOT>/.well-known/acme-challenge/<token>
+//    所以这里必须把 URL 里的 .well-known/acme-challenge 段保留下来
+//    （等价于 nginx 里用 `root` 而不是 `alias`），不能直接 static(ACME_WEBROOT)。
+const ACME_CHALLENGE_DIR = path.join(ACME_WEBROOT, '.well-known', 'acme-challenge');
+try { fs.mkdirSync(ACME_CHALLENGE_DIR, { recursive: true }); } catch { /* 权限不足时忽略 */ }
+app.use('/.well-known/acme-challenge', express.static(ACME_CHALLENGE_DIR));
 // 找不到验证文件就干脆 404，不要落到下面的 SPA 回退（否则 certbot 失败时只看到首页，难排查）
 app.use('/.well-known/acme-challenge', (_req, res) => {
   res.status(404).type('text/plain').send('acme challenge not found');
