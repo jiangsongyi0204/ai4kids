@@ -7,6 +7,7 @@
   "scripts": {
     "start": "ts-node server/server.ts",
     "dev": "node --watch --require ts-node/register server/server.ts",
+    "dev:https": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/dev-https.ps1",
     "build": "tsc",
     "test": "node tests/check.js",
     "test:pages": "node tests/check.js"

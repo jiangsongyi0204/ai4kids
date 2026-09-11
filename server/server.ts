@@ -10,16 +10,32 @@
  * 启动：npm run dev   （监听模式，改 server 文件自动重启）
  *       npm start     （生产模式，ts-node 直跑）
  * 如需改端口：PORT=8080 npm run dev
+ *
+ * HTTPS（不用 Nginx，Node 自己扛）：
+ *   TLS_DIR      证书目录，默认 /etc/letsencrypt/live/ai4kids.online
+ *   HTTPS_PORT   HTTPS 端口，默认 443
+ *   ACME_WEBROOT certbot 的 HTTP-01 验证目录，默认 /var/www/certbot
+ *   → 证书存在：443 跑 HTTPS，80 的请求 301 跳过去（ACME 验证路径除外）
+ *   → 证书不存在：只跑 HTTP（本地开发就是这种情况）
  */
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
+import http from 'http';
+import https from 'https';
 import { openHarvestStore } from './db';
 
 const app = express();
+// 生产环境跑在 HTTPS 反向代理/负载均衡后面时，让 req.protocol / req.ip 取到真实值
+app.set('trust proxy', true);
 const PORT = Number(process.env.PORT) || 80;
 const HOST = process.env.HOST || '0.0.0.0';
+// HTTPS：证书存在时自动在 HTTPS_PORT 上开 TLS，并把 80 的请求 301 跳过去
+const HTTPS_PORT = Number(process.env.HTTPS_PORT) || 443;
+const TLS_DIR = process.env.TLS_DIR || '/etc/letsencrypt/live/ai4kids.online';
+// certbot 的 HTTP-01 验证文件目录（申请/续期证书时由本服务在 80 端口提供）
+const ACME_WEBROOT = process.env.ACME_WEBROOT || '/var/www/certbot';
 
 const APPS_DIR = path.join(__dirname, '../app');
 const PUBLIC_DIR = path.join(__dirname, '../public');
@@ -167,15 +183,58 @@ app.get('/api/harvest', (req, res) => {
   }
 });
 
+// Let's Encrypt 的 HTTP-01 验证文件（certbot 写到这里，必须能通过 80 端口访问到）
+// 目录不存在时先建出来，避免 serve-static 因 root 不存在而抛 ENOENT
+try { fs.mkdirSync(ACME_WEBROOT, { recursive: true }); } catch { /* 权限不足时忽略 */ }
+app.use('/.well-known/acme-challenge', express.static(ACME_WEBROOT));
+// 找不到验证文件就干脆 404，不要落到下面的 SPA 回退（否则 certbot 失败时只看到首页，难排查）
+app.use('/.well-known/acme-challenge', (_req, res) => {
+  res.status(404).type('text/plain').send('acme challenge not found');
+});
+
 // 其他未匹配请求回退到首页（SPA 支持）
 app.get('*', (req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
 });
 
-app.listen(PORT, HOST, () => {
-  console.log(`🚀 ai4kids · 人工智能的未来 服务器已启动: http://${HOST}:${PORT}`);
-  console.log(`   主站首页:  http://${HOST}:${PORT}/`);
+// ========== 启动（HTTP；证书存在时同时启动 HTTPS） ==========
+function readCerts(): { key: Buffer; cert: Buffer } | null {
+  try {
+    return {
+      key: fs.readFileSync(path.join(TLS_DIR, 'privkey.pem')),
+      cert: fs.readFileSync(path.join(TLS_DIR, 'fullchain.pem')),
+    };
+  } catch {
+    return null;
+  }
+}
+
+const tlsCerts = readCerts();
+const httpsOn = !!(tlsCerts && HTTPS_PORT > 0);
+
+if (tlsCerts && HTTPS_PORT > 0) {
+  https.createServer(tlsCerts, app).listen(HTTPS_PORT, HOST, () => {
+    console.log(`🔒 HTTPS 已启动: https://${HOST}:${HTTPS_PORT}/   证书: ${TLS_DIR}`);
+  });
+}
+
+http.createServer((req, res) => {
+  const url = req.url || '/';
+  // 证书验证请求必须留在 80 端口，不能跳转，否则 certbot 校验失败
+  const isAcme = url.startsWith('/.well-known/acme-challenge/');
+  if (httpsOn && !isAcme) {
+    const host = String(req.headers.host || '').replace(/:\d+$/, '') || `localhost:${HTTPS_PORT}`;
+    res.writeHead(301, { Location: `https://${host}${url}` });
+    res.end();
+    return;
+  }
+  app(req, res);
+}).listen(PORT, HOST, () => {
+  console.log('🚀 ai4kids · 人工智能的未来 服务器已启动');
+  console.log(httpsOn
+    ? `   HTTP : http://${HOST}:${PORT}/  → 301 跳转到 HTTPS`
+    : `   HTTP : http://${HOST}:${PORT}/  （未检测到证书，本次只跑 HTTP）`);
   for (const name of APPS) {
-    console.log(`   ${name}: http://${HOST}:${PORT}/${name}/`);
+    console.log(`   子应用: /${name}/`);
   }
 });

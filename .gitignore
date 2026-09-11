@@ -34,3 +34,6 @@ desktop.ini
 *.swp
 *.swo
 *~
+
+# 本地 HTTPS 自签证书（仅本机开发用，不要提交）
+.certs/

@@ -77,6 +77,70 @@ ai4kids/
 
 ---
 
+## 🔒 HTTPS 部署（ai4kids.online）
+
+线上不装 Nginx，**Express 自己监听 80 与 443**：
+
+```
+浏览器 ── https:443 ──> Express（PM2: ai4kids）
+        ── http:80  ──> Express：放行 /.well-known/acme-challenge，其余 301 跳 https
+```
+
+- 证书放在 `/etc/letsencrypt/live/ai4kids.online/`（`privkey.pem` + `fullchain.pem`）
+- **检测到证书** → 443 自动启用 HTTPS，80 的请求全部 301 跳过去
+- **没检测到证书** → 只跑 HTTP（本地开发、首次部署都是这种状态，不会启动失败）
+- 绑定 80/443 需要 root，项目的 PM2 就是以 root 运行的
+
+### 一次性配置（在 ECS 上，只需跑一次）
+
+```bash
+cd /root/projects/ai4kids
+bash deploy/setup-https.sh 你的邮箱@example.com
+```
+
+脚本自动完成：装 certbot → 用 `ecosystem.config.js` 重启 Node（监听 80）→ 校验 `/.well-known/acme-challenge/` 是否通畅 → 用 webroot 方式申请 Let's Encrypt 证书（一张证书同时覆盖 `ai4kids.online` 与 `www.ai4kids.online`）→ 重启 Node 让 443 生效 → 配好续期后自动重启 Node。
+
+> 全程 Node 都待在 80 端口上，不存在端口交接，**几乎没有中断**。
+
+### 需要人工确认的 3 件事
+
+| 项 | 说明 |
+|---|---|
+| DNS 解析 | `ai4kids.online` 和 `www.ai4kids.online` 的 A 记录都要指向 ECS 公网 IP |
+| 阿里云安全组 | 入方向放行 **80** 与 **443** |
+| ICP 备案 | 大陆节点绑域名必须备案，否则会被拦截（这是访问不通最常见的原因） |
+
+### 之后的日常发布
+
+push 到 `main` 会自动部署，`deploy.yml` 每次都执行：
+
+```bash
+pm2 startOrRestart ecosystem.config.js --update-env
+```
+
+Node 一直占着 80 端口，加证书不改变端口，所以**部署过程不会导致站点中断**。
+
+### 相关文件
+
+| 文件 | 用途 |
+|---|---|
+| `ecosystem.config.js` | PM2 配置：`PORT=80`、`HTTPS_PORT=443`、`TLS_DIR`、`ACME_WEBROOT` |
+| `deploy/setup-https.sh` | 一次性脚本（装 certbot + 签证书 + 配续期重启） |
+| `server/server.ts` | 启动时读证书：有则起 HTTPS + 80 跳转，无则只跑 HTTP |
+
+### 常用排查
+
+```bash
+pm2 logs ai4kids                                        # Node 日志（看是否打印 🔒 HTTPS 已启动）
+curl -I http://127.0.0.1/                               # 本机 80
+curl -I --resolve ai4kids.online:443:127.0.0.1 https://ai4kids.online/   # 本机 443
+ss -lntp | grep -E ':(80|443)\b'                        # 端口是否被 Node 监听
+ls -l /etc/letsencrypt/live/ai4kids.online/             # 证书是否存在
+certbot renew --dry-run                                 # 试跑一次续期
+```
+
+---
+
 ## 🧭 儿童职业启蒙101
 
 把「职业启蒙」变成一场点亮星球的游戏：

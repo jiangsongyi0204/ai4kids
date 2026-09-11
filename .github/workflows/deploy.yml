@@ -38,9 +38,11 @@ jobs:
 
             # 3. 在 HTML 中注入时间戳（缓存破坏）
             TIMESTAMP=$(date +%s)
-            find public app -name "*.html" -exec sed -i "s|\.css\"|.css?v=${TIMESTAMP}\"|g; s|\.js\"|.js?v=${TIMESTAMP}\"|g" {} \; || true
+            find public -name "*.html" -exec sed -i "s|\.css\"|.css?v=${TIMESTAMP}\"|g; s|\.js\"|.js?v=${TIMESTAMP}\"|g" {} \; || true
 
-            # 4. 重启服务（Express + ts-node，监听 80 端口）
-            pm2 restart ai4kids 2>/dev/null || pm2 start npm --name ai4kids -- run start
+            # 4. 重启服务（Node 自己监听 80 + 443，不依赖 Nginx）
+            #    证书存在时 443 自动启用 HTTPS；证书不存在则只跑 HTTP，不会挂
+            pm2 startOrRestart ecosystem.config.js --update-env
+            pm2 save || true
 
             echo "✅ 部署完成 — $(date)"

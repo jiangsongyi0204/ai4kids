@@ -1,0 +1,19 @@
+# Shell 脚本必须是 LF，否则在 Linux 上会报 `bad interpreter: /bin/bash^M`
+*.sh text eol=lf
+
+# 文本文件默认按 LF 存储，避免 Windows 提交把 LF 变成 CRLF
+*.js   text eol=lf
+*.ts   text eol=lf
+*.json text eol=lf
+*.html text eol=lf
+*.css  text eol=lf
+*.conf text eol=lf
+*.yml  text eol=lf
+
+# 图片等二进制，禁止任何换行转换
+*.jpg  binary
+*.jpeg binary
+*.png  binary
+*.webp binary
+*.woff2 binary
+*.db   binary
