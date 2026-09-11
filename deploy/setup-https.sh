@@ -40,8 +40,24 @@ if [ ! -f "$REPO_DIR/ecosystem.config.js" ]; then
   exit 1
 fi
 
+# 轮询等待 URL 可用（最多 40 秒）。
+# 注意：本项目用 ts-node 直跑 TypeScript，首次编译要几秒，
+# 不能 sleep 2 秒就下结论（否则会误判成「服务挂了」）。
+wait_ready() {
+  local url="$1"; shift
+  local i
+  for i in $(seq 1 40); do
+    if curl -fsS -o /dev/null --max-time 3 "$@" "$url" 2>/dev/null; then
+      return 0
+    fi
+    sleep 1
+  done
+  return 1
+}
+
 echo "==> 0/8 检查 DNS 解析"
-SERVER_IP="$(curl -s --max-time 8 https://api.ipify.org || echo '')"
+SERVER_IP="$(curl -s --max-time 8 https://api.ipify.org || true)"
+if [ -z "$SERVER_IP" ]; then SERVER_IP="$(curl -s --max-time 8 http://ip.3322.net || true)"; fi
 echo "    本机公网 IP : ${SERVER_IP:-未知}"
 for d in "$DOMAIN" "$WWW_DOMAIN"; do
   if command -v getent >/dev/null; then
@@ -76,17 +92,17 @@ if ! command -v pm2 >/dev/null; then
 fi
 pm2 startOrRestart ecosystem.config.js --update-env
 pm2 save || true
-sleep 2
 
 echo "==> 3/8 通过 80 端口验证站点与 ACME 路径"
-if curl -fsS -o /dev/null --max-time 10 "http://127.0.0.1/" ; then
+if wait_ready "http://127.0.0.1/"; then
   echo "    ✅ 本机 http://127.0.0.1/ 正常"
 else
-  echo "    ❌ 本机 80 端口无响应，请先看 pm2 logs ai4kids"; exit 1
+  echo "    ❌ 等了 40 秒本机 80 端口仍无响应，请先看：pm2 logs ai4kids --lines 50 --nostream"
+  exit 1
 fi
 # 放一个探针文件，确认 ACME 路径确实由 Node 提供
 echo "ai4kids-acme-ok" > "$WEBROOT/ping.txt"
-if curl -fsS --max-time 10 "http://127.0.0.1/.well-known/acme-challenge/ping.txt" | grep -q "ai4kids-acme-ok"; then
+if [ "$(curl -fsS --max-time 10 "http://127.0.0.1/.well-known/acme-challenge/ping.txt" 2>/dev/null)" = "ai4kids-acme-ok" ]; then
   echo "    ✅ ACME 验证路径通畅"
 else
   echo "    ❌ /.well-known/acme-challenge/ 未正确响应，certbot 会失败（检查 server.ts 里是否注册了该静态目录）"; exit 1
@@ -102,13 +118,12 @@ certbot certonly \
 echo "==> 5/8 重启 Node，让 443 上的 HTTPS 生效"
 pm2 restart ai4kids --update-env || pm2 startOrRestart ecosystem.config.js --update-env
 pm2 save || true
-sleep 3
 
 echo "==> 6/8 验证 HTTPS"
-if curl -fsS -o /dev/null --max-time 10 --resolve "${DOMAIN}:443:127.0.0.1" "https://${DOMAIN}/" ; then
+if wait_ready "https://${DOMAIN}/" --resolve "${DOMAIN}:443:127.0.0.1"; then
   echo "    ✅ https://${DOMAIN}/ 正常"
 else
-  echo "    ⚠️  本机 HTTPS 校验失败，请看 pm2 logs ai4kids（证书路径：${CERT_LIVE}）"
+  echo "    ⚠️  本机 HTTPS 校验失败，请看 pm2 logs ai4kids --lines 50 --nostream（证书路径：${CERT_LIVE}）"
 fi
 code="$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 -H 'Host: '"$DOMAIN" "http://127.0.0.1/" || echo '000')"
 echo "    HTTP 跳转状态码：$code （期望 301）"
