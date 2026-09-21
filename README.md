@@ -4,7 +4,7 @@
 
 基于《AI时代教育全景导航》(guide.html) 的教育游戏系列。后端 **Node.js + Express + TypeScript**，前端纯 HTML/CSS/JS，零构建步骤，子应用自动扫描。
 
-**当前线上内容**：首页《人工智能简史》16 站互动课程（第 1–6 站已上线）· 🏆 收获墙 · 《AI时代教育全景导航》。
+**当前线上内容**：首页课程卡片一览 · 《人工智能简史》16 站互动课程（第 1–6 站已上线）· 🏆 收获墙 · 《AI时代教育全景导航》。
 
 ---
 
@@ -40,10 +40,13 @@ npm run dev:https  # 想用 HTTPS：自签证书，同时跑 80 + 443
 
 | 页面 | 本地 | 线上 |
 |------|------|------|
-| 首页（人工智能简史 · 课程目录） | `http://localhost/` | `https://ai4kids.online/` |
-| 第 1–6 站课件 | `http://localhost/history/lesson1.html` … `lesson6.html` | `https://ai4kids.online/history/lesson1.html` … |
+| 首页（课程卡片一览） | `http://localhost/` | `https://ai4kids.online/` |
+| 《人工智能简史》课程目录（16 站时间轴） | `http://localhost/course/aitimeline/` | `https://ai4kids.online/course/aitimeline/` |
+| 第 1–6 站课件 | `http://localhost/course/aitimeline/lesson1.html` … `lesson6.html` | `https://ai4kids.online/course/aitimeline/lesson1.html` … |
 | 🏆 收获墙（学员收获卡片） | `http://localhost/harvest.html` | `https://ai4kids.online/harvest.html` |
 | AI时代教育全景导航 | `http://localhost/guide.html` | `https://ai4kids.online/guide.html` |
+
+> 旧的 `/history/lessonN.html` 会 **301 重定向** 到 `/course/aitimeline/lessonN.html`（老书签仍可用）；`/course/` 本身没有页面，会 301 回首页。
 
 > 端口默认 80，可用 `PORT=8080` 改；跑了 `npm run dev:https` 后把 `http://localhost/` 换成 `https://localhost/` 也能访问。
 
@@ -69,24 +72,25 @@ ai4kids/
 │   ├── server.ts                  # Express 入口，静态服务，/api/apps 自动扫描，/api/harvest 收获墙
 │   └── db.ts                      # SQLite 数据层（Node 内置 node:sqlite，无第三方依赖）
 ├── public/                        # 主站前端（静态服务根目录）
-│   ├── index.html                 # 首页：「人工智能简史」课程目录（16 站时间轴）
-│   ├── harvest.html               # 🏆 收获墙：所有学员的收获卡片
+│   ├── index.html                 # 首页：课程卡片一览（点击卡片进入课程目录）
+│   ├── harvest.html               # 🏆 收获墙：所有学员的收获卡片（入口在首页）
 │   ├── guide.html                 # AI时代教育全景导航
 │   ├── css/                       # common.css（主站公共样式）+ style.css（课件样式）
 │   ├── js/                        # 公共脚本（tracker / classroom-float / cloud-records / lesson-recorder）
 │   ├── fonts/                     # Orbitron 字体（课件用）
-│   └── history/                   # 人工智能简史 · 课件（已上线第 1–6 站，URL = /history/lessonN.html）
-│       ├── index.html             # 仅 meta 跳回 / 的兼容页
-│       ├── lesson1.html … lesson6.html
-│       ├── lesson.css / lesson.js # 各站共享样式与交互脚本
-│       ├── *-lab.css / *-lab.js   # 各站互动实验室（图灵 / 谜题 / 感知机 / ELIZA / 专家系统 / 神经网络）
-│       └── img/                   # 配图
+│   └── course/                    # 课程容器（一门课一个子目录）
+│       └── aitimeline/            # 《人工智能简史》：课程目录 + 课件（URL = /course/aitimeline/）
+│           ├── index.html         # 16 站时间轴课程目录
+│           ├── lesson1.html … lesson6.html
+│           ├── lesson.css / lesson.js # 各站共享样式与交互脚本
+│           ├── *-lab.css / *-lab.js   # 各站互动实验室（图灵 / 谜题 / 感知机 / ELIZA / 专家系统 / 神经网络）
+│           └── img/               # 配图
 ├── app/                           # （当前不存在）子应用：建 app/<name>/index.html + config.json 即自动注册到 /<name>/，/api/apps 现返回空数组
 ├── database/                      # 运行时数据（AI 生成物 + SQLite）
 │   ├── images/ text/ videos/ music/   # 大模型生成的图像 / 文字 / 视频 / 音乐（启动时自动创建）
 │   └── ai4kids.db                 # SQLite 数据库（harvests 表 = 收获墙，首次启动自动建表）
 ├── tests/
-│   └── check.js                   # 自动化测试：页面加载 + 关键元素 + 导航 + API（43 条断言）
+│   └── check.js                   # 自动化测试：页面加载 + 关键元素 + 导航 + API（57 条断言）
 ├── scripts/dev-https.ps1          # 本地 HTTPS：自签证书 + 启动服务（Windows）
 ├── deploy/setup-https.sh          # 线上一次性配置：certbot 签证书 + 续期自动重启
 ├── ecosystem.config.js            # PM2 配置（PORT=80 / HTTPS_PORT=443 / TLS_DIR / ACME_WEBROOT）
@@ -162,9 +166,9 @@ certbot renew --dry-run                                 # 试跑一次续期
 
 ---
 
-## 🧠 人工智能简史（当前首页）
+## 🧠 人工智能简史（`/course/aitimeline/`）
 
-首页（`public/index.html`）是 **16 站时间轴课程目录**，从 1950 年图灵测试一路走到今天。**第 1–6 站已上线**，第 7 站起在首页显示为「🚧 本站课件尚未上线」（置灰不可点）。
+首页（`public/index.html`）只放**课程卡片一览**；点卡片进入课程目录（`public/course/aitimeline/index.html`，URL `/course/aitimeline/`），那是一份 **16 站时间轴课程目录**，从 1950 年图灵测试一路走到今天。**第 1–6 站已上线**，第 7 站起在目录里显示为「🚧 本站课件尚未上线」（置灰不可点）。
 
 | 站 | 年份 | 主题 | 互动实验室 |
 |---|---|---|---|
@@ -177,8 +181,8 @@ certbot renew --dry-run                                 # 试跑一次续期
 
 每站课件都是同一套结构：🚀 出发 → 🕰️ 故事 → 📖 知识 → 🖐️ 小任务 → ❓ 小测验 → 🏁 完成，最后一步可以写下**收获**并提交到收获墙（`POST /api/harvest`）。
 
-- 课件路径：`public/history/` → URL `/history/lessonN.html`
-- 补齐后续站点课件后，把 `public/index.html` 里的 `MAX_LESSON = 6` 调大即可
+- 课件路径：`public/course/aitimeline/` → URL `/course/aitimeline/lessonN.html`
+- 补齐后续站点课件后，把 `public/course/aitimeline/index.html` 里的 `MAX_LESSON = 6` 调大即可
 
 ---
 

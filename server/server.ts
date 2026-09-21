@@ -81,8 +81,8 @@ function assetVersion(absFile: string): string | null {
 }
 
 /** 把 HTML 里的本地 .css / .js 引用改成带版本号的 URL（外部链接、data: 不动）
- *  urlDir：当前页面的 URL 目录，如 `/` 、`/history/`。
- *  相对路径必须按浏览器规则解析：`../../css/style.css` 从 `/history/` 出发会被
+ *  urlDir：当前页面的 URL 目录，如 `/` 、`/course/`。
+ *  相对路径必须按浏览器规则解析：`../../css/style.css` 从 `/course/` 出发会被
  *  截断到根，得到 `/css/style.css`（文件系统语义会跑到 public/ 外面去，找不到文件）
  */
 function bustAssetUrls(html: string, urlDir: string): string {
@@ -138,6 +138,20 @@ app.use((req, res, next) => {
   } catch {
     next(); // 读不到就交给后面的静态服务
   }
+});
+
+// 每门课在 public/course/<课程名>/ 下自成一套（course/ 只是「按课程分目录」的容器）。
+// 这里做几件兼容/纠偏：
+//   1) 老课件路径 /history/lessonN.html → /course/aitimeline/lessonN.html（老书签仍可用）
+//   2) /course 与 /course/ 本身没有页面 → 回站点首页（首页就是课程一览）
+//   3) 目录 URL 漏了末尾斜杠 → 补上，否则 resolveHtmlFile 认不出它是目录，会静默回退成首页
+app.use((req, res, next) => {
+  if (req.method !== 'GET' && req.method !== 'HEAD') return next();
+  const p = req.path;
+  if (p === '/course' || p === '/course/') return res.redirect(301, '/');
+  if (p === '/course/aitimeline') return res.redirect(301, '/course/aitimeline/');
+  if (p !== '/history' && !p.startsWith('/history/')) return next();
+  res.redirect(301, '/course/aitimeline' + (p === '/history' ? '/' : p.slice('/history'.length)));
 });
 
 // 主站前端静态资源（css / js / 图片 / 字体 …）
