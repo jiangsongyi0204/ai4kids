@@ -141,17 +141,12 @@ app.use((req, res, next) => {
 });
 
 // 每门课在 public/course/<课程名>/ 下自成一套（course/ 只是「按课程分目录」的容器）。
-// 这里做几件兼容/纠偏：
-//   1) 老课件路径 /history/lessonN.html → /course/aitimeline/lessonN.html（老书签仍可用）
-//   2) /course 与 /course/ 本身没有页面 → 回站点首页（首页就是课程一览）
-//   3) 目录 URL 漏了末尾斜杠 → 补上，否则 resolveHtmlFile 认不出它是目录，会静默回退成首页
+// /course 与 /course/ 本身没有页面 → 回站点首页（首页就是课程一览）；
+// 目录 URL 漏写末尾斜杠时，由后面的 express.static 自动 301 补上。
 app.use((req, res, next) => {
   if (req.method !== 'GET' && req.method !== 'HEAD') return next();
-  const p = req.path;
-  if (p === '/course' || p === '/course/') return res.redirect(301, '/');
-  if (p === '/course/aitimeline') return res.redirect(301, '/course/aitimeline/');
-  if (p !== '/history' && !p.startsWith('/history/')) return next();
-  res.redirect(301, '/course/aitimeline' + (p === '/history' ? '/' : p.slice('/history'.length)));
+  if (req.path === '/course' || req.path === '/course/') return res.redirect(301, '/');
+  return next();
 });
 
 // 主站前端静态资源（css / js / 图片 / 字体 …）

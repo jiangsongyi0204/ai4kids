@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -79,33 +79,43 @@
         <span class="ic">🎓</span>
         <h1>AI4Kids 人工智能课堂</h1>
         <p>选一门课，跟着故事、互动实验和小任务，一步一步读懂人工智能。</p>
-        <div class="meta">📚 1 门课程 · 🛰️ 16 站故事 · ⏱ 每站约 60 分钟</div>
+        <div class="meta">📚 1 门课程 · 🎮 互动实验 · 🔁 四步循环可视化 · ⏱ 约 20 分钟</div>
     </header>
 
     <div class="sec-head">
         <h2>📚 课程一览</h2>
-        <span>点开卡片，进入课程目录</span>
+        <span>点开卡片，开始上课</span>
     </div>
 
     <div class="grid">
-        <!-- 课程卡片：人工智能简史（点击进入课程目录 /course/） -->
-        <a class="ccard" href="/course/aitimeline/">
+        <!-- 课程卡片：MCST 图解（点击进入 /course/mcst/） -->
+        <a class="ccard" href="/course/mcst/">
             <div class="ccard-cover">
-                <span class="ccard-badge">已上线 1–6 站</span>
-                <svg class="nn-ic" width="76" height="76" viewBox="0 0 100 100" aria-hidden="true"><g stroke="rgba(255,255,255,.45)" stroke-width="1.4"><line x1="16" y1="22" x2="40" y2="22"/><line x1="16" y1="22" x2="40" y2="50"/><line x1="16" y1="22" x2="40" y2="78"/><line x1="16" y1="50" x2="40" y2="22"/><line x1="16" y1="50" x2="40" y2="50"/><line x1="16" y1="50" x2="40" y2="78"/><line x1="16" y1="78" x2="40" y2="22"/><line x1="16" y1="78" x2="40" y2="50"/><line x1="16" y1="78" x2="40" y2="78"/><line x1="40" y1="22" x2="64" y2="22"/><line x1="40" y1="22" x2="64" y2="50"/><line x1="40" y1="22" x2="64" y2="78"/><line x1="40" y1="50" x2="64" y2="22"/><line x1="40" y1="50" x2="64" y2="50"/><line x1="40" y1="50" x2="64" y2="78"/><line x1="40" y1="78" x2="64" y2="22"/><line x1="40" y1="78" x2="64" y2="50"/><line x1="40" y1="78" x2="64" y2="78"/><line x1="64" y1="22" x2="88" y2="50"/><line x1="64" y1="50" x2="88" y2="50"/><line x1="64" y1="78" x2="88" y2="50"/></g><g fill="#fff"><circle cx="16" cy="22" r="4.4"/><circle cx="16" cy="50" r="4.4"/><circle cx="16" cy="78" r="4.4"/><circle cx="40" cy="22" r="4.4"/><circle cx="40" cy="50" r="4.4"/><circle cx="40" cy="78" r="4.4"/><circle cx="64" cy="22" r="4.4"/><circle cx="64" cy="50" r="4.4"/><circle cx="64" cy="78" r="4.4"/><circle cx="88" cy="50" r="5.8"/></g><circle cx="88" cy="50" r="5.8" fill="#FFD34D"/></svg>
+                <span class="ccard-badge">互动实验</span>
+                <svg width="86" height="86" viewBox="0 0 100 100" aria-hidden="true">
+                    <g stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-linecap="round">
+                        <line x1="36" y1="12" x2="36" y2="88"/><line x1="64" y1="12" x2="64" y2="88"/>
+                        <line x1="12" y1="36" x2="88" y2="36"/><line x1="12" y1="64" x2="88" y2="64"/>
+                    </g>
+                    <g stroke="#0d2259" stroke-width="6" stroke-linecap="round">
+                        <line x1="15" y1="15" x2="29" y2="29"/><line x1="29" y1="15" x2="15" y2="29"/>
+                        <line x1="71" y1="71" x2="85" y2="85"/><line x1="85" y1="71" x2="71" y2="85"/>
+                    </g>
+                    <circle cx="50" cy="50" r="11" fill="#fff"/>
+                </svg>
             </div>
             <div class="ccard-body">
-                <h3>人工智能简史</h3>
-                <div class="ccard-sub">🛰️ 16 站时间轴课程</div>
-                <p>从 1950 到 2025 的一条人工智能时间轴：图灵测试、达特茅斯会议、感知机、ELIZA、专家系统、反向传播、深蓝、AlphaGo、ChatGPT、文生视频、AI 智能体……读懂 AI「从出生到今天」的完整进化史。</p>
+                <h3>MCST 图解</h3>
+                <div class="ccard-sub">🎮 井字棋人机对战 · 蒙特卡洛树搜索</div>
+                <p>你执白棋，AI 执黑棋。每走一步，AI 都会把「选择 → 扩展 → 模拟 → 反向传播」四步想在明面上：看它如何靠几千次随机预演，挑出最稳的一手。</p>
                 <ul class="ccard-tags">
-                    <li>🛰️ 16 站故事</li>
-                    <li>🧪 互动实验室</li>
-                    <li>❓ 每站小测验</li>
-                    <li>🏆 收获盖章</li>
+                    <li>🎲 3×3 井字棋</li>
+                    <li>🔁 四步循环</li>
+                    <li>📊 搜索统计</li>
+                    <li>🧠 算法思维</li>
                 </ul>
                 <div class="ccard-foot">
-                    <span class="ccard-meta">每站含 故事 / 知识 / 小任务 / 小测验 / 收获</span>
+                    <span class="ccard-meta">每步含 四步思考动画 / 候选落点胜率</span>
                     <span class="ccard-go">进入课程 →</span>
                 </div>
             </div>
@@ -119,7 +129,7 @@
         </div>
     </div>
 
-    <p class="home-note">🏆 读完任意一站，记得把收获贴到<a href="/harvest.html" style="color:#5b6ee8;font-weight:700;text-decoration:none;">收获墙</a>上，和大家分享～</p>
+    <p class="home-note">🏆 学完一节课，记得把收获贴到<a href="/harvest.html" style="color:#5b6ee8;font-weight:700;text-decoration:none;">收获墙</a>上，和大家分享～</p>
 </div>
 <script src="/js/classroom-float.js"></script>
 </body>

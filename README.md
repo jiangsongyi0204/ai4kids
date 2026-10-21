@@ -1,10 +1,10 @@
 # ai4kids · AI+教育的落地实践 
 
-> K12 AI 教育游戏平台 — 用一场「16 站时间旅行」读完人工智能简史
+> K12 AI 教育游戏平台 — 用看得见的互动实验，把 AI 算法讲给孩子听
 
 基于《AI时代教育全景导航》(guide.html) 的教育游戏系列。后端 **Node.js + Express + TypeScript**，前端纯 HTML/CSS/JS，零构建步骤，子应用自动扫描。
 
-**当前线上内容**：首页课程卡片一览 · 《人工智能简史》16 站互动课程（第 1–6 站已上线）· 🏆 收获墙 · 《AI时代教育全景导航》。
+**当前线上内容**：首页课程卡片一览 · 《MCST 图解》井字棋人机对战互动课 · 🏆 收获墙 · 《AI时代教育全景导航》。
 
 ---
 
@@ -41,12 +41,11 @@ npm run dev:https  # 想用 HTTPS：自签证书，同时跑 80 + 443
 | 页面 | 本地 | 线上 |
 |------|------|------|
 | 首页（课程卡片一览） | `http://localhost/` | `https://ai4kids.online/` |
-| 《人工智能简史》课程目录（16 站时间轴） | `http://localhost/course/aitimeline/` | `https://ai4kids.online/course/aitimeline/` |
-| 第 1–6 站课件 | `http://localhost/course/aitimeline/lesson1.html` … `lesson6.html` | `https://ai4kids.online/course/aitimeline/lesson1.html` … |
+| 《MCST 图解》井字棋互动课 | `http://localhost/course/mcst/` | `https://ai4kids.online/course/mcst/` |
 | 🏆 收获墙（学员收获卡片） | `http://localhost/harvest.html` | `https://ai4kids.online/harvest.html` |
 | AI时代教育全景导航 | `http://localhost/guide.html` | `https://ai4kids.online/guide.html` |
 
-> 旧的 `/history/lessonN.html` 会 **301 重定向** 到 `/course/aitimeline/lessonN.html`（老书签仍可用）；`/course/` 本身没有页面，会 301 回首页。
+> `/course/` 本身没有页面，会 301 回首页；已下线课程的旧路径（如 `/course/aitimeline/`、`/history/lessonN.html`）会回落到首页。
 
 > 端口默认 80，可用 `PORT=8080` 改；跑了 `npm run dev:https` 后把 `http://localhost/` 换成 `https://localhost/` 也能访问。
 
@@ -75,22 +74,20 @@ ai4kids/
 │   ├── index.html                 # 首页：课程卡片一览（点击卡片进入课程目录）
 │   ├── harvest.html               # 🏆 收获墙：所有学员的收获卡片（入口在首页）
 │   ├── guide.html                 # AI时代教育全景导航
-│   ├── css/                       # common.css（主站公共样式）+ style.css（课件样式）
-│   ├── js/                        # 公共脚本（tracker / classroom-float / cloud-records / lesson-recorder）
+│   ├── css/                       # common.css（主站公共样式）+ style.css（课件样式，可按需复用）
+│   ├── js/                        # 公共脚本（classroom-float / tracker / cloud-records / lesson-recorder）
 │   ├── fonts/                     # Orbitron 字体（课件用）
 │   └── course/                    # 课程容器（一门课一个子目录）
-│       └── aitimeline/            # 《人工智能简史》：课程目录 + 课件（URL = /course/aitimeline/）
-│           ├── index.html         # 16 站时间轴课程目录
-│           ├── lesson1.html … lesson6.html
-│           ├── lesson.css / lesson.js # 各站共享样式与交互脚本
-│           ├── *-lab.css / *-lab.js   # 各站互动实验室（图灵 / 谜题 / 感知机 / ELIZA / 专家系统 / 神经网络）
-│           └── img/               # 配图
+│       └── mcst/                  # 《MCST 图解》：井字棋人机对战（URL = /course/mcst/）
+│           ├── index.html         # 棋盘 + 四步思考面板 + 四步图解
+│           ├── mcst.css           # 页面样式
+│           └── mcst.js            # 井字棋 MCTS 内核 + 四步可视化
 ├── app/                           # （当前不存在）子应用：建 app/<name>/index.html + config.json 即自动注册到 /<name>/，/api/apps 现返回空数组
 ├── database/                      # 运行时数据（AI 生成物 + SQLite）
 │   ├── images/ text/ videos/ music/   # 大模型生成的图像 / 文字 / 视频 / 音乐（启动时自动创建）
 │   └── ai4kids.db                 # SQLite 数据库（harvests 表 = 收获墙，首次启动自动建表）
 ├── tests/
-│   └── check.js                   # 自动化测试：页面加载 + 关键元素 + 导航 + API（57 条断言）
+│   └── check.js                   # 自动化测试：页面加载 + 关键元素 + 导航 + API（32 条断言）
 ├── scripts/dev-https.ps1          # 本地 HTTPS：自签证书 + 启动服务（Windows）
 ├── deploy/setup-https.sh          # 线上一次性配置：certbot 签证书 + 续期自动重启
 ├── ecosystem.config.js            # PM2 配置（PORT=80 / HTTPS_PORT=443 / TLS_DIR / ACME_WEBROOT）
@@ -166,23 +163,17 @@ certbot renew --dry-run                                 # 试跑一次续期
 
 ---
 
-## 🧠 人工智能简史（`/course/aitimeline/`）
+## 🎲 MCST 图解（`/course/mcst/`）
 
-首页（`public/index.html`）只放**课程卡片一览**；点卡片进入课程目录（`public/course/aitimeline/index.html`，URL `/course/aitimeline/`），那是一份 **16 站时间轴课程目录**，从 1950 年图灵测试一路走到今天。**第 1–6 站已上线**，第 7 站起在目录里显示为「🚧 本站课件尚未上线」（置灰不可点）。
+一页式互动课：用 **3×3 井字棋**讲清蒙特卡洛树搜索（Monte Carlo Tree Search，常见缩写 MCTS；本站卡片写作 MCST）的**四步循环**。
 
-| 站 | 年份 | 主题 | 互动实验室 |
-|---|---|---|---|
-| 1 | 1950 | 图灵测试：机器会思考吗？ | 图灵机模拟（`turing-lab`）+ 谜题破译（`enigma-lab` / `enigma-break`） |
-| 2 | 1956 | 人工智能诞生：一场改变世界的会议 | — |
-| 3 | 1957 | 感知机：第一台会学习的机器 | 感知机训练器（`perceptron-trainer`） |
-| 4 | 1966 | ELIZA：世界上第一个聊天机器人 | ELIZA 对话实验（`eliza-lab`） |
-| 5 | 1980 | 专家系统：装进电脑的专家经验 | 专家系统推理（`expert-lab`） |
-| 6 | 1986 | 反向传播：让神经网络学会纠错 | 神经网络实验室（`neural-net-lab`） |
+- 人类执**白棋**（先手），AI 执**黑棋**（后手），AI 用 UCT 做搜索
+- 每次 AI 落子，右侧面板会展示一次真实迭代的完整轨迹：**① 选择 Selection → ② 扩展 Expansion → ③ 模拟 Simulation → ④ 反向传播 Backpropagation**
+- 下方「为什么走这里？」列出每个候选落点的访问次数与模拟胜率（访问最多者即 AI 的选择，即 robust child）
+- 可调模拟次数（2 000 / 6 000 / 12 000），可关闭四步动画
+- `mcst.js` 内是零依赖的 MCTS 实现：`iterate()` 跑一次四步、`playSteps()` 驱动动画、`renderTrace()` 渲染轨迹
 
-每站课件都是同一套结构：🚀 出发 → 🕰️ 故事 → 📖 知识 → 🖐️ 小任务 → ❓ 小测验 → 🏁 完成，最后一步可以写下**收获**并提交到收获墙（`POST /api/harvest`）。
-
-- 课件路径：`public/course/aitimeline/` → URL `/course/aitimeline/lessonN.html`
-- 补齐后续站点课件后，把 `public/course/aitimeline/index.html` 里的 `MAX_LESSON = 6` 调大即可
+> 教学口径：AI 不是「穷举所有走法」，而是靠大量随机模拟做统计；四步循环重复几千次，才挑出访问次数最多的一手。
 
 ---
 
@@ -205,7 +196,7 @@ certbot renew --dry-run                                 # 试跑一次续期
 npm test            # 页面完整性 + API 检查（需先启动服务）
 ```
 
-共 **43 条断言**，分四组：页面加载（标题）/ 关键元素 / 导航跳转 / API 端点。改端口后可 `BASE=http://localhost:8080 npm test`。
+共 **32 条断言**，分四组：页面加载（标题）/ 关键元素 / 导航跳转 / API 端点。改端口后可 `BASE=http://localhost:8080 npm test`。
 
 ---
 
