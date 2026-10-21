@@ -28,57 +28,67 @@
             <div class="status" id="status"><span class="dot"></span><span id="statusText">准备开局…</span></div>
             <div class="controls">
                 <button class="btn primary" id="restart" type="button">↻ 重新开始</button>
-                <label class="ctl">模拟次数
+                <label class="ctl">搜索次数
                     <select id="sims">
-                        <option value="2000">2 000 次</option>
-                        <option value="6000" selected>6 000 次</option>
-                        <option value="12000">12 000 次</option>
+                        <option value="10">10 次</option>
+                        <option value="20">20 次</option>
+                        <option value="50">50 次</option>
+                        <option value="100" selected>100 次</option>
                     </select>
                 </label>
-                <label class="ctl switch"><input type="checkbox" id="animate" checked /> 播放四步动画</label>
+                <label class="ctl switch"><input type="checkbox" id="stepMode" /> 单步显示</label>
             </div>
-            <p class="hint">你先走：点任意空格落下白棋。之后 AI 每走一步，都会在右边把「选择 → 扩展 → 模拟 → 反向传播」走给你看。</p>
+            <p class="hint">你先走：点任意空格落下白棋。之后 AI 每走一步，都会在右边把「选择 → 扩展 → 模拟 → 反向传播」走给你看；勾选「单步显示」后，AI 会等你看完搜索树再落子。<span id="simsHint"></span></p>
         </section>
 
-        <section class="card">
+        <section class="card think">
             <div class="side-head">
                 <h2>AI 的思考</h2>
                 <span class="who" id="thinkMeta">等待开局</span>
             </div>
-            <div class="steps" id="steps">
-                <div class="step">
-                    <span class="num">1</span>
-                    <div>
-                        <h4>选择 <span class="en">Selection</span></h4>
-                        <div class="dyn" id="dyn1">等待 AI 思考…</div>
-                    </div>
+
+            <div class="ucb">
+                <span class="ucb-tag">UCB</span>
+                <span class="formula">
+                    <span class="frac"><i>W</i><b>V</b></span>
+                    <span class="op">+</span>
+                    <span class="op">C</span>
+                    <span class="op">·</span>
+                    <span class="sqrt"><span class="radical">√</span><span class="rad"><span class="frac small"><i>ln N<sub>父</sub></i><b>V</b></span></span></span>
+                </span>
+                <span class="ucb-note"><b>W</b> 胜分 · <b>V</b> 访问次数 · <b>N<sub>父</sub></b> 父节点访问次数</span>
+            </div>
+
+            <div class="iters">
+                <div class="iters-head">
+                    <h3>搜索树</h3>
+                    <span id="itersMeta">等待 AI 思考…</span>
                 </div>
-                <div class="step">
-                    <span class="num">2</span>
-                    <div>
-                        <h4>扩展 <span class="en">Expansion</span></h4>
-                        <div class="dyn" id="dyn2">等待 AI 思考…</div>
-                    </div>
+                <div class="tree-bar" id="treeBar">
+                    <button class="tbtn" type="button" id="treePrev">◀ 上一步</button>
+                    <button class="tbtn" type="button" id="treeNext">下一步 ▶</button>
+                    <button class="tbtn accent" type="button" id="treePlay">▶ 单步播放</button>
+                    <span class="tree-step" id="treeStep">—</span>
                 </div>
-                <div class="step">
-                    <span class="num">3</span>
-                    <div>
-                        <h4>模拟 <span class="en">Simulation</span></h4>
-                        <div class="dyn" id="dyn3">等待 AI 思考…</div>
-                    </div>
+                <div class="tree-wrap">
+                    <svg id="tree" class="tree" role="img" aria-label="蒙特卡洛搜索树，每个节点是一张小棋盘，下方标注访问次数与胜分"></svg>
                 </div>
-                <div class="step">
-                    <span class="num">4</span>
-                    <div>
-                        <h4>反向传播 <span class="en">Backpropagation</span></h4>
-                        <div class="dyn" id="dyn4">等待 AI 思考…</div>
-                    </div>
+                <p class="tree-phase is-hidden" id="treePhase"></p>
+                <p class="tree-legend">每个节点就是当时的那张棋盘（圆环标出新建这个节点的那步棋）；棋盘下面是访问次数 <b>V</b> 与胜分 <b>W</b>；<span class="lg-path">蓝色</span> = 这次搜索走过的路径，<span class="lg-new">橙色虚线</span> = 这次新长出的节点，⭐ = AI 最终选择。一次搜索的四步都在这里演：① 选择高亮路径 → ② 扩展长出新节点 → ③ 模拟给出胜负 → ④ 反向传播让路径上的 V / W 加一。点到某一行记录，可以让树直接跳到那一次。</p>
+
+                <div class="iters-head sub">
+                    <h3>逐次记录</h3>
+                    <span id="itersSubMeta">AI 思考后，这里逐条列出每次搜索的四步</span>
                 </div>
+                <div class="iters-body" id="iters">
+                    <p class="iters-empty">AI 每走一步，这里会逐条列出每次搜索的四个步骤（选择 → 扩展 → 模拟 → 反向传播）。</p>
+                </div>
+                <p class="iters-foot">小棋盘上方：<b>W</b> = 胜分（按该节点轮到走棋的一方计）· <b>V</b> = 访问次数 · <b>P</b> = 父节点编号（根节点为 -1，也就是「这个节点是从哪个节点走出来的」）。虚线框是本次新长出来的节点。</p>
             </div>
 
             <div class="decision">
-                <h3>为什么走这里？</h3>
-                <p class="muted" id="decisionEmpty">AI 思考后，这里会列出每个候选落点被模拟了多少次、模拟胜率有多高。</p>
+                <h3>最终搜索树</h3>
+                <p class="muted" id="decisionEmpty">AI 思考后，这里会列出根节点下每个候选落点的访问次数与模拟胜率。</p>
                 <div class="cands" id="cands"></div>
             </div>
         </section>
