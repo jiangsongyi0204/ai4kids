@@ -153,6 +153,10 @@ body {
 .iters-empty { font-size: 12px; color: #a3a8c2; line-height: 1.8; }
 .iters-wait { background: #f7f9ff; border: 1px dashed #dbe3fb; border-radius: 12px; padding: 10px 12px; }
 .iters-wait.is-hidden { display: none; }
+.iters-stat { margin-top: 8px; font-size: 11px; color: #6a7196; line-height: 1.75;
+              background: #f7f9ff; border: 1px solid #e6ebf9; border-radius: 11px; padding: 7px 11px; }
+.iters-stat:empty { display: none; }
+.iters-stat b { color: #2f3f8f; }
 .iters-note { font-size: 10.5px; color: #8a6a1f; background: #fffaf0; border: 1px solid #f4e3b8;
               border-radius: 10px; padding: 6px 9px; line-height: 1.7; }
 .iters-foot { font-size: 10.5px; color: #a3a8c2; line-height: 1.7; margin-top: 8px; }

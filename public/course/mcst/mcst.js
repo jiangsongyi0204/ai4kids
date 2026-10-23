@@ -34,6 +34,7 @@
         treePlay: document.getElementById('treePlay'),
         treeStep: document.getElementById('treeStep'),
         treePhase: document.getElementById('treePhase'),
+        itersStat: document.getElementById('itersStat'),
         simsHint: document.getElementById('simsHint')
     };
     var cells = [];
@@ -327,6 +328,7 @@
         renderIters();
         el.itersMeta.textContent = '等待 AI 思考…';
         el.itersSubMeta.textContent = 'AI 思考后，这里逐条列出每次搜索的四步';
+        if (el.itersStat) el.itersStat.textContent = '';
         el.cands.innerHTML = '';
         el.decisionEmpty.style.display = '';
     }
@@ -892,9 +894,11 @@
         var traces = state.lastTraces || [];
         if (!traces.length) {
             el.iters.innerHTML = '<p class="iters-empty">AI 每走一步，这里会逐条列出每次搜索的四个步骤（选择 → 扩展 → 模拟 → 反向传播）。</p>';
+            if (el.itersStat) el.itersStat.textContent = '';
             return;
         }
         el.itersMeta.textContent = state.metaText;
+        if (el.itersStat) el.itersStat.innerHTML = simSummary(traces);
         for (var k = 0; k < traces.length; k++) el.iters.appendChild(renderIter(traces[k], k));
 
         var empty = document.createElement('p');
@@ -905,6 +909,23 @@
 
         state.shownRows = -1;
         syncIters();
+    }
+
+    /** 本次搜索里模拟的胜负分布 —— 解释为什么「模拟几乎都是白棋胜」 */
+    function simSummary(traces) {
+        var w = 0, b = 0, d = 0;
+        for (var i = 0; i < traces.length; i++) {
+            var win = traces[i].sim ? traces[i].sim.winner : 0;
+            if (win === WHITE) w++;
+            else if (win === BLACK) b++;
+            else d++;
+        }
+        var n = traces.length || 1;
+        var pct = function (v) { return Math.round(v / n * 100); };
+        return '这 <b>' + traces.length + '</b> 次模拟的结局：<b>白棋胜 ' + w + '</b> 次（' + pct(w) + '%）· ' +
+            '<b>黑棋胜 ' + b + '</b> 次（' + pct(b) + '%）· <b>平局 ' + d + '</b> 次（' + pct(d) + '%）。' +
+            '<br>模拟时双方是<b>乱下</b>的，先手白棋本来就占便宜（还占着中心），所以白胜特别多——' +
+            '这正是「随机乱下只能当粗糙参考、要多模拟几次」的原因。';
     }
 
     /** 单步显示时，逐次记录也只露出已经演完的那几次搜索 */
