@@ -58,6 +58,7 @@
                 </span>
                 <span class="ucb-note"><b>W</b> 胜分 · <b>V</b> 访问次数 · <b>N<sub>父</sub></b> 父节点访问次数</span>
             </div>
+            <p class="ucb-hint">公式里的 <b>W / V 是从「父节点（走棋的那一方）」看的胜率</b>：子节点记的是轮到<b>对手</b>走棋时的胜分，所以真正比较时要用 <b>1 − W / V</b>。例如子节点是白棋视角、W/V = 0，说明这一路模拟里白棋一次没赢，换成黑棋（AI）看就是 1 − 0 = 1 分。</p>
 
             <div class="iters">
                 <div class="iters-head">

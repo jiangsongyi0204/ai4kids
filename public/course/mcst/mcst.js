@@ -409,6 +409,10 @@
                 var after = map[n.id] || n;
                 line.appendChild(thumb({ board: n.board, wins: after.wins, visits: after.visits, pid: n.pid }));
             }
+            var picked = t.selection[t.selection.length - 1];
+            var ucbBadge = badge('UCB ' + ucbText(valuesAt(typeof t.slot === 'number' ? t.slot : 0), picked) + ' 最高');
+            ucbBadge.title = 'UCB = 胜率 + C·√(ln N父 / V)，C = 1.4。\n其中胜率取「父节点（走棋方）」视角 = 1 − W/V，因为子节点记的是轮到对手走棋时的 W/V。\n用这次搜索开始时的 V/W 计算，分数最高的节点会被走下去。';
+            line.appendChild(ucbBadge);
         } else {
             line.appendChild(badge('根节点还有没试过的走法，跳过选择'));
         }
@@ -616,15 +620,34 @@
         return vals;
     }
 
+    /** 单个节点相对父节点的 UCB 分数（用传入的 V/W 快照算，父节点视角） */
+    function ucbScore(vals, n) {
+        var pv = vals[n.pid] ? vals[n.pid].v : 0;
+        var v = vals[n.id];
+        if (!pv || !v || !v.v) return null;
+        return (1 - v.w / v.v) + UCT_C * Math.sqrt(Math.log(pv) / v.v);
+    }
+
+    function ucbText(vals, n) {
+        var v = vals[n.id];
+        if (!v || !v.v) return '未试过';
+        var u = ucbScore(vals, n);
+        return u === null ? '—' : u.toFixed(2);
+    }
+
     function phaseText(t) {
         if (!t) return '';
         var sel = t.selection;
         var last = sel[sel.length - 1];
         var mover = t.expanded ? colorName(other(t.expanded.player)) : '';
         if (state.phase === 0) {
-            return '① 选择：' + (sel.length > 1
-                ? '按 UCB 从根局面往下走 ' + (sel.length - 1) + ' 层，走到节点 #' + last.id
-                : '根节点还有没试过的走法，不用往下选，直接进入扩展');
+            if (sel.length > 1) {
+                var pre = valuesAt(state.treeStep - 1);
+                return '① 选择：每个候选都算一个 UCB 分数（胜率高 + 试得少），' +
+                    '#' + sel[1].id + ' 的分数最高（' + ucbText(pre, sel[1]) + '）' +
+                    (sel.length > 2 ? '，再按同样的规则继续往下，一路走到 #' + last.id : '，于是往下走到 #' + last.id);
+            }
+            return '① 选择：根节点还有没试过的走法，不用往下选，直接进入扩展';
         }
         if (state.phase === 1) {
             return '② 扩展：' + (t.expanded
@@ -812,6 +835,7 @@
             var title = svgEl('title', {});
             title.textContent = '节点 #' + n.id + ' · 父节点 #' + n.pid +
                 ' · W:' + fmtNum(vv.w) + ' V:' + vv.v +
+                (ph === 0 && n.pid >= 0 ? ' · UCB ' + ucbText(vals, n) : '') +
                 (n.move >= 0 ? ' · ' + colorName(other(n.player)) + ' ' + CELL_NAMES[n.move] : ' · 根局面');
             g.appendChild(title);
 
@@ -843,6 +867,16 @@
                 });
                 star.textContent = '⭐';
                 g.appendChild(star);
+            }
+
+            // ① 选择：每个候选旁边标出它相对父节点的 UCB 分数，最高分那个会被走进去
+            if (ph === 0 && state.stepMode && n.pid >= 0) {
+                var ucbT = svgEl('text', {
+                    x: p.x, y: p.y + NB / 2 + 29, 'text-anchor': 'middle', 'font-size': 8,
+                    'font-weight': 800, fill: on ? '#5b6ee8' : '#b0b6d0'
+                });
+                ucbT.textContent = 'U' + ucbText(vals, n);
+                g.appendChild(ucbT);
             }
 
             // ④ 反向传播：路径上的节点标出这次 V+1

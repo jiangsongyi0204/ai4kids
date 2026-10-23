@@ -118,6 +118,9 @@ body {
 .sqrt .rad { border-top: 1px solid #1e2440; margin-top: 3px; padding: 0 4px 0 2px; }
 .ucb-note { font-size: 10.5px; color: #8b90ad; line-height: 1.6; margin-left: auto; }
 .ucb-note b { color: #5b6ee8; }
+.ucb-hint { margin-top: 7px; font-size: 10.5px; color: #6a7196; line-height: 1.75;
+            background: #fbfcff; border: 1px dashed #e3e9f9; border-radius: 10px; padding: 6px 10px; }
+.ucb-hint b { color: #2f3f8f; }
 
 /* ---------- 搜索过程（每次一行小棋盘） ---------- */
 .iters { border-top: 1px dashed #e6eaf6; padding-top: 12px; }
